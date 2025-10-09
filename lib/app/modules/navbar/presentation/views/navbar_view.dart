@@ -18,6 +18,7 @@ class NavbarView extends GetView<NavbarController> {
   final List<Widget> pages = [
     HomeView(),
     TrendsView(),
+
     SettingsView(),
     ProfileView(),
   ];
@@ -85,15 +86,14 @@ class NavbarView extends GetView<NavbarController> {
                   ),
                 ),
               ),
-
-              _buildNavItem(Icons.person_outline, Icons.person, "Profile", 2),
               _buildNavItem(
                 Icons.settings_outlined,
                 Icons.settings,
                 "Settings",
 
-                3,
+                2,
               ),
+              _buildNavItem(Icons.person_outline, Icons.person, "Profile", 3),
             ],
           ),
         ),

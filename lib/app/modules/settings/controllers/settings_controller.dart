@@ -1,23 +1,34 @@
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
-  //TODO: Implement SettingsController
+  final RxList<int> selectedGoalsIndex = <int>[0, 3, 5].obs;
+  final List<String> goals = [
+    "Balance Eating",
+    "Manage Weight",
+    "Heart Health",
+    "Diabetes Focus",
+    "Longevity",
+    "Atheletic Performance",
+  ];
+  var allergensToAvoid = <String>[
+    "Mediterranean",
+    "Vegetarian",
+    "Vegan",
+    "Pescatarian",
+    "Paleo",
+    "Keto",
+    "Low FODMAP",
+    "Dairy-Free",
+    "Gluten-Free",
+    "+Other",
+  ].obs;
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  var selectedAllergens = <String>["Vegetarian", "Low FODMAP", "Vegan",].obs;
+  void toggleSelection(String item, RxList<String> list) {
+    if (list.contains(item)) {
+      list.remove(item);
+    } else {
+      list.add(item);
+    }
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

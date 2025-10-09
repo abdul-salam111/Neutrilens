@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:neutri_lens/app/core/core.dart';
+import 'package:neutri_lens/app/core/widgets/custom_button.dart';
+import 'package:neutri_lens/app/core/widgets/custom_textfield.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -9,14 +13,74 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ProfileView'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'ProfileView is working',
-          style: TextStyle(fontSize: 20),
+      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: screenPadding,
+            child: Column(
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppColors.appPrimaryColor,
+                  radius: 52,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: CachedNetworkImageProvider(
+                      "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?semt=ais_hybrid&w=740&q=80",
+                    ),
+                  ),
+                ),
+                heightBox(10),
+                Text(
+                  "John Doe",
+                  style: context.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                heightBox(2),
+                Text(
+                  "Abdulsalam.0302@gmail.com",
+                  style: context.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                heightBox(30),
+                CustomTextFormField(
+                  hintText: "Abdul Salam",
+                  label: "Full Name",
+                  labelfontSize: 14,
+                  labelColor: Colors.black,
+                  borderColor: AppColors.darkGreyColor.withAlpha(90),
+                ),
+                heightBox(10),
+                CustomTextFormField(
+                  hintText: "abdulsalam.0302@gmail.com",
+                  label: "Email",
+                  labelfontSize: 14,
+                  labelColor: Colors.black,
+                  borderColor: AppColors.darkGreyColor.withAlpha(90),
+                ),
+                heightBox(10),
+                CustomTextFormField(
+                  hintText: "20 Years",
+                  labelfontSize: 14,
+                  label: "Age",
+                  labelColor: Colors.black,
+                  borderColor: AppColors.darkGreyColor.withAlpha(90),
+                ),
+                heightBox(context.screenHeight * 0.1),
+                SizedBox(
+                  height: 45,
+                  width: 200,
+                  child: CustomButton(
+                    text: "Log Out",
+                    onPressed: () {},
+                    backgroundColor: AppColors.appPrimaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

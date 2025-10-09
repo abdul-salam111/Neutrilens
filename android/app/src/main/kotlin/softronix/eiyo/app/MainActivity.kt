@@ -1,4 +1,4 @@
-package com.example.neutri_lens
+package softronix.eiyo.app
 
 import io.flutter.embedding.android.FlutterActivity
 
