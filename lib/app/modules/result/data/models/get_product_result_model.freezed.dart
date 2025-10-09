@@ -311,7 +311,8 @@ $ProductCopyWith<$Res>? get product {
 /// @nodoc
 mixin _$Product {
 
-@JsonKey(name: "brands") String? get brands;@JsonKey(name: "image_front_small_url") String? get imageFrontSmallUrl;@JsonKey(name: "nutrient_levels_tags") List<String>? get nutrientLevelsTags;@JsonKey(name: "nutriments") Nutriments? get nutriments;@JsonKey(name: "nutriscore_grade") String? get nutriscoreGrade;@JsonKey(name: "nutriscore_score") int? get nutriscoreScore;@JsonKey(name: "product_name") String? get productName;
+@JsonKey(name: "brands") String? get brands;@JsonKey(name: "image_front_small_url") String? get imageFrontSmallUrl;@JsonKey(name: "nutrient_levels_tags") List<String>? get nutrientLevelsTags;@JsonKey(name: "nutriments") Nutriments? get nutriments;@JsonKey(name: "nutriscore_grade") String? get nutriscoreGrade;@JsonKey(name: "nutriscore_score") int? get nutriscoreScore;@JsonKey(name: "product_name") String? get productName;// Added fields for NutriLens scoring
+@JsonKey(name: "nova_group") int? get novaGroup;@JsonKey(name: "additives_n") int? get additivesN;
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -324,16 +325,16 @@ $ProductCopyWith<Product> get copyWith => _$ProductCopyWithImpl<Product>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&const DeepCollectionEquality().equals(other.nutrientLevelsTags, nutrientLevelsTags)&&(identical(other.nutriments, nutriments) || other.nutriments == nutriments)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&(identical(other.nutriscoreScore, nutriscoreScore) || other.nutriscoreScore == nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&const DeepCollectionEquality().equals(other.nutrientLevelsTags, nutrientLevelsTags)&&(identical(other.nutriments, nutriments) || other.nutriments == nutriments)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&(identical(other.nutriscoreScore, nutriscoreScore) || other.nutriscoreScore == nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.novaGroup, novaGroup) || other.novaGroup == novaGroup)&&(identical(other.additivesN, additivesN) || other.additivesN == additivesN));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,brands,imageFrontSmallUrl,const DeepCollectionEquality().hash(nutrientLevelsTags),nutriments,nutriscoreGrade,nutriscoreScore,productName);
+int get hashCode => Object.hash(runtimeType,brands,imageFrontSmallUrl,const DeepCollectionEquality().hash(nutrientLevelsTags),nutriments,nutriscoreGrade,nutriscoreScore,productName,novaGroup,additivesN);
 
 @override
 String toString() {
-  return 'Product(brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutrientLevelsTags: $nutrientLevelsTags, nutriments: $nutriments, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName)';
+  return 'Product(brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutrientLevelsTags: $nutrientLevelsTags, nutriments: $nutriments, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName, novaGroup: $novaGroup, additivesN: $additivesN)';
 }
 
 
@@ -344,7 +345,7 @@ abstract mixin class $ProductCopyWith<$Res>  {
   factory $ProductCopyWith(Product value, $Res Function(Product) _then) = _$ProductCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutrient_levels_tags") List<String>? nutrientLevelsTags,@JsonKey(name: "nutriments") Nutriments? nutriments,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") int? nutriscoreScore,@JsonKey(name: "product_name") String? productName
+@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutrient_levels_tags") List<String>? nutrientLevelsTags,@JsonKey(name: "nutriments") Nutriments? nutriments,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") int? nutriscoreScore,@JsonKey(name: "product_name") String? productName,@JsonKey(name: "nova_group") int? novaGroup,@JsonKey(name: "additives_n") int? additivesN
 });
 
 
@@ -361,7 +362,7 @@ class _$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutrientLevelsTags = freezed,Object? nutriments = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutrientLevelsTags = freezed,Object? nutriments = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,Object? novaGroup = freezed,Object? additivesN = freezed,}) {
   return _then(_self.copyWith(
 brands: freezed == brands ? _self.brands : brands // ignore: cast_nullable_to_non_nullable
 as String?,imageFrontSmallUrl: freezed == imageFrontSmallUrl ? _self.imageFrontSmallUrl : imageFrontSmallUrl // ignore: cast_nullable_to_non_nullable
@@ -370,7 +371,9 @@ as List<String>?,nutriments: freezed == nutriments ? _self.nutriments : nutrimen
 as Nutriments?,nutriscoreGrade: freezed == nutriscoreGrade ? _self.nutriscoreGrade : nutriscoreGrade // ignore: cast_nullable_to_non_nullable
 as String?,nutriscoreScore: freezed == nutriscoreScore ? _self.nutriscoreScore : nutriscoreScore // ignore: cast_nullable_to_non_nullable
 as int?,productName: freezed == productName ? _self.productName : productName // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,novaGroup: freezed == novaGroup ? _self.novaGroup : novaGroup // ignore: cast_nullable_to_non_nullable
+as int?,additivesN: freezed == additivesN ? _self.additivesN : additivesN // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 /// Create a copy of Product
@@ -467,10 +470,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags")  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments")  Nutriments? nutriments, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  int? nutriscoreScore, @JsonKey(name: "product_name")  String? productName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags")  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments")  Nutriments? nutriments, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  int? nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "nova_group")  int? novaGroup, @JsonKey(name: "additives_n")  int? additivesN)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Product() when $default != null:
-return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_that.nutriments,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName);case _:
+return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_that.nutriments,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.novaGroup,_that.additivesN);case _:
   return orElse();
 
 }
@@ -488,10 +491,10 @@ return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags")  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments")  Nutriments? nutriments, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  int? nutriscoreScore, @JsonKey(name: "product_name")  String? productName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags")  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments")  Nutriments? nutriments, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  int? nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "nova_group")  int? novaGroup, @JsonKey(name: "additives_n")  int? additivesN)  $default,) {final _that = this;
 switch (_that) {
 case _Product():
-return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_that.nutriments,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName);case _:
+return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_that.nutriments,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.novaGroup,_that.additivesN);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -508,10 +511,10 @@ return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags")  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments")  Nutriments? nutriments, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  int? nutriscoreScore, @JsonKey(name: "product_name")  String? productName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags")  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments")  Nutriments? nutriments, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  int? nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "nova_group")  int? novaGroup, @JsonKey(name: "additives_n")  int? additivesN)?  $default,) {final _that = this;
 switch (_that) {
 case _Product() when $default != null:
-return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_that.nutriments,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName);case _:
+return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_that.nutriments,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.novaGroup,_that.additivesN);case _:
   return null;
 
 }
@@ -523,7 +526,7 @@ return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutrientLevelsTags,_
 @JsonSerializable()
 
 class _Product implements Product {
-  const _Product({@JsonKey(name: "brands") this.brands, @JsonKey(name: "image_front_small_url") this.imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags") final  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments") this.nutriments, @JsonKey(name: "nutriscore_grade") this.nutriscoreGrade, @JsonKey(name: "nutriscore_score") this.nutriscoreScore, @JsonKey(name: "product_name") this.productName}): _nutrientLevelsTags = nutrientLevelsTags;
+  const _Product({@JsonKey(name: "brands") this.brands, @JsonKey(name: "image_front_small_url") this.imageFrontSmallUrl, @JsonKey(name: "nutrient_levels_tags") final  List<String>? nutrientLevelsTags, @JsonKey(name: "nutriments") this.nutriments, @JsonKey(name: "nutriscore_grade") this.nutriscoreGrade, @JsonKey(name: "nutriscore_score") this.nutriscoreScore, @JsonKey(name: "product_name") this.productName, @JsonKey(name: "nova_group") this.novaGroup, @JsonKey(name: "additives_n") this.additivesN}): _nutrientLevelsTags = nutrientLevelsTags;
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 
 @override@JsonKey(name: "brands") final  String? brands;
@@ -541,6 +544,9 @@ class _Product implements Product {
 @override@JsonKey(name: "nutriscore_grade") final  String? nutriscoreGrade;
 @override@JsonKey(name: "nutriscore_score") final  int? nutriscoreScore;
 @override@JsonKey(name: "product_name") final  String? productName;
+// Added fields for NutriLens scoring
+@override@JsonKey(name: "nova_group") final  int? novaGroup;
+@override@JsonKey(name: "additives_n") final  int? additivesN;
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
@@ -555,16 +561,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&const DeepCollectionEquality().equals(other._nutrientLevelsTags, _nutrientLevelsTags)&&(identical(other.nutriments, nutriments) || other.nutriments == nutriments)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&(identical(other.nutriscoreScore, nutriscoreScore) || other.nutriscoreScore == nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&const DeepCollectionEquality().equals(other._nutrientLevelsTags, _nutrientLevelsTags)&&(identical(other.nutriments, nutriments) || other.nutriments == nutriments)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&(identical(other.nutriscoreScore, nutriscoreScore) || other.nutriscoreScore == nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.novaGroup, novaGroup) || other.novaGroup == novaGroup)&&(identical(other.additivesN, additivesN) || other.additivesN == additivesN));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,brands,imageFrontSmallUrl,const DeepCollectionEquality().hash(_nutrientLevelsTags),nutriments,nutriscoreGrade,nutriscoreScore,productName);
+int get hashCode => Object.hash(runtimeType,brands,imageFrontSmallUrl,const DeepCollectionEquality().hash(_nutrientLevelsTags),nutriments,nutriscoreGrade,nutriscoreScore,productName,novaGroup,additivesN);
 
 @override
 String toString() {
-  return 'Product(brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutrientLevelsTags: $nutrientLevelsTags, nutriments: $nutriments, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName)';
+  return 'Product(brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutrientLevelsTags: $nutrientLevelsTags, nutriments: $nutriments, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName, novaGroup: $novaGroup, additivesN: $additivesN)';
 }
 
 
@@ -575,7 +581,7 @@ abstract mixin class _$ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   factory _$ProductCopyWith(_Product value, $Res Function(_Product) _then) = __$ProductCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutrient_levels_tags") List<String>? nutrientLevelsTags,@JsonKey(name: "nutriments") Nutriments? nutriments,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") int? nutriscoreScore,@JsonKey(name: "product_name") String? productName
+@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutrient_levels_tags") List<String>? nutrientLevelsTags,@JsonKey(name: "nutriments") Nutriments? nutriments,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") int? nutriscoreScore,@JsonKey(name: "product_name") String? productName,@JsonKey(name: "nova_group") int? novaGroup,@JsonKey(name: "additives_n") int? additivesN
 });
 
 
@@ -592,7 +598,7 @@ class __$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutrientLevelsTags = freezed,Object? nutriments = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutrientLevelsTags = freezed,Object? nutriments = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,Object? novaGroup = freezed,Object? additivesN = freezed,}) {
   return _then(_Product(
 brands: freezed == brands ? _self.brands : brands // ignore: cast_nullable_to_non_nullable
 as String?,imageFrontSmallUrl: freezed == imageFrontSmallUrl ? _self.imageFrontSmallUrl : imageFrontSmallUrl // ignore: cast_nullable_to_non_nullable
@@ -601,7 +607,9 @@ as List<String>?,nutriments: freezed == nutriments ? _self.nutriments : nutrimen
 as Nutriments?,nutriscoreGrade: freezed == nutriscoreGrade ? _self.nutriscoreGrade : nutriscoreGrade // ignore: cast_nullable_to_non_nullable
 as String?,nutriscoreScore: freezed == nutriscoreScore ? _self.nutriscoreScore : nutriscoreScore // ignore: cast_nullable_to_non_nullable
 as int?,productName: freezed == productName ? _self.productName : productName // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,novaGroup: freezed == novaGroup ? _self.novaGroup : novaGroup // ignore: cast_nullable_to_non_nullable
+as int?,additivesN: freezed == additivesN ? _self.additivesN : additivesN // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -624,7 +632,9 @@ $NutrimentsCopyWith<$Res>? get nutriments {
 /// @nodoc
 mixin _$Nutriments {
 
-@JsonKey(name: "fat") double? get fat;@JsonKey(name: "fiber") double? get fiber;@JsonKey(name: "salt") double? get salt;@JsonKey(name: "saturated-fat") double? get saturatedFat;@JsonKey(name: "sodium") double? get sodium;@JsonKey(name: "sugars") double? get sugars;
+@JsonKey(name: "fat") double? get fat;@JsonKey(name: "fiber") double? get fiber;@JsonKey(name: "salt") double? get salt;@JsonKey(name: "saturated-fat") double? get saturatedFat;@JsonKey(name: "sodium") double? get sodium;@JsonKey(name: "sugars") double? get sugars;// Added fields for fallback calculation
+@JsonKey(name: "energy-kcal") double? get energyKcal;@JsonKey(name: "proteins") double? get proteins;// Per 100g values (more reliable)
+@JsonKey(name: "fat_100g") double? get fat100g;@JsonKey(name: "fiber_100g") double? get fiber100g;@JsonKey(name: "salt_100g") double? get salt100g;@JsonKey(name: "saturated-fat_100g") double? get saturatedFat100g;@JsonKey(name: "sodium_100g") double? get sodium100g;@JsonKey(name: "sugars_100g") double? get sugars100g;@JsonKey(name: "energy-kcal_100g") double? get energyKcal100g;@JsonKey(name: "proteins_100g") double? get proteins100g;
 /// Create a copy of Nutriments
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -637,16 +647,16 @@ $NutrimentsCopyWith<Nutriments> get copyWith => _$NutrimentsCopyWithImpl<Nutrime
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Nutriments&&(identical(other.fat, fat) || other.fat == fat)&&(identical(other.fiber, fiber) || other.fiber == fiber)&&(identical(other.salt, salt) || other.salt == salt)&&(identical(other.saturatedFat, saturatedFat) || other.saturatedFat == saturatedFat)&&(identical(other.sodium, sodium) || other.sodium == sodium)&&(identical(other.sugars, sugars) || other.sugars == sugars));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Nutriments&&(identical(other.fat, fat) || other.fat == fat)&&(identical(other.fiber, fiber) || other.fiber == fiber)&&(identical(other.salt, salt) || other.salt == salt)&&(identical(other.saturatedFat, saturatedFat) || other.saturatedFat == saturatedFat)&&(identical(other.sodium, sodium) || other.sodium == sodium)&&(identical(other.sugars, sugars) || other.sugars == sugars)&&(identical(other.energyKcal, energyKcal) || other.energyKcal == energyKcal)&&(identical(other.proteins, proteins) || other.proteins == proteins)&&(identical(other.fat100g, fat100g) || other.fat100g == fat100g)&&(identical(other.fiber100g, fiber100g) || other.fiber100g == fiber100g)&&(identical(other.salt100g, salt100g) || other.salt100g == salt100g)&&(identical(other.saturatedFat100g, saturatedFat100g) || other.saturatedFat100g == saturatedFat100g)&&(identical(other.sodium100g, sodium100g) || other.sodium100g == sodium100g)&&(identical(other.sugars100g, sugars100g) || other.sugars100g == sugars100g)&&(identical(other.energyKcal100g, energyKcal100g) || other.energyKcal100g == energyKcal100g)&&(identical(other.proteins100g, proteins100g) || other.proteins100g == proteins100g));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fat,fiber,salt,saturatedFat,sodium,sugars);
+int get hashCode => Object.hash(runtimeType,fat,fiber,salt,saturatedFat,sodium,sugars,energyKcal,proteins,fat100g,fiber100g,salt100g,saturatedFat100g,sodium100g,sugars100g,energyKcal100g,proteins100g);
 
 @override
 String toString() {
-  return 'Nutriments(fat: $fat, fiber: $fiber, salt: $salt, saturatedFat: $saturatedFat, sodium: $sodium, sugars: $sugars)';
+  return 'Nutriments(fat: $fat, fiber: $fiber, salt: $salt, saturatedFat: $saturatedFat, sodium: $sodium, sugars: $sugars, energyKcal: $energyKcal, proteins: $proteins, fat100g: $fat100g, fiber100g: $fiber100g, salt100g: $salt100g, saturatedFat100g: $saturatedFat100g, sodium100g: $sodium100g, sugars100g: $sugars100g, energyKcal100g: $energyKcal100g, proteins100g: $proteins100g)';
 }
 
 
@@ -657,7 +667,7 @@ abstract mixin class $NutrimentsCopyWith<$Res>  {
   factory $NutrimentsCopyWith(Nutriments value, $Res Function(Nutriments) _then) = _$NutrimentsCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "fat") double? fat,@JsonKey(name: "fiber") double? fiber,@JsonKey(name: "salt") double? salt,@JsonKey(name: "saturated-fat") double? saturatedFat,@JsonKey(name: "sodium") double? sodium,@JsonKey(name: "sugars") double? sugars
+@JsonKey(name: "fat") double? fat,@JsonKey(name: "fiber") double? fiber,@JsonKey(name: "salt") double? salt,@JsonKey(name: "saturated-fat") double? saturatedFat,@JsonKey(name: "sodium") double? sodium,@JsonKey(name: "sugars") double? sugars,@JsonKey(name: "energy-kcal") double? energyKcal,@JsonKey(name: "proteins") double? proteins,@JsonKey(name: "fat_100g") double? fat100g,@JsonKey(name: "fiber_100g") double? fiber100g,@JsonKey(name: "salt_100g") double? salt100g,@JsonKey(name: "saturated-fat_100g") double? saturatedFat100g,@JsonKey(name: "sodium_100g") double? sodium100g,@JsonKey(name: "sugars_100g") double? sugars100g,@JsonKey(name: "energy-kcal_100g") double? energyKcal100g,@JsonKey(name: "proteins_100g") double? proteins100g
 });
 
 
@@ -674,7 +684,7 @@ class _$NutrimentsCopyWithImpl<$Res>
 
 /// Create a copy of Nutriments
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fat = freezed,Object? fiber = freezed,Object? salt = freezed,Object? saturatedFat = freezed,Object? sodium = freezed,Object? sugars = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fat = freezed,Object? fiber = freezed,Object? salt = freezed,Object? saturatedFat = freezed,Object? sodium = freezed,Object? sugars = freezed,Object? energyKcal = freezed,Object? proteins = freezed,Object? fat100g = freezed,Object? fiber100g = freezed,Object? salt100g = freezed,Object? saturatedFat100g = freezed,Object? sodium100g = freezed,Object? sugars100g = freezed,Object? energyKcal100g = freezed,Object? proteins100g = freezed,}) {
   return _then(_self.copyWith(
 fat: freezed == fat ? _self.fat : fat // ignore: cast_nullable_to_non_nullable
 as double?,fiber: freezed == fiber ? _self.fiber : fiber // ignore: cast_nullable_to_non_nullable
@@ -682,6 +692,16 @@ as double?,salt: freezed == salt ? _self.salt : salt // ignore: cast_nullable_to
 as double?,saturatedFat: freezed == saturatedFat ? _self.saturatedFat : saturatedFat // ignore: cast_nullable_to_non_nullable
 as double?,sodium: freezed == sodium ? _self.sodium : sodium // ignore: cast_nullable_to_non_nullable
 as double?,sugars: freezed == sugars ? _self.sugars : sugars // ignore: cast_nullable_to_non_nullable
+as double?,energyKcal: freezed == energyKcal ? _self.energyKcal : energyKcal // ignore: cast_nullable_to_non_nullable
+as double?,proteins: freezed == proteins ? _self.proteins : proteins // ignore: cast_nullable_to_non_nullable
+as double?,fat100g: freezed == fat100g ? _self.fat100g : fat100g // ignore: cast_nullable_to_non_nullable
+as double?,fiber100g: freezed == fiber100g ? _self.fiber100g : fiber100g // ignore: cast_nullable_to_non_nullable
+as double?,salt100g: freezed == salt100g ? _self.salt100g : salt100g // ignore: cast_nullable_to_non_nullable
+as double?,saturatedFat100g: freezed == saturatedFat100g ? _self.saturatedFat100g : saturatedFat100g // ignore: cast_nullable_to_non_nullable
+as double?,sodium100g: freezed == sodium100g ? _self.sodium100g : sodium100g // ignore: cast_nullable_to_non_nullable
+as double?,sugars100g: freezed == sugars100g ? _self.sugars100g : sugars100g // ignore: cast_nullable_to_non_nullable
+as double?,energyKcal100g: freezed == energyKcal100g ? _self.energyKcal100g : energyKcal100g // ignore: cast_nullable_to_non_nullable
+as double?,proteins100g: freezed == proteins100g ? _self.proteins100g : proteins100g // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }
@@ -767,10 +787,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "fat")  double? fat, @JsonKey(name: "fiber")  double? fiber, @JsonKey(name: "salt")  double? salt, @JsonKey(name: "saturated-fat")  double? saturatedFat, @JsonKey(name: "sodium")  double? sodium, @JsonKey(name: "sugars")  double? sugars)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "fat")  double? fat, @JsonKey(name: "fiber")  double? fiber, @JsonKey(name: "salt")  double? salt, @JsonKey(name: "saturated-fat")  double? saturatedFat, @JsonKey(name: "sodium")  double? sodium, @JsonKey(name: "sugars")  double? sugars, @JsonKey(name: "energy-kcal")  double? energyKcal, @JsonKey(name: "proteins")  double? proteins, @JsonKey(name: "fat_100g")  double? fat100g, @JsonKey(name: "fiber_100g")  double? fiber100g, @JsonKey(name: "salt_100g")  double? salt100g, @JsonKey(name: "saturated-fat_100g")  double? saturatedFat100g, @JsonKey(name: "sodium_100g")  double? sodium100g, @JsonKey(name: "sugars_100g")  double? sugars100g, @JsonKey(name: "energy-kcal_100g")  double? energyKcal100g, @JsonKey(name: "proteins_100g")  double? proteins100g)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Nutriments() when $default != null:
-return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium,_that.sugars);case _:
+return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium,_that.sugars,_that.energyKcal,_that.proteins,_that.fat100g,_that.fiber100g,_that.salt100g,_that.saturatedFat100g,_that.sodium100g,_that.sugars100g,_that.energyKcal100g,_that.proteins100g);case _:
   return orElse();
 
 }
@@ -788,10 +808,10 @@ return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "fat")  double? fat, @JsonKey(name: "fiber")  double? fiber, @JsonKey(name: "salt")  double? salt, @JsonKey(name: "saturated-fat")  double? saturatedFat, @JsonKey(name: "sodium")  double? sodium, @JsonKey(name: "sugars")  double? sugars)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "fat")  double? fat, @JsonKey(name: "fiber")  double? fiber, @JsonKey(name: "salt")  double? salt, @JsonKey(name: "saturated-fat")  double? saturatedFat, @JsonKey(name: "sodium")  double? sodium, @JsonKey(name: "sugars")  double? sugars, @JsonKey(name: "energy-kcal")  double? energyKcal, @JsonKey(name: "proteins")  double? proteins, @JsonKey(name: "fat_100g")  double? fat100g, @JsonKey(name: "fiber_100g")  double? fiber100g, @JsonKey(name: "salt_100g")  double? salt100g, @JsonKey(name: "saturated-fat_100g")  double? saturatedFat100g, @JsonKey(name: "sodium_100g")  double? sodium100g, @JsonKey(name: "sugars_100g")  double? sugars100g, @JsonKey(name: "energy-kcal_100g")  double? energyKcal100g, @JsonKey(name: "proteins_100g")  double? proteins100g)  $default,) {final _that = this;
 switch (_that) {
 case _Nutriments():
-return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium,_that.sugars);case _:
+return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium,_that.sugars,_that.energyKcal,_that.proteins,_that.fat100g,_that.fiber100g,_that.salt100g,_that.saturatedFat100g,_that.sodium100g,_that.sugars100g,_that.energyKcal100g,_that.proteins100g);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -808,10 +828,10 @@ return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "fat")  double? fat, @JsonKey(name: "fiber")  double? fiber, @JsonKey(name: "salt")  double? salt, @JsonKey(name: "saturated-fat")  double? saturatedFat, @JsonKey(name: "sodium")  double? sodium, @JsonKey(name: "sugars")  double? sugars)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "fat")  double? fat, @JsonKey(name: "fiber")  double? fiber, @JsonKey(name: "salt")  double? salt, @JsonKey(name: "saturated-fat")  double? saturatedFat, @JsonKey(name: "sodium")  double? sodium, @JsonKey(name: "sugars")  double? sugars, @JsonKey(name: "energy-kcal")  double? energyKcal, @JsonKey(name: "proteins")  double? proteins, @JsonKey(name: "fat_100g")  double? fat100g, @JsonKey(name: "fiber_100g")  double? fiber100g, @JsonKey(name: "salt_100g")  double? salt100g, @JsonKey(name: "saturated-fat_100g")  double? saturatedFat100g, @JsonKey(name: "sodium_100g")  double? sodium100g, @JsonKey(name: "sugars_100g")  double? sugars100g, @JsonKey(name: "energy-kcal_100g")  double? energyKcal100g, @JsonKey(name: "proteins_100g")  double? proteins100g)?  $default,) {final _that = this;
 switch (_that) {
 case _Nutriments() when $default != null:
-return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium,_that.sugars);case _:
+return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium,_that.sugars,_that.energyKcal,_that.proteins,_that.fat100g,_that.fiber100g,_that.salt100g,_that.saturatedFat100g,_that.sodium100g,_that.sugars100g,_that.energyKcal100g,_that.proteins100g);case _:
   return null;
 
 }
@@ -823,7 +843,7 @@ return $default(_that.fat,_that.fiber,_that.salt,_that.saturatedFat,_that.sodium
 @JsonSerializable()
 
 class _Nutriments implements Nutriments {
-  const _Nutriments({@JsonKey(name: "fat") this.fat, @JsonKey(name: "fiber") this.fiber, @JsonKey(name: "salt") this.salt, @JsonKey(name: "saturated-fat") this.saturatedFat, @JsonKey(name: "sodium") this.sodium, @JsonKey(name: "sugars") this.sugars});
+  const _Nutriments({@JsonKey(name: "fat") this.fat, @JsonKey(name: "fiber") this.fiber, @JsonKey(name: "salt") this.salt, @JsonKey(name: "saturated-fat") this.saturatedFat, @JsonKey(name: "sodium") this.sodium, @JsonKey(name: "sugars") this.sugars, @JsonKey(name: "energy-kcal") this.energyKcal, @JsonKey(name: "proteins") this.proteins, @JsonKey(name: "fat_100g") this.fat100g, @JsonKey(name: "fiber_100g") this.fiber100g, @JsonKey(name: "salt_100g") this.salt100g, @JsonKey(name: "saturated-fat_100g") this.saturatedFat100g, @JsonKey(name: "sodium_100g") this.sodium100g, @JsonKey(name: "sugars_100g") this.sugars100g, @JsonKey(name: "energy-kcal_100g") this.energyKcal100g, @JsonKey(name: "proteins_100g") this.proteins100g});
   factory _Nutriments.fromJson(Map<String, dynamic> json) => _$NutrimentsFromJson(json);
 
 @override@JsonKey(name: "fat") final  double? fat;
@@ -832,6 +852,18 @@ class _Nutriments implements Nutriments {
 @override@JsonKey(name: "saturated-fat") final  double? saturatedFat;
 @override@JsonKey(name: "sodium") final  double? sodium;
 @override@JsonKey(name: "sugars") final  double? sugars;
+// Added fields for fallback calculation
+@override@JsonKey(name: "energy-kcal") final  double? energyKcal;
+@override@JsonKey(name: "proteins") final  double? proteins;
+// Per 100g values (more reliable)
+@override@JsonKey(name: "fat_100g") final  double? fat100g;
+@override@JsonKey(name: "fiber_100g") final  double? fiber100g;
+@override@JsonKey(name: "salt_100g") final  double? salt100g;
+@override@JsonKey(name: "saturated-fat_100g") final  double? saturatedFat100g;
+@override@JsonKey(name: "sodium_100g") final  double? sodium100g;
+@override@JsonKey(name: "sugars_100g") final  double? sugars100g;
+@override@JsonKey(name: "energy-kcal_100g") final  double? energyKcal100g;
+@override@JsonKey(name: "proteins_100g") final  double? proteins100g;
 
 /// Create a copy of Nutriments
 /// with the given fields replaced by the non-null parameter values.
@@ -846,16 +878,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Nutriments&&(identical(other.fat, fat) || other.fat == fat)&&(identical(other.fiber, fiber) || other.fiber == fiber)&&(identical(other.salt, salt) || other.salt == salt)&&(identical(other.saturatedFat, saturatedFat) || other.saturatedFat == saturatedFat)&&(identical(other.sodium, sodium) || other.sodium == sodium)&&(identical(other.sugars, sugars) || other.sugars == sugars));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Nutriments&&(identical(other.fat, fat) || other.fat == fat)&&(identical(other.fiber, fiber) || other.fiber == fiber)&&(identical(other.salt, salt) || other.salt == salt)&&(identical(other.saturatedFat, saturatedFat) || other.saturatedFat == saturatedFat)&&(identical(other.sodium, sodium) || other.sodium == sodium)&&(identical(other.sugars, sugars) || other.sugars == sugars)&&(identical(other.energyKcal, energyKcal) || other.energyKcal == energyKcal)&&(identical(other.proteins, proteins) || other.proteins == proteins)&&(identical(other.fat100g, fat100g) || other.fat100g == fat100g)&&(identical(other.fiber100g, fiber100g) || other.fiber100g == fiber100g)&&(identical(other.salt100g, salt100g) || other.salt100g == salt100g)&&(identical(other.saturatedFat100g, saturatedFat100g) || other.saturatedFat100g == saturatedFat100g)&&(identical(other.sodium100g, sodium100g) || other.sodium100g == sodium100g)&&(identical(other.sugars100g, sugars100g) || other.sugars100g == sugars100g)&&(identical(other.energyKcal100g, energyKcal100g) || other.energyKcal100g == energyKcal100g)&&(identical(other.proteins100g, proteins100g) || other.proteins100g == proteins100g));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fat,fiber,salt,saturatedFat,sodium,sugars);
+int get hashCode => Object.hash(runtimeType,fat,fiber,salt,saturatedFat,sodium,sugars,energyKcal,proteins,fat100g,fiber100g,salt100g,saturatedFat100g,sodium100g,sugars100g,energyKcal100g,proteins100g);
 
 @override
 String toString() {
-  return 'Nutriments(fat: $fat, fiber: $fiber, salt: $salt, saturatedFat: $saturatedFat, sodium: $sodium, sugars: $sugars)';
+  return 'Nutriments(fat: $fat, fiber: $fiber, salt: $salt, saturatedFat: $saturatedFat, sodium: $sodium, sugars: $sugars, energyKcal: $energyKcal, proteins: $proteins, fat100g: $fat100g, fiber100g: $fiber100g, salt100g: $salt100g, saturatedFat100g: $saturatedFat100g, sodium100g: $sodium100g, sugars100g: $sugars100g, energyKcal100g: $energyKcal100g, proteins100g: $proteins100g)';
 }
 
 
@@ -866,7 +898,7 @@ abstract mixin class _$NutrimentsCopyWith<$Res> implements $NutrimentsCopyWith<$
   factory _$NutrimentsCopyWith(_Nutriments value, $Res Function(_Nutriments) _then) = __$NutrimentsCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "fat") double? fat,@JsonKey(name: "fiber") double? fiber,@JsonKey(name: "salt") double? salt,@JsonKey(name: "saturated-fat") double? saturatedFat,@JsonKey(name: "sodium") double? sodium,@JsonKey(name: "sugars") double? sugars
+@JsonKey(name: "fat") double? fat,@JsonKey(name: "fiber") double? fiber,@JsonKey(name: "salt") double? salt,@JsonKey(name: "saturated-fat") double? saturatedFat,@JsonKey(name: "sodium") double? sodium,@JsonKey(name: "sugars") double? sugars,@JsonKey(name: "energy-kcal") double? energyKcal,@JsonKey(name: "proteins") double? proteins,@JsonKey(name: "fat_100g") double? fat100g,@JsonKey(name: "fiber_100g") double? fiber100g,@JsonKey(name: "salt_100g") double? salt100g,@JsonKey(name: "saturated-fat_100g") double? saturatedFat100g,@JsonKey(name: "sodium_100g") double? sodium100g,@JsonKey(name: "sugars_100g") double? sugars100g,@JsonKey(name: "energy-kcal_100g") double? energyKcal100g,@JsonKey(name: "proteins_100g") double? proteins100g
 });
 
 
@@ -883,7 +915,7 @@ class __$NutrimentsCopyWithImpl<$Res>
 
 /// Create a copy of Nutriments
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fat = freezed,Object? fiber = freezed,Object? salt = freezed,Object? saturatedFat = freezed,Object? sodium = freezed,Object? sugars = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fat = freezed,Object? fiber = freezed,Object? salt = freezed,Object? saturatedFat = freezed,Object? sodium = freezed,Object? sugars = freezed,Object? energyKcal = freezed,Object? proteins = freezed,Object? fat100g = freezed,Object? fiber100g = freezed,Object? salt100g = freezed,Object? saturatedFat100g = freezed,Object? sodium100g = freezed,Object? sugars100g = freezed,Object? energyKcal100g = freezed,Object? proteins100g = freezed,}) {
   return _then(_Nutriments(
 fat: freezed == fat ? _self.fat : fat // ignore: cast_nullable_to_non_nullable
 as double?,fiber: freezed == fiber ? _self.fiber : fiber // ignore: cast_nullable_to_non_nullable
@@ -891,6 +923,16 @@ as double?,salt: freezed == salt ? _self.salt : salt // ignore: cast_nullable_to
 as double?,saturatedFat: freezed == saturatedFat ? _self.saturatedFat : saturatedFat // ignore: cast_nullable_to_non_nullable
 as double?,sodium: freezed == sodium ? _self.sodium : sodium // ignore: cast_nullable_to_non_nullable
 as double?,sugars: freezed == sugars ? _self.sugars : sugars // ignore: cast_nullable_to_non_nullable
+as double?,energyKcal: freezed == energyKcal ? _self.energyKcal : energyKcal // ignore: cast_nullable_to_non_nullable
+as double?,proteins: freezed == proteins ? _self.proteins : proteins // ignore: cast_nullable_to_non_nullable
+as double?,fat100g: freezed == fat100g ? _self.fat100g : fat100g // ignore: cast_nullable_to_non_nullable
+as double?,fiber100g: freezed == fiber100g ? _self.fiber100g : fiber100g // ignore: cast_nullable_to_non_nullable
+as double?,salt100g: freezed == salt100g ? _self.salt100g : salt100g // ignore: cast_nullable_to_non_nullable
+as double?,saturatedFat100g: freezed == saturatedFat100g ? _self.saturatedFat100g : saturatedFat100g // ignore: cast_nullable_to_non_nullable
+as double?,sodium100g: freezed == sodium100g ? _self.sodium100g : sodium100g // ignore: cast_nullable_to_non_nullable
+as double?,sugars100g: freezed == sugars100g ? _self.sugars100g : sugars100g // ignore: cast_nullable_to_non_nullable
+as double?,energyKcal100g: freezed == energyKcal100g ? _self.energyKcal100g : energyKcal100g // ignore: cast_nullable_to_non_nullable
+as double?,proteins100g: freezed == proteins100g ? _self.proteins100g : proteins100g // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }

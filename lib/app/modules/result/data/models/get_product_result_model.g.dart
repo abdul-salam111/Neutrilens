@@ -38,6 +38,8 @@ _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
   nutriscoreGrade: json['nutriscore_grade'] as String?,
   nutriscoreScore: (json['nutriscore_score'] as num?)?.toInt(),
   productName: json['product_name'] as String?,
+  novaGroup: (json['nova_group'] as num?)?.toInt(),
+  additivesN: (json['additives_n'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
@@ -48,6 +50,8 @@ Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
   'nutriscore_grade': instance.nutriscoreGrade,
   'nutriscore_score': instance.nutriscoreScore,
   'product_name': instance.productName,
+  'nova_group': instance.novaGroup,
+  'additives_n': instance.additivesN,
 };
 
 _Nutriments _$NutrimentsFromJson(Map<String, dynamic> json) => _Nutriments(
@@ -57,6 +61,16 @@ _Nutriments _$NutrimentsFromJson(Map<String, dynamic> json) => _Nutriments(
   saturatedFat: (json['saturated-fat'] as num?)?.toDouble(),
   sodium: (json['sodium'] as num?)?.toDouble(),
   sugars: (json['sugars'] as num?)?.toDouble(),
+  energyKcal: (json['energy-kcal'] as num?)?.toDouble(),
+  proteins: (json['proteins'] as num?)?.toDouble(),
+  fat100g: (json['fat_100g'] as num?)?.toDouble(),
+  fiber100g: (json['fiber_100g'] as num?)?.toDouble(),
+  salt100g: (json['salt_100g'] as num?)?.toDouble(),
+  saturatedFat100g: (json['saturated-fat_100g'] as num?)?.toDouble(),
+  sodium100g: (json['sodium_100g'] as num?)?.toDouble(),
+  sugars100g: (json['sugars_100g'] as num?)?.toDouble(),
+  energyKcal100g: (json['energy-kcal_100g'] as num?)?.toDouble(),
+  proteins100g: (json['proteins_100g'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$NutrimentsToJson(_Nutriments instance) =>
@@ -67,4 +81,14 @@ Map<String, dynamic> _$NutrimentsToJson(_Nutriments instance) =>
       'saturated-fat': instance.saturatedFat,
       'sodium': instance.sodium,
       'sugars': instance.sugars,
+      'energy-kcal': instance.energyKcal,
+      'proteins': instance.proteins,
+      'fat_100g': instance.fat100g,
+      'fiber_100g': instance.fiber100g,
+      'salt_100g': instance.salt100g,
+      'saturated-fat_100g': instance.saturatedFat100g,
+      'sodium_100g': instance.sodium100g,
+      'sugars_100g': instance.sugars100g,
+      'energy-kcal_100g': instance.energyKcal100g,
+      'proteins_100g': instance.proteins100g,
     };

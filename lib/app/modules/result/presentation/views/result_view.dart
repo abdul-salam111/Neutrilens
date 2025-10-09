@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
@@ -8,6 +7,7 @@ import '../controllers/result_controller.dart';
 
 class ResultView extends GetView<ResultController> {
   const ResultView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -55,10 +55,8 @@ class ResultView extends GetView<ResultController> {
                                         ?.imageFrontSmallUrl
                                         .toString() ??
                                     "",
-
                                 height: context.screenHeight * 0.2,
                                 width: context.screenWidth * 0.2,
-                       
                               ),
                               Positioned(
                                 bottom: 0,
@@ -67,9 +65,10 @@ class ResultView extends GetView<ResultController> {
                                       controller.backgroundColor.value,
                                   radius: 20,
                                   child: Icon(
-                                    controller.grade.value == "a"
+                                    (controller.grade.value == "a" &&
+                                            controller.grade.value == "b")
                                         ? Icons.check
-                                        : controller.grade.value == "b"
+                                        : controller.grade.value == "c"
                                         ? Icons.remove
                                         : Icons.close,
                                   ),
@@ -80,7 +79,7 @@ class ResultView extends GetView<ResultController> {
                         ),
                         heightBox(10),
                         Text(
-                          " ${controller.grade.value == "a"
+                          "${controller.grade.value == "a"
                               ? "Good"
                               : controller.grade.value == "c" || controller.grade.value == "b"
                               ? "Ok"
@@ -91,6 +90,8 @@ class ResultView extends GetView<ResultController> {
                           ),
                         ),
                         heightBox(10),
+
+                        // NutriLens Score Card
                         Container(
                           padding: padding16,
                           width: double.infinity,
@@ -117,7 +118,7 @@ class ResultView extends GetView<ResultController> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Text(
-                                      controller.grade.value.toUpperCase(),
+                                      "${controller.nutriLensScore.value.round()}",
                                       style: context.titleLarge!.copyWith(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -126,15 +127,111 @@ class ResultView extends GetView<ResultController> {
                                   ),
                                 ],
                               ),
+                              heightBox(5),
+                              Text(
+                                "Grade: ${controller.grade.value.toUpperCase()}",
+                                style: context.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                               Text(
                                 controller.grade.value == "a"
-                                    ? "Very good nutritional quality"
+                                    ? "Excellent nutritional quality"
                                     : controller.grade.value == "b"
-                                    ? "Normal nutritional quality"
+                                    ? "Good nutritional quality"
+                                    : controller.grade.value == "c"
+                                    ? "Average nutritional quality"
+                                    : controller.grade.value == "d"
+                                    ? "Poor nutritional quality"
                                     : "Very poor nutritional quality",
                                 style: context.bodySmall!.copyWith(),
                               ),
-                              heightBox(20),
+                              heightBox(10),
+                              Text(
+                                "Method: ${controller.scoringMethod.value}",
+                                style: context.bodySmall!.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        heightBox(10),
+
+                        // Score Breakdown
+                        Container(
+                          padding: padding16,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: crossAxisStart,
+                            children: [
+                              Text(
+                                "Score Breakdown",
+                                style: context.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              heightBox(10),
+                              _buildScoreRow(
+                                context,
+                                "Food Quality",
+                                controller.foodScore.value,
+                                "70% weight",
+                              ),
+                              heightBox(8),
+                              _buildScoreRow(
+                                context,
+                                "Processing Level",
+                                controller.processedScore.value,
+                                "30% weight",
+                              ),
+                              if (controller.scoreExplanation.isNotEmpty) ...[
+                                heightBox(15),
+                                Text(
+                                  "Calculation Details:",
+                                  style: context.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                heightBox(5),
+                                ...controller.scoreExplanation.map(
+                                  (exp) => Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 8,
+                                      top: 2,
+                                    ),
+                                    child: Text(
+                                      "• $exp",
+                                      style: context.bodySmall!.copyWith(
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+
+                        heightBox(10),
+
+                        // Original nutrition details section
+                        Container(
+                          padding: padding16,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: crossAxisStart,
+                            children: [
                               Row(
                                 mainAxisAlignment: mainAxisSpaceBetween,
                                 children: [
@@ -197,8 +294,7 @@ class ResultView extends GetView<ResultController> {
                                                   widthBox(6),
                                                   Expanded(
                                                     child: Text(
-                                                      "${controller.nutritionDetails[index]['tag'].toString().substring(3)} : ${controller.nutritionDetails[index]['value'].toString()}%",
-
+                                                      "${controller.nutritionDetails[index]['display_name']} : ${controller.nutritionDetails[index]['value']}${controller.nutritionDetails[index]['unit']}",
                                                       style: context.bodyMedium!
                                                           .copyWith(
                                                             height: 1.5,
@@ -251,7 +347,7 @@ class ResultView extends GetView<ResultController> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              " ${controller.nutritionDetails[index]['level'].toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
+                                              "${controller.nutritionDetails[index]['level'].toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
                                             ),
                                           ),
                                         );
@@ -260,39 +356,6 @@ class ResultView extends GetView<ResultController> {
                                   ),
                                 ),
                               ),
-                              // heightBox(20),
-                              // Text(
-                              //   "Similar Good Food Choice: ",
-                              //   style: context.bodyLarge!.copyWith(
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              // ),
-                              // heightBox(10),
-                              // SizedBox(
-                              //   height: 100,
-                              //   child: ListView.builder(
-                              //     scrollDirection: Axis.horizontal,
-                              //     itemCount: 10,
-                              //     itemBuilder: (context, index) {
-                              //       return Container(
-                              //         margin: EdgeInsets.only(right: 10),
-                              //         decoration: BoxDecoration(
-                              //           border: Border.all(
-                              //             color: AppColors.borderColor,
-                              //           ),
-                              //           borderRadius: BorderRadius.circular(10),
-                              //         ),
-                              //         padding: defaultPadding,
-                              //         child: CachedNetworkImage(
-                              //           imageUrl:
-                              //               "https://springs.com.pk/cdn/shop/files/8964002346905_c68203c5-67dc-4378-8593-edebcb6c792c.png?v=1747846571",
-                              //           height: context.screenHeight * 0.2,
-                              //           width: context.screenWidth * 0.2,
-                              //         ),
-                              //       );
-                              //     },
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
@@ -304,6 +367,73 @@ class ResultView extends GetView<ResultController> {
               )
             : Center(child: Text(controller.errorMessage.value.toString())),
       ),
+    );
+  }
+
+  Widget _buildScoreRow(
+    BuildContext context,
+    String label,
+    double score,
+    String weight,
+  ) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: context.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                weight,
+                style: context.bodySmall!.copyWith(
+                  color: Colors.grey[600],
+                  fontSize: 11,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: score / 100,
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        score >= 80
+                            ? Colors.green
+                            : score >= 65
+                            ? Colors.lightGreen
+                            : score >= 50
+                            ? Colors.orange
+                            : Colors.red,
+                      ),
+                      minHeight: 8,
+                    ),
+                  ),
+                  widthBox(10),
+                  Text(
+                    "${score.round()}",
+                    style: context.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
