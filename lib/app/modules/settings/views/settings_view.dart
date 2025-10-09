@@ -69,7 +69,10 @@ class SettingsView extends GetView<SettingsController> {
                     label: Text(item, style: context.bodyMedium),
                     selected: isSelected,
                     selectedColor: Colors.orange,
-                    onSelected: (_) {},
+                    onSelected: (_) {
+                  
+                      
+                    },
                   );
                 }).toList(),
               ),
