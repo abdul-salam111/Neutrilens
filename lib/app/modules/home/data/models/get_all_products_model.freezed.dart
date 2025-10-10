@@ -301,7 +301,7 @@ as int?,
 /// @nodoc
 mixin _$Product {
 
-@JsonKey(name: "brands") String? get brands;@JsonKey(name: "image_front_small_url") String? get imageFrontSmallUrl;@JsonKey(name: "nutriscore_grade") String? get nutriscoreGrade;@JsonKey(name: "nutriscore_score") dynamic get nutriscoreScore;@JsonKey(name: "product_name") String? get productName;@JsonKey(name: "quantity") String? get quantity;
+@JsonKey(name: "code") String? get code;@JsonKey(name: "brands") String? get brands;@JsonKey(name: "image_front_small_url") String? get imageFrontSmallUrl;@JsonKey(name: "nutriscore_grade") String? get nutriscoreGrade;@JsonKey(name: "nutriscore_score") dynamic get nutriscoreScore;@JsonKey(name: "product_name") String? get productName;@JsonKey(name: "quantity") String? get quantity;@JsonKey(name: "categories") String? get categories;
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -314,16 +314,16 @@ $ProductCopyWith<Product> get copyWith => _$ProductCopyWithImpl<Product>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&const DeepCollectionEquality().equals(other.nutriscoreScore, nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.code, code) || other.code == code)&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&const DeepCollectionEquality().equals(other.nutriscoreScore, nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.categories, categories) || other.categories == categories));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,brands,imageFrontSmallUrl,nutriscoreGrade,const DeepCollectionEquality().hash(nutriscoreScore),productName,quantity);
+int get hashCode => Object.hash(runtimeType,code,brands,imageFrontSmallUrl,nutriscoreGrade,const DeepCollectionEquality().hash(nutriscoreScore),productName,quantity,categories);
 
 @override
 String toString() {
-  return 'Product(brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName, quantity: $quantity)';
+  return 'Product(code: $code, brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName, quantity: $quantity, categories: $categories)';
 }
 
 
@@ -334,7 +334,7 @@ abstract mixin class $ProductCopyWith<$Res>  {
   factory $ProductCopyWith(Product value, $Res Function(Product) _then) = _$ProductCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") dynamic nutriscoreScore,@JsonKey(name: "product_name") String? productName,@JsonKey(name: "quantity") String? quantity
+@JsonKey(name: "code") String? code,@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") dynamic nutriscoreScore,@JsonKey(name: "product_name") String? productName,@JsonKey(name: "quantity") String? quantity,@JsonKey(name: "categories") String? categories
 });
 
 
@@ -351,14 +351,16 @@ class _$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,Object? quantity = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,Object? quantity = freezed,Object? categories = freezed,}) {
   return _then(_self.copyWith(
-brands: freezed == brands ? _self.brands : brands // ignore: cast_nullable_to_non_nullable
+code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,brands: freezed == brands ? _self.brands : brands // ignore: cast_nullable_to_non_nullable
 as String?,imageFrontSmallUrl: freezed == imageFrontSmallUrl ? _self.imageFrontSmallUrl : imageFrontSmallUrl // ignore: cast_nullable_to_non_nullable
 as String?,nutriscoreGrade: freezed == nutriscoreGrade ? _self.nutriscoreGrade : nutriscoreGrade // ignore: cast_nullable_to_non_nullable
 as String?,nutriscoreScore: freezed == nutriscoreScore ? _self.nutriscoreScore : nutriscoreScore // ignore: cast_nullable_to_non_nullable
 as dynamic,productName: freezed == productName ? _self.productName : productName // ignore: cast_nullable_to_non_nullable
 as String?,quantity: freezed == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as String?,categories: freezed == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -444,10 +446,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  dynamic nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "quantity")  String? quantity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "code")  String? code, @JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  dynamic nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "quantity")  String? quantity, @JsonKey(name: "categories")  String? categories)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Product() when $default != null:
-return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.quantity);case _:
+return $default(_that.code,_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.quantity,_that.categories);case _:
   return orElse();
 
 }
@@ -465,10 +467,10 @@ return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  dynamic nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "quantity")  String? quantity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "code")  String? code, @JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  dynamic nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "quantity")  String? quantity, @JsonKey(name: "categories")  String? categories)  $default,) {final _that = this;
 switch (_that) {
 case _Product():
-return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.quantity);case _:
+return $default(_that.code,_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.quantity,_that.categories);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -485,10 +487,10 @@ return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  dynamic nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "quantity")  String? quantity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "code")  String? code, @JsonKey(name: "brands")  String? brands, @JsonKey(name: "image_front_small_url")  String? imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade")  String? nutriscoreGrade, @JsonKey(name: "nutriscore_score")  dynamic nutriscoreScore, @JsonKey(name: "product_name")  String? productName, @JsonKey(name: "quantity")  String? quantity, @JsonKey(name: "categories")  String? categories)?  $default,) {final _that = this;
 switch (_that) {
 case _Product() when $default != null:
-return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.quantity);case _:
+return $default(_that.code,_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_that.nutriscoreScore,_that.productName,_that.quantity,_that.categories);case _:
   return null;
 
 }
@@ -500,15 +502,17 @@ return $default(_that.brands,_that.imageFrontSmallUrl,_that.nutriscoreGrade,_tha
 @JsonSerializable()
 
 class _Product implements Product {
-  const _Product({@JsonKey(name: "brands") this.brands, @JsonKey(name: "image_front_small_url") this.imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade") this.nutriscoreGrade, @JsonKey(name: "nutriscore_score") this.nutriscoreScore, @JsonKey(name: "product_name") this.productName, @JsonKey(name: "quantity") this.quantity});
+  const _Product({@JsonKey(name: "code") this.code, @JsonKey(name: "brands") this.brands, @JsonKey(name: "image_front_small_url") this.imageFrontSmallUrl, @JsonKey(name: "nutriscore_grade") this.nutriscoreGrade, @JsonKey(name: "nutriscore_score") this.nutriscoreScore, @JsonKey(name: "product_name") this.productName, @JsonKey(name: "quantity") this.quantity, @JsonKey(name: "categories") this.categories});
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 
+@override@JsonKey(name: "code") final  String? code;
 @override@JsonKey(name: "brands") final  String? brands;
 @override@JsonKey(name: "image_front_small_url") final  String? imageFrontSmallUrl;
 @override@JsonKey(name: "nutriscore_grade") final  String? nutriscoreGrade;
 @override@JsonKey(name: "nutriscore_score") final  dynamic nutriscoreScore;
 @override@JsonKey(name: "product_name") final  String? productName;
 @override@JsonKey(name: "quantity") final  String? quantity;
+@override@JsonKey(name: "categories") final  String? categories;
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
@@ -523,16 +527,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&const DeepCollectionEquality().equals(other.nutriscoreScore, nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.code, code) || other.code == code)&&(identical(other.brands, brands) || other.brands == brands)&&(identical(other.imageFrontSmallUrl, imageFrontSmallUrl) || other.imageFrontSmallUrl == imageFrontSmallUrl)&&(identical(other.nutriscoreGrade, nutriscoreGrade) || other.nutriscoreGrade == nutriscoreGrade)&&const DeepCollectionEquality().equals(other.nutriscoreScore, nutriscoreScore)&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.categories, categories) || other.categories == categories));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,brands,imageFrontSmallUrl,nutriscoreGrade,const DeepCollectionEquality().hash(nutriscoreScore),productName,quantity);
+int get hashCode => Object.hash(runtimeType,code,brands,imageFrontSmallUrl,nutriscoreGrade,const DeepCollectionEquality().hash(nutriscoreScore),productName,quantity,categories);
 
 @override
 String toString() {
-  return 'Product(brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName, quantity: $quantity)';
+  return 'Product(code: $code, brands: $brands, imageFrontSmallUrl: $imageFrontSmallUrl, nutriscoreGrade: $nutriscoreGrade, nutriscoreScore: $nutriscoreScore, productName: $productName, quantity: $quantity, categories: $categories)';
 }
 
 
@@ -543,7 +547,7 @@ abstract mixin class _$ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   factory _$ProductCopyWith(_Product value, $Res Function(_Product) _then) = __$ProductCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") dynamic nutriscoreScore,@JsonKey(name: "product_name") String? productName,@JsonKey(name: "quantity") String? quantity
+@JsonKey(name: "code") String? code,@JsonKey(name: "brands") String? brands,@JsonKey(name: "image_front_small_url") String? imageFrontSmallUrl,@JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,@JsonKey(name: "nutriscore_score") dynamic nutriscoreScore,@JsonKey(name: "product_name") String? productName,@JsonKey(name: "quantity") String? quantity,@JsonKey(name: "categories") String? categories
 });
 
 
@@ -560,14 +564,16 @@ class __$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,Object? quantity = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? brands = freezed,Object? imageFrontSmallUrl = freezed,Object? nutriscoreGrade = freezed,Object? nutriscoreScore = freezed,Object? productName = freezed,Object? quantity = freezed,Object? categories = freezed,}) {
   return _then(_Product(
-brands: freezed == brands ? _self.brands : brands // ignore: cast_nullable_to_non_nullable
+code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,brands: freezed == brands ? _self.brands : brands // ignore: cast_nullable_to_non_nullable
 as String?,imageFrontSmallUrl: freezed == imageFrontSmallUrl ? _self.imageFrontSmallUrl : imageFrontSmallUrl // ignore: cast_nullable_to_non_nullable
 as String?,nutriscoreGrade: freezed == nutriscoreGrade ? _self.nutriscoreGrade : nutriscoreGrade // ignore: cast_nullable_to_non_nullable
 as String?,nutriscoreScore: freezed == nutriscoreScore ? _self.nutriscoreScore : nutriscoreScore // ignore: cast_nullable_to_non_nullable
 as dynamic,productName: freezed == productName ? _self.productName : productName // ignore: cast_nullable_to_non_nullable
 as String?,quantity: freezed == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as String?,categories: freezed == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

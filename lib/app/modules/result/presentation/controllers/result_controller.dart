@@ -20,20 +20,20 @@ class NutriLensScores {
   });
 
   Map<String, dynamic> toJson() => {
-        "foodScore": {
-          "value": foodScore.round(),
-          "basis": debug["basisFood"],
-          "grade": debug["grade"],
-          "method": method,
-          "explain": debug["explainFood"]
-        },
-        "processedScore": {
-          "value": processedScore.round(),
-          "basis": debug["basisProcessed"],
-          "novaGroup": debug["novaGroup"]
-        },
-        "nutriLensScore": nutriLensScore.round()
-      };
+    "foodScore": {
+      "value": foodScore.round(),
+      "basis": debug["basisFood"],
+      "grade": debug["grade"],
+      "method": method,
+      "explain": debug["explainFood"],
+    },
+    "processedScore": {
+      "value": processedScore.round(),
+      "basis": debug["basisProcessed"],
+      "novaGroup": debug["novaGroup"],
+    },
+    "nutriLensScore": nutriLensScore.round(),
+  };
 }
 
 class ResultController extends GetxController {
@@ -46,7 +46,7 @@ class ResultController extends GetxController {
   final Rx<Color> backgroundColor = Colors.white.obs;
   final Rx<String> grade = "".obs;
   final List<Map<String, dynamic>> nutritionDetails = [];
-  
+
   // New score-related observables
   final Rx<double> foodScore = 0.0.obs;
   final Rx<double> processedScore = 0.0.obs;
@@ -72,7 +72,7 @@ class ResultController extends GetxController {
 
   double fallbackFoodScore(Nutriments? nutriments) {
     if (nutriments == null) return 50.0;
-    
+
     double score = 100;
     final explain = <String>[];
 
@@ -119,7 +119,7 @@ class ResultController extends GetxController {
 
     score = clampValue(score, 0, 100);
     explain.insert(0, "Fallback computed");
-    
+
     return score;
   }
 
@@ -164,14 +164,14 @@ class ResultController extends GetxController {
     if (food == null) {
       food = fallbackFoodScore(product.nutriments);
       // Get explanation for fallback
-      double score = 100;
       final nutriments = product.nutriments;
-      
+
       if (nutriments != null) {
         double sugars = nutriments.sugars100g ?? nutriments.sugars ?? 0;
         if (sugars > 0) explain.add("Sugar -${(1.5 * sugars).round()}");
 
-        double satFat = nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0;
+        double satFat =
+            nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0;
         if (satFat > 0) explain.add("SatFat -${(2 * satFat).round()}");
 
         double? sodium = nutriments.sodium100g ?? nutriments.sodium;
@@ -196,7 +196,7 @@ class ResultController extends GetxController {
         double proteinBonus = min(protein * 2.0, 10);
         if (proteinBonus > 0) explain.add("Protein +${proteinBonus.round()}");
       }
-      
+
       explain.insert(0, "Fallback computed");
       method = "fallback";
     }
@@ -204,7 +204,7 @@ class ResultController extends GetxController {
     // --- Processed score ---
     int? nova = product.novaGroup;
     double? processed = mapNovaTo100(nova);
-    
+
     if (processed == null) {
       // Fallback based on additives
       int additives = product.additivesN ?? 0;
@@ -233,7 +233,7 @@ class ResultController extends GetxController {
     if (score >= 80) return Colors.green;
     if (score >= 65) return Colors.lightGreen;
     if (score >= 50) return Colors.orangeAccent;
-    if (score >= 35) return Colors.orange;
+    if (score >= 35) return Colors.red;
     return Colors.red;
   }
 
@@ -261,35 +261,22 @@ class ResultController extends GetxController {
       (model) {
         isLoading.value = false;
         getProductResultModel.value = model;
-        
+
         // Compute NutriLens scores using client's algorithm
         final scores = computeNutriLensScores(model.product);
-        
+
         // Update observables with computed scores
         foodScore.value = scores.foodScore;
         processedScore.value = scores.processedScore;
         nutriLensScore.value = scores.nutriLensScore;
         scoringMethod.value = scores.method;
-        scoreExplanation.value = List<String>.from(scores.debug["explainFood"] ?? []);
-        
+        scoreExplanation.value = List<String>.from(
+          scores.debug["explainFood"] ?? [],
+        );
+
         // Set grade based on NutriLens score (not just nutriscore_grade)
         grade.value = getScoreGrade(scores.nutriLensScore);
         backgroundColor.value = getScoreColor(scores.nutriLensScore);
-
-        // Print debug info
-        print("=== NutriLens Score Calculation ===");
-        print("Product: ${model.product?.productName}");
-        print("Nutriscore Grade: ${model.product?.nutriscoreGrade}");
-        print("Nutriscore Score: ${model.product?.nutriscoreScore}");
-        print("Nova Group: ${model.product?.novaGroup}");
-        print("Additives: ${model.product?.additivesN}");
-        print("Food Score: ${scores.foodScore.round()}");
-        print("Processed Score: ${scores.processedScore.round()}");
-        print("NutriLens Score: ${scores.nutriLensScore.round()}");
-        print("Method: ${scores.method}");
-        print("Grade: ${grade.value.toUpperCase()}");
-        print("Explanation: ${scores.debug["explainFood"]}");
-        print("===================================");
 
         // Build nutrition details
         nutritionDetails.clear();
@@ -311,11 +298,13 @@ class ResultController extends GetxController {
             nutrientUnit = 'g';
             displayName = 'Fat';
           } else if (tag.contains('saturated-fat')) {
-            nutrientValue = '${nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0}';
+            nutrientValue =
+                '${nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0}';
             nutrientUnit = 'g';
             displayName = 'Saturated Fat';
           } else if (tag.contains('sugars')) {
-            nutrientValue = '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
+            nutrientValue =
+                '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
             nutrientUnit = 'g';
             displayName = 'Sugars';
           } else if (tag.contains('salt')) {

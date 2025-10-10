@@ -30,19 +30,23 @@ Map<String, dynamic> _$GetAllProductsModelToJson(
 };
 
 _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
+  code: json['code'] as String?,
   brands: json['brands'] as String?,
   imageFrontSmallUrl: json['image_front_small_url'] as String?,
   nutriscoreGrade: json['nutriscore_grade'] as String?,
   nutriscoreScore: json['nutriscore_score'],
   productName: json['product_name'] as String?,
   quantity: json['quantity'] as String?,
+  categories: json['categories'] as String?,
 );
 
 Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
+  'code': instance.code,
   'brands': instance.brands,
   'image_front_small_url': instance.imageFrontSmallUrl,
   'nutriscore_grade': instance.nutriscoreGrade,
   'nutriscore_score': instance.nutriscoreScore,
   'product_name': instance.productName,
   'quantity': instance.quantity,
+  'categories': instance.categories,
 };

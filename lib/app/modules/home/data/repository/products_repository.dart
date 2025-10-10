@@ -12,7 +12,7 @@ class ProductsRepository {
     try {
       final response = await _dio.getApi(
         url:
-            "https://world.openfoodfacts.org/api/v2/search?page=$page&page_size=$pageSize&fields=product_name,brands,nutriment_nutrients,nutriscore_score,nutriscore_grade,image_front_small_url,quantity",
+            "https://world.openfoodfacts.org/api/v2/search?page=$page&page_size=$pageSize&fields=product_name,brands,nutriment_nutrients,nutriscore_score,nutriscore_grade,image_front_small_url,quantity,code,categories",
       );
       return right(GetAllProductsModel.fromJson(response));
     } catch (e) {

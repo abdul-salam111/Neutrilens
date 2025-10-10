@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:neutri_lens/app/core/utils/image_picker_util.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../../core/core.dart';
@@ -14,42 +13,48 @@ class SignupView extends GetView<SignupController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: GestureDetector(
-        onTap: () {
-          controller.pageController.nextPage(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeIn,
-          );
-        },
-        child: Container(
-          height: 50,
-          padding: screenPadding,
-          margin: padding14,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColors.appPrimaryColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: mainAxisSpaceBetween,
+      bottomNavigationBar: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            controller.pageController.nextPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeIn,
+            );
+          },
+          child: Container(
+            height: 50,
+            padding: screenPadding,
+            margin: padding14,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.appPrimaryColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: mainAxisSpaceBetween,
 
-            children: [
-              Obx(
-                () => Text(
-                  controller.currentIndex.value == 2
-                      ? "Create Account"
-                      : "Next",
-                  style: context.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
+              children: [
+                Obx(
+                  () => Text(
+                    controller.currentIndex.value == 2
+                        ? "Create Account"
+                        : "Next",
+                    style: context.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              CircleAvatar(
-                radius: 15,
-                backgroundColor: Colors.white.withAlpha(90),
-                child: Icon(Icons.arrow_forward, color: Colors.black, size: 15),
-              ),
-            ],
+                CircleAvatar(
+                  radius: 15,
+                  backgroundColor: Colors.white.withAlpha(90),
+                  child: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.black,
+                    size: 15,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -106,57 +111,57 @@ class SignupView extends GetView<SignupController> {
                     padding: screenPadding,
                     child: ListView(
                       children: [
-                        GestureDetector(
-                          onTap: () async {
-                            controller.profileImage.value =
-                                await ImagePickerUtil.pickImage() ??
-                                controller.profileImage.value;
-                          },
-                          child: Center(
-                            child: Container(
-                              height: 100,
-                              width: 100,
+                        // GestureDetector(
+                        //   onTap: () async {
+                        //     controller.profileImage.value =
+                        //         await ImagePickerUtil.pickImage() ??
+                        //         controller.profileImage.value;
+                        //   },
+                        //   child: Center(
+                        //     child: Container(
+                        //       height: 100,
+                        //       width: 100,
 
-                              decoration: BoxDecoration(
-                                color: AppColors.lightGreyColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Obx(
-                                () => controller.profileImage.value != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.file(
-                                          controller.profileImage.value!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                    : Padding(
-                                        padding: defaultPadding,
-                                        child: Column(
-                                          mainAxisAlignment: mainAxisCenter,
-                                          children: [
-                                            Icon(
-                                              Iconsax.user,
-                                              color: AppColors.greyColor,
-                                            ),
-                                            heightBox(8),
-                                            Text(
-                                              "Profile Picture",
-                                              style: context.displaySmall!
-                                                  .copyWith(
-                                                    fontSize: 10,
-                                                    color:
-                                                        AppColors.darkGreyColor,
-                                                  ),
-                                              textAlign: textAlignCenter,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        //       decoration: BoxDecoration(
+                        //         color: AppColors.lightGreyColor,
+                        //         borderRadius: BorderRadius.circular(10),
+                        //       ),
+                        //       child: Obx(
+                        //         () => controller.profileImage.value != null
+                        //             ? ClipRRect(
+                        //                 borderRadius: BorderRadius.circular(10),
+                        //                 child: Image.file(
+                        //                   controller.profileImage.value!,
+                        //                   fit: BoxFit.cover,
+                        //                 ),
+                        //               )
+                        //             : Padding(
+                        //                 padding: defaultPadding,
+                        //                 child: Column(
+                        //                   mainAxisAlignment: mainAxisCenter,
+                        //                   children: [
+                        //                     Icon(
+                        //                       Iconsax.user,
+                        //                       color: AppColors.greyColor,
+                        //                     ),
+                        //                     heightBox(8),
+                        //                     Text(
+                        //                       "Profile Picture",
+                        //                       style: context.displaySmall!
+                        //                           .copyWith(
+                        //                             fontSize: 10,
+                        //                             color:
+                        //                                 AppColors.darkGreyColor,
+                        //                           ),
+                        //                       textAlign: textAlignCenter,
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         heightBox(30),
                         CustomTextFormField(
                           controller: controller.nameController,
@@ -164,17 +169,20 @@ class SignupView extends GetView<SignupController> {
                           prefixIcon: Iconsax.user,
                           fillColor: AppColors.halfWhiteColor,
                         ),
-                        heightBox(20),
-                        Text(
-                          "Age",
-                          style: context.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
+                        heightBox(40),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Text(
+                            "Age",
+                            style: context.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         heightBox(8),
                         Wrap(
                           direction: Axis.horizontal,
-
+                          alignment: WrapAlignment.center,
                           spacing: 8,
                           runSpacing: 8,
                           children: List.generate(controller.agesList.length, (

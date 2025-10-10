@@ -20,8 +20,8 @@ class SigninView extends GetView<SigninController> {
             child: Center(
               child: Column(
                 children: [
-                  heightBox(context.screenHeight * 0.06),
-                  Image.asset(AppImages.blackappLogo, height: 100, width: 150),
+                  heightBox(context.screenHeight * 0.07),
+                  Image.asset(AppImages.blackappLogo, height: 100, width: 180),
                   heightBox(context.screenHeight * 0.04),
                   Text(
                     "Log In",
@@ -34,7 +34,7 @@ class SigninView extends GetView<SigninController> {
                     width: context.screenWidth * 0.8,
                     child: Text(
                       "Mauris urna velit, congue et aliquam non, imperdiet id massa.",
-                      style: context.bodySmall!.copyWith(
+                      style: context.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.darkGreyColor,
                       ),
@@ -74,7 +74,7 @@ class SigninView extends GetView<SigninController> {
                                       ListTileControlAffinity.leading,
                                   title: Text(
                                     "Remember Me",
-                                    style: context.bodySmall!.copyWith(),
+                                    style: context.bodyMedium!.copyWith(),
                                   ),
                                   value: controller.rememberMe.value,
                                   onChanged: (bool? value) {
@@ -88,7 +88,7 @@ class SigninView extends GetView<SigninController> {
                               onPressed: () {},
                               child: Text(
                                 "Forgot Password?",
-                                style: context.bodySmall!.copyWith(
+                                style: context.bodyMedium!.copyWith(
                                   color: AppColors.appPrimaryColor,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -125,7 +125,7 @@ class SigninView extends GetView<SigninController> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
                             "OR",
-                            style: context.bodySmall!.copyWith(
+                            style: context.bodyMedium!.copyWith(
                               color: AppColors.darkGreyColor,
                             ),
                           ),
@@ -150,7 +150,7 @@ class SigninView extends GetView<SigninController> {
                     children: [
                       Text(
                         "Don't have an account?",
-                        style: context.bodyMedium!.copyWith(
+                        style: context.bodyLarge!.copyWith(
                           color: AppColors.darkGreyColor,
                         ),
                       ),
@@ -160,7 +160,7 @@ class SigninView extends GetView<SigninController> {
                         },
                         child: Text(
                           "Sign Up",
-                          style: context.bodyMedium!.copyWith(
+                          style: context.bodyLarge!.copyWith(
                             color: AppColors.appPrimaryColor,
                             fontWeight: FontWeight.bold,
                           ),
@@ -176,26 +176,26 @@ class SigninView extends GetView<SigninController> {
                       children: [
                         TextSpan(
                           text: "By continuing, you agree to our ",
-                          style: context.bodySmall!.copyWith(
+                          style: context.bodyMedium!.copyWith(
                             color: AppColors.darkGreyColor,
                           ),
                         ),
                         TextSpan(
                           text: "Terms of Service",
-                          style: context.bodySmall!.copyWith(
+                          style: context.bodyMedium!.copyWith(
                             color: AppColors.greyColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
                           text: " and ",
-                          style: context.bodySmall!.copyWith(
+                          style: context.bodyMedium!.copyWith(
                             color: AppColors.darkGreyColor,
                           ),
                         ),
                         TextSpan(
                           text: "Privacy Policy",
-                          style: context.bodySmall!.copyWith(
+                          style: context.bodyMedium!.copyWith(
                             color: AppColors.greyColor,
                             fontWeight: FontWeight.bold,
                           ),

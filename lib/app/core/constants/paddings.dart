@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // General paddings
 const defaultPadding = EdgeInsets.all(8);
 const padding5 = EdgeInsets.all(5);
@@ -27,7 +26,7 @@ const symmetricVertical16 = EdgeInsets.symmetric(vertical: 16);
 const symmetricVertical20 = EdgeInsets.symmetric(vertical: 20);
 
 // Specific paddings
-const screenPadding = EdgeInsets.only(left: 14, right: 14);
+const screenPadding = EdgeInsets.only(left: 18, right: 18);
 const leftRightPadding8 = EdgeInsets.only(left: 8, right: 8);
 const leftRightPadding12 = EdgeInsets.only(left: 12, right: 12);
 const topPadding10 = EdgeInsets.only(top: 10);

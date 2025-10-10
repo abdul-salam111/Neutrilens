@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/widgets/custom_searchfield.dart';
+import '../../../../routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -38,7 +41,9 @@ class HomeView extends GetView<HomeController> {
               heightBox(10),
               Text(
                 "Hello John",
-                style: context.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+                style: context.titleLarge!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               heightBox(5),
               RichText(
@@ -46,11 +51,11 @@ class HomeView extends GetView<HomeController> {
                   children: [
                     TextSpan(
                       text: "Your fitness looking",
-                      style: context.bodySmall,
+                      style: context.bodyMedium,
                     ),
                     TextSpan(
                       text: " Good",
-                      style: context.bodySmall!.copyWith(
+                      style: context.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
@@ -118,132 +123,183 @@ class HomeView extends GetView<HomeController> {
                         }
 
                         final product = controller.products[index];
-                        return Container(
-                          padding: defaultPadding,
-                          margin: const EdgeInsets.only(top: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.lightGreyColor.withAlpha(80),
+                        return InkWell(
+                          onTap: () => Get.toNamed(
+                            Routes.RESULT,
+                            arguments: product.code,
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.darkGreyColor.withAlpha(
-                                      80,
+                          child: Container(
+                            padding: defaultPadding,
+                            margin: const EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.lightGreyColor.withAlpha(80),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppColors.darkGreyColor.withAlpha(
+                                        80,
+                                      ),
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: product.imageFrontSmallUrl!,
+                                      height: Platform.isAndroid ? 120 : 120,
+                                      width: Platform.isAndroid ? 100 : 120,
+                                      fit: BoxFit.cover,
+
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                            AppImages.appLogo,
+                                            height: 90,
+                                            width: 90,
+                                          ),
                                     ),
                                   ),
-                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: product.imageFrontSmallUrl != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl: product.imageFrontSmallUrl!,
-                                          height: 90,
-                                          width: 90,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) => Center(
-                                            child: SizedBox(
-                                              height: 30,
-                                              width: 30,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                              ),
+                                widthBox(10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: crossAxisStart,
+                                    children: [
+                                      /// Product name + quantity
+                                      Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        spacing: 5,
+                                        children: [
+                                          Text(
+                                            product.productName ?? "N/A",
+                                            style: context.bodyLarge!.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            "(${product.quantity ?? "N/A"})",
+                                            style: context.bodySmall!.copyWith(
+                                              color: AppColors.greyColor,
                                             ),
                                           ),
-                                          errorWidget: (context, url, error) =>
-                                              Image.asset(
-                                                AppImages.appLogo,
-                                                height: 90,
-                                                width: 90,
-                                              ),
-                                        ),
-                                      )
-                                    : Image.asset(
-                                        AppImages.appLogo,
-                                        height: 90,
-                                        width: 90,
+                                        ],
                                       ),
-                              ),
-                              widthBox(10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: crossAxisStart,
-                                  children: [
-                                    Text(
-                                      product.brands ?? "N/A",
-                                      style: context.bodyMedium,
-                                    ),
-                                    Text(
-                                      product.productName ?? "N/A",
-                                      style: context.bodyMedium!.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      product.quantity ?? "N/A",
-                                      style: context.bodySmall!.copyWith(
-                                        color: AppColors.darkGreyColor,
-                                      ),
-                                    ),
-                                    heightBox(5),
-                                    Row(
-                                      children: [
-                                        if (product.nutriscoreGrade != null)
-                                          Container(
-                                            width: 100,
-                                            padding: padding5,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              color: _getGradeColor(
-                                                product.nutriscoreGrade!,
-                                              ),
+
+                                      heightBox(4),
+
+                                      /// Brand (wraps automatically)
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: "Brand: ",
+                                              style: context.bodyMedium!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
-                                            child: Center(
-                                              child: Text(
-                                                _getStatus(
-                                                  product.nutriscoreGrade!,
-                                                ),
-                                                style: context.bodySmall!
+                                            TextSpan(
+                                              text: product.brands ?? "N/A",
+                                              style: context.bodyMedium!
+                                                  .copyWith(color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                        overflow: TextOverflow.visible,
+                                        maxLines: 1,
+                                      ),
+
+                                      heightBox(4),
+
+                                      if (product.categories != null)
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: "Categories: ",
+                                                style: context.bodyMedium!
                                                     .copyWith(
-                                                      color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
                                               ),
-                                            ),
+                                              TextSpan(
+                                                text:
+                                                    product.categories ?? "N/A",
+                                                style: context.bodyMedium!
+                                                    .copyWith(
+                                                      color: Colors.grey,
+                                                    ),
+                                              ),
+                                            ],
                                           ),
-                                        widthBox(10),
-                                        Container(
-                                          width: 70,
-                                          padding: padding5,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              50,
-                                            ),
-                                            color: AppColors.lightGreyColor,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              "FoodIQ",
-                                              style: context.bodySmall!
-                                                  .copyWith(
-                                                    color: Colors.black,
-                                                  ),
-                                            ),
-                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.visible,
                                         ),
-                                      ],
-                                    ),
-                                  ],
+
+                                      heightBox(8),
+
+                                      /// NutriScore + FoodIQ
+                                      Wrap(
+                                        spacing: 10,
+                                        runSpacing: 5,
+                                        children: [
+                                          if (product.nutriscoreGrade != null)
+                                            Container(
+                                              width: 100,
+                                              padding: padding5,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                color: _getGradeColor(
+                                                  product.nutriscoreGrade!,
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  _getStatus(
+                                                    product.nutriscoreGrade!,
+                                                  ),
+                                                  style: context.bodySmall!
+                                                      .copyWith(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                          Container(
+                                            width: 70,
+                                            padding: padding5,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              color: AppColors.lightGreyColor,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                "FoodIQ",
+                                                style: context.bodySmall!
+                                                    .copyWith(
+                                                      color: Colors.black,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
 import '../controllers/result_controller.dart';
@@ -30,34 +31,41 @@ class ResultView extends GetView<ResultController> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
-                          ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Align(
-                                alignment: topLeft,
-                                child: IconButton(
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                  icon: Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              CachedNetworkImage(
-                                imageUrl:
-                                    controller
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                controller
                                         .getProductResultModel
                                         .value
                                         ?.product
                                         ?.imageFrontSmallUrl
                                         .toString() ??
                                     "",
-                                height: context.screenHeight * 0.2,
-                                width: context.screenWidth * 0.2,
                               ),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Align(
+                                alignment: topLeft,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
                               Positioned(
                                 bottom: 0,
                                 child: CircleAvatar(
@@ -65,12 +73,13 @@ class ResultView extends GetView<ResultController> {
                                       controller.backgroundColor.value,
                                   radius: 20,
                                   child: Icon(
-                                    (controller.grade.value == "a" &&
+                                    (controller.grade.value == "a" ||
                                             controller.grade.value == "b")
                                         ? Icons.check
                                         : controller.grade.value == "c"
                                         ? Icons.remove
                                         : Icons.close,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -84,9 +93,10 @@ class ResultView extends GetView<ResultController> {
                               : controller.grade.value == "c" || controller.grade.value == "b"
                               ? "Ok"
                               : "Don't"} Pick",
-                          style: context.titleLarge!.copyWith(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
+                            fontSize: 25,
                           ),
                         ),
                         heightBox(10),
@@ -99,59 +109,64 @@ class ResultView extends GetView<ResultController> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Column(
-                            crossAxisAlignment: crossAxisStart,
+                          child: Row(
+                            mainAxisAlignment: mainAxisSpaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment: mainAxisSpaceBetween,
+                              Column(
+                                crossAxisAlignment: crossAxisStart,
                                 children: [
                                   Text(
                                     "Eiyo Score",
-                                    style: context.bodyLarge!.copyWith(
+                                    style: context.titleMedium!.copyWith(
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 18,
                                     ),
                                   ),
-                                  Container(
-                                    padding: defaultPadding,
-                                    decoration: BoxDecoration(
-                                      color: controller.backgroundColor.value,
-                                      borderRadius: BorderRadius.circular(10),
+                                  heightBox(5),
+                                  Text(
+                                    "Grade: ${controller.grade.value.toUpperCase()}",
+                                    style: context.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    child: Text(
-                                      "${controller.nutriLensScore.value.round()}",
-                                      style: context.titleLarge!.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  ),
+                                  Text(
+                                    controller.grade.value == "a"
+                                        ? "Excellent nutritional quality"
+                                        : controller.grade.value == "b"
+                                        ? "Good nutritional quality"
+                                        : controller.grade.value == "c"
+                                        ? "Average nutritional quality"
+                                        : controller.grade.value == "d"
+                                        ? "Poor nutritional quality"
+                                        : "Very poor nutritional quality",
+                                    style: context.bodyMedium!.copyWith(),
+                                  ),
+                                  heightBox(10),
+                                  Text(
+                                    "Method: ${controller.scoringMethod.value}",
+                                    style: context.bodyMedium!.copyWith(
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.grey[600],
                                     ),
                                   ),
                                 ],
                               ),
-                              heightBox(5),
-                              Text(
-                                "Grade: ${controller.grade.value.toUpperCase()}",
-                                style: context.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
+                              Container(
+                                width: 70,
+                                padding: defaultPadding,
+                                decoration: BoxDecoration(
+                                  color: controller.backgroundColor.value,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ),
-                              Text(
-                                controller.grade.value == "a"
-                                    ? "Excellent nutritional quality"
-                                    : controller.grade.value == "b"
-                                    ? "Good nutritional quality"
-                                    : controller.grade.value == "c"
-                                    ? "Average nutritional quality"
-                                    : controller.grade.value == "d"
-                                    ? "Poor nutritional quality"
-                                    : "Very poor nutritional quality",
-                                style: context.bodySmall!.copyWith(),
-                              ),
-                              heightBox(10),
-                              Text(
-                                "Method: ${controller.scoringMethod.value}",
-                                style: context.bodySmall!.copyWith(
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.grey[600],
+                                child: Center(
+                                  child: Text(
+                                    "${controller.nutriLensScore.value.round()}",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -173,8 +188,9 @@ class ResultView extends GetView<ResultController> {
                             children: [
                               Text(
                                 "Score Breakdown",
-                                style: context.bodyLarge!.copyWith(
+                                style: context.titleMedium!.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 ),
                               ),
                               heightBox(10),
@@ -195,7 +211,7 @@ class ResultView extends GetView<ResultController> {
                                 heightBox(15),
                                 Text(
                                   "Calculation Details:",
-                                  style: context.bodyMedium!.copyWith(
+                                  style: context.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -208,7 +224,7 @@ class ResultView extends GetView<ResultController> {
                                     ),
                                     child: Text(
                                       "• $exp",
-                                      style: context.bodySmall!.copyWith(
+                                      style: context.bodyMedium!.copyWith(
                                         color: Colors.grey[700],
                                       ),
                                     ),
@@ -295,7 +311,7 @@ class ResultView extends GetView<ResultController> {
                                                   Expanded(
                                                     child: Text(
                                                       "${controller.nutritionDetails[index]['display_name']} : ${controller.nutritionDetails[index]['value']}${controller.nutritionDetails[index]['unit']}",
-                                                      style: context.bodyMedium!
+                                                      style: context.bodyLarge!
                                                           .copyWith(
                                                             height: 1.5,
                                                           ),
@@ -345,10 +361,9 @@ class ResultView extends GetView<ResultController> {
                                               10,
                                             ),
                                           ),
-                                          child: Center(
-                                            child: Text(
-                                              "${controller.nutritionDetails[index]['level'].toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
-                                            ),
+                                          child: Text(
+                                            "${controller.nutritionDetails[index]['level'].toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
+                                            style: context.bodyMedium,
                                           ),
                                         );
                                       },
@@ -385,16 +400,11 @@ class ResultView extends GetView<ResultController> {
             children: [
               Text(
                 label,
-                style: context.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: context.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
               ),
               Text(
                 weight,
-                style: context.bodySmall!.copyWith(
-                  color: Colors.grey[600],
-                  fontSize: 11,
-                ),
+                style: context.bodyMedium!.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
