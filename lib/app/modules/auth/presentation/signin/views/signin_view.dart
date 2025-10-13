@@ -84,16 +84,16 @@ class SigninView extends GetView<SigninController> {
                                 ),
                               ),
                             ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                "Forgot Password?",
-                                style: context.bodyMedium!.copyWith(
-                                  color: AppColors.appPrimaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                            // TextButton(
+                            //   onPressed: () {},
+                            //   child: Text(
+                            //     "Forgot Password?",
+                            //     style: context.bodyMedium!.copyWith(
+                            //       color: AppColors.appPrimaryColor,
+                            //       fontWeight: FontWeight.bold,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                         heightBox(context.screenHeight * 0.05),
@@ -103,7 +103,7 @@ class SigninView extends GetView<SigninController> {
                           child: CustomButton(
                             text: "Log In",
                             onPressed: () {
-                              Get.toNamed(Routes.NAVBAR);
+                              Get.offAllNamed(Routes.NAVBAR);
                             },
 
                             radius: 10,

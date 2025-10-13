@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
+
 import 'package:neutri_lens/app/core/widgets/count_down_circle.dart';
 import 'package:neutri_lens/app/modules/trends/views/good_pickes_chart_widget.dart';
 
@@ -18,19 +17,19 @@ class TrendsView extends GetView<TrendsController> {
       appBar: AppBar(
         title: const Text('Trends'),
         centerTitle: false,
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: CircleAvatar(
-              backgroundColor: AppColors.lightGreyColor,
-              child: Icon(
-                Iconsax.notification,
-                color: AppColors.appPrimaryColor,
-              ),
-            ),
-          ),
-          widthBox(10),
-        ],
+        // actions: [
+        //   GestureDetector(
+        //     onTap: () {},
+        //     child: CircleAvatar(
+        //       backgroundColor: AppColors.lightGreyColor,
+        //       child: Icon(
+        //         Iconsax.notification,
+        //         color: AppColors.appPrimaryColor,
+        //       ),
+        //     ),
+        //   ),
+        //   widthBox(10),
+        // ],
       ),
       body: ListView(
         padding: screenPadding,
@@ -41,71 +40,72 @@ class TrendsView extends GetView<TrendsController> {
             style: context.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
           heightBox(5),
-          InkWell(
-            onTap: () async {
-              final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-                builder: (context, child) {
-                  // For theming (optional)
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: ColorScheme.light(
-                        primary: Colors.orange,
-                        onPrimary: Colors.white,
-                        onSurface: Colors.black,
-                      ),
-                    ),
-                    child: child!,
-                  );
-                },
-              );
 
-              if (picked != null) {
-                final formattedDate = DateFormat("dd-MMMM-yyyy").format(picked);
-                controller.selectedDate.value = formattedDate;
-              }
-            },
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              decoration: BoxDecoration(
-                color: AppColors.lightGreyColor.withAlpha(80),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: screenPadding,
-                child: Row(
-                  mainAxisAlignment: mainAxisSpaceBetween,
-                  children: [
-                    Obx(
-                      () => Text(
-                        controller.selectedDate.value != ""
-                            ? controller.selectedDate.value
-                            : DateFormat("dd-MMMM-yyyy").format(DateTime.now()),
-                        style: context.bodySmall!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.greyColor,
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      Iconsax.calendar,
-                      color: AppColors.greyColor,
-                      size: 18,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () async {
+          //     final DateTime? picked = await showDatePicker(
+          //       context: context,
+          //       initialDate: DateTime.now(),
+          //       firstDate: DateTime(2000),
+          //       lastDate: DateTime(2100),
+          //       builder: (context, child) {
+          //         // For theming (optional)
+          //         return Theme(
+          //           data: Theme.of(context).copyWith(
+          //             colorScheme: ColorScheme.light(
+          //               primary: Colors.orange,
+          //               onPrimary: Colors.white,
+          //               onSurface: Colors.black,
+          //             ),
+          //           ),
+          //           child: child!,
+          //         );
+          //       },
+          //     );
 
+          //     if (picked != null) {
+          //       final formattedDate = DateFormat("dd-MMMM-yyyy").format(picked);
+          //       controller.selectedDate.value = formattedDate;
+          //     }
+          //   },
+          //   child: Container(
+          //     width: double.infinity,
+          //     height: 50,
+          //     decoration: BoxDecoration(
+          //       color: AppColors.lightGreyColor.withAlpha(80),
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),
+          //     child: Padding(
+          //       padding: screenPadding,
+          //       child: Row(
+          //         mainAxisAlignment: mainAxisSpaceBetween,
+          //         children: [
+          //           Obx(
+          //             () => Text(
+          //               controller.selectedDate.value != ""
+          //                   ? controller.selectedDate.value
+          //                   : DateFormat("dd-MMMM-yyyy").format(DateTime.now()),
+          //               style: context.bodySmall!.copyWith(
+          //                 fontWeight: FontWeight.bold,
+          //                 color: AppColors.greyColor,
+          //               ),
+          //             ),
+          //           ),
+          //           Icon(
+          //             Iconsax.calendar,
+          //             color: AppColors.greyColor,
+          //             size: 18,
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
           heightBox(10),
           SizedBox(
-            height: context.screenHeight * 0.08,
+            height: context.screenHeight * 0.06,
             child: Row(
+              mainAxisAlignment: mainAxisSpaceBetween,
               children: List.generate(controller.statesMode.length, (index) {
                 return InkWell(
                   onTap: () {
@@ -120,8 +120,7 @@ class TrendsView extends GetView<TrendsController> {
                             : AppColors.lightGreyColor.withAlpha(90),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: defaultPadding,
-                      margin: defaultPadding,
+
                       child: Center(
                         child: Text(
                           controller.statesMode[index],
@@ -129,6 +128,10 @@ class TrendsView extends GetView<TrendsController> {
                             color: controller.selectedStatesMode.value == index
                                 ? Colors.white
                                 : Colors.black,
+                            fontSize:
+                                controller.selectedStatesMode.value == index
+                                ? 16
+                                : 15,
                             fontWeight:
                                 controller.selectedStatesMode.value == index
                                 ? FontWeight.bold
@@ -142,6 +145,7 @@ class TrendsView extends GetView<TrendsController> {
               }),
             ),
           ),
+          heightBox(10),
           Container(
             padding: defaultPadding,
             decoration: BoxDecoration(
@@ -270,10 +274,7 @@ class TrendsView extends GetView<TrendsController> {
                   ],
                 ),
                 widthBox(30),
-                DaysCountdownCircle(
-                  totalValue: 100,
-                  obtainedValue: 86,
-                ),
+                DaysCountdownCircle(totalValue: 100, obtainedValue: 86),
               ],
             ),
           ),

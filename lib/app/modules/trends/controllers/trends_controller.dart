@@ -5,7 +5,7 @@ import '../views/good_pickes_chart_widget.dart';
 class TrendsController extends GetxController {
   final selectedDate = "".obs;
   final RxInt selectedStatesMode = 0.obs;
-  final List<String> statesMode = ["Today", "Week", "Month"];
+  final List<String> statesMode = ["This Week", "This Month", "This Year"];
 
   List<ChartDataPoint> salesData = [
     ChartDataPoint(0, 3),

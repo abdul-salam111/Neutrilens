@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -62,13 +64,17 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 heightBox(10),
                 CustomTextFormField(
-                  hintText: "20 Years",
+                  hintText: "20",
                   labelfontSize: 14,
-                  label: "Age",
+                  label: "Age (Years)",
                   labelColor: Colors.black,
                   borderColor: AppColors.darkGreyColor.withAlpha(90),
                 ),
-                heightBox(context.screenHeight * 0.1),
+                heightBox(
+                  Platform.isAndroid
+                      ? context.screenHeight * 0.08
+                      : context.screenHeight * 0.1,
+                ),
                 SizedBox(
                   height: 45,
                   width: 200,

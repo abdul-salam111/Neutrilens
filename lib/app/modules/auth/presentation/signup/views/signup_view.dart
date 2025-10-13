@@ -165,8 +165,8 @@ class SignupView extends GetView<SignupController> {
                         heightBox(30),
                         CustomTextFormField(
                           controller: controller.nameController,
-                          hintText: "Enter Your Full Name",
-                          prefixIcon: Iconsax.user,
+                          hintText: "Enter Your Email",
+                          prefixIcon: Iconsax.sms,
                           fillColor: AppColors.halfWhiteColor,
                         ),
                         heightBox(40),
@@ -275,14 +275,6 @@ class SignupView extends GetView<SignupController> {
                             );
                           }).toList(),
                         ),
-                      ),
-
-                      SizedBox(height: 20),
-                      CustomTextFormField(
-                        controller: controller.disLikesController,
-                        hintText: "e.g., Dislike(optional)",
-
-                        fillColor: AppColors.halfWhiteColor,
                       ),
                     ],
                   ),

@@ -71,7 +71,7 @@ class ResultView extends GetView<ResultController> {
                                 child: CircleAvatar(
                                   backgroundColor:
                                       controller.backgroundColor.value,
-                                  radius: 20,
+                                  radius: 23,
                                   child: Icon(
                                     (controller.grade.value == "a" ||
                                             controller.grade.value == "b")
@@ -80,6 +80,8 @@ class ResultView extends GetView<ResultController> {
                                         ? Icons.remove
                                         : Icons.close,
                                     color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    size: 35,
                                   ),
                                 ),
                               ),
@@ -152,18 +154,18 @@ class ResultView extends GetView<ResultController> {
                                 ],
                               ),
                               Container(
-                                width: 70,
-                                padding: defaultPadding,
+                                width: 80,
+                                padding: padding5,
                                 decoration: BoxDecoration(
                                   color: controller.backgroundColor.value,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "${controller.nutriLensScore.value.round()}",
+                                    "${controller.nutriLensScore.value.round()}%",
                                     style: GoogleFonts.poppins(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
                                       fontSize: 30,
                                     ),
                                   ),
