@@ -267,7 +267,7 @@ class SignupView extends GetView<SignupController> {
                               backgroundColor: AppColors.lightGreyColor,
                               label: Text(item, style: context.bodyMedium),
                               selected: isSelected,
-                              selectedColor: Colors.orange,
+                              selectedColor: AppColors.appPrimaryColor,
                               onSelected: (_) => controller.toggleSelection(
                                 item,
                                 controller.selectedAllergens,

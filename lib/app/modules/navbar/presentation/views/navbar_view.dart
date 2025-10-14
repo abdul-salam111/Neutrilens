@@ -124,14 +124,14 @@ class NavbarView extends GetView<NavbarController> {
             children: [
               Icon(
                 isSelected ? filledIcon : outlineIcon,
-                color: isSelected ? Colors.orange : Colors.grey,
+                color: isSelected ? AppColors.appPrimaryColor : Colors.grey,
                 size: 30,
               ),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 15,
-                  color: isSelected ? Colors.orange : Colors.grey,
+                  color: isSelected ? AppColors.appPrimaryColor : Colors.grey,
                 ),
               ),
             ],
