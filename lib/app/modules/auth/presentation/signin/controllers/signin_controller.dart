@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/data/local_data/secure_storage/storage.dart';
 import 'package:neutri_lens/app/core/services/session_manager.dart';
-import 'package:neutri_lens/app/modules/auth/data/repository/auth_repository.dart';
+import 'package:neutri_lens/app/modules/auth/data/repository/user_repository.dart';
 import 'package:neutri_lens/app/routes/app_pages.dart';
 
 import '../../../../../core/utils/apptoast_util.dart';
 
 class SigninController extends GetxController {
   // ignore: unused_field
-  final AuthRepository _authRepository;
+  final UserRepository _authRepository;
   SigninController(this._authRepository);
 
   var rememberMe = false.obs;

@@ -1,11 +1,11 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:neutri_lens/app/core/core.dart';
-import 'package:neutri_lens/app/modules/auth/data/repository/auth_repository.dart';
+import 'package:neutri_lens/app/modules/auth/data/repository/user_repository.dart';
 import '../../../../core/data/local_data/secure_storage/storage.dart';
 import '../models/get_goals_diet_list/get_goals_diet_list.dart';
 import '../models/user_model/user_model.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
+class UserRepositoryImpl implements UserRepository {
   final _dio = DioHelper();
   @override
   Future<Either<AppException, GetGoalsDietList>> getGoalsDietList() async {

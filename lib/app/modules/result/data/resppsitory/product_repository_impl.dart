@@ -31,14 +31,27 @@ class ProductRepositoryImpl implements ProductRepository {
   // }
 
   @override
-  Future<Either<AppException, GetSuggestedProductModel>> getSuggestedProducts({
-    required String qrCode,
-  }) async {
+  Future<Either<AppException, List<GetSuggestedProductModel>>>
+  getSuggestedProducts({required String qrCode}) async {
     try {
       final response = await _dio.getApi(
-        url: "${ApiKeys.getSuggestedProductsUrl}$qrCode",
+        url: "https://bfd7e08bbfa2.ngrok-free.app/scan/scan-temp",
       );
-      return right(GetSuggestedProductModel.fromJson(response));
+
+      if (response is List) {
+        final suggestedProducts = response
+            .map((item) => GetSuggestedProductModel.fromJson(item))
+            .toList();
+
+        return right(suggestedProducts);
+      }
+
+      // If it's a single object or unexpected format
+      if (response is Map<String, dynamic>) {
+        return right([GetSuggestedProductModel.fromJson(response)]);
+      }
+
+      return left(AppException("Invalid response format from API"));
     } catch (error) {
       return left(AppException(error.toString()));
     }

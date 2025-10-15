@@ -1,17 +1,17 @@
-import 'dart:io';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/modules/auth/data/models/get_goals_diet_list/get_goals_diet_list.dart';
 import 'package:neutri_lens/app/modules/auth/data/models/user_model/user_model.dart';
-import 'package:neutri_lens/app/modules/auth/data/repository/auth_repository.dart';
+import 'package:neutri_lens/app/modules/auth/data/repository/user_repository.dart';
 
 import '../../../../../routes/app_pages.dart';
 
 class SignupController extends GetxController {
   // Dependencies
-  final AuthRepository authRepository;
+  final UserRepository authRepository;
 
   SignupController(this.authRepository);
 
@@ -30,7 +30,7 @@ class SignupController extends GetxController {
   final isLoading = false.obs;
   final currentIndex = 0.obs;
   final selectedAge = 1.obs;
-  final profileImage = Rx<File?>(null);
+
 
   // Goals & Diet Preferences
   final goals = <DietPreference>[].obs;

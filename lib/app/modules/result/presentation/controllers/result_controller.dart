@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/modules/result/data/models/get_product_result_model/get_product_result_model.dart';
+import 'package:neutri_lens/app/modules/result/data/models/get_suggested_product/get_suggested_product_model.dart';
 import 'package:neutri_lens/app/modules/result/data/resppsitory/product_repository.dart';
 
 import '../../../../core/utils/apptoast_util.dart';
@@ -337,17 +338,24 @@ class ResultController extends GetxController {
     return 'unknown';
   }
 
+  RxList<GetSuggestedProductModel> suggestedProducts =
+      <GetSuggestedProductModel>[].obs;
+  final isLoadingSuggested = false.obs;
+
   void getSuggestedProduct() async {
+    isLoadingSuggested.value = true;
     final response = await _getProductResultRepo.getSuggestedProducts(
       qrCode: Get.arguments.toString(),
     );
 
     response.fold(
       (failure) {
+        isLoadingSuggested.value = false;
         AppToasts.showErrorToast(Get.context!, failure.toString());
       },
       (model) {
-        isLoading.value = false;
+        isLoadingSuggested.value = false;
+        suggestedProducts.value = model;
       },
     );
   }
@@ -355,7 +363,8 @@ class ResultController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getProductDetails().then((_) => uploadScannedProduct());
+    getProductDetails().then((_) => getSuggestedProduct());
+    // .then((_) => uploadScannedProduct());
   }
 
   uploadScannedProduct() async {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neutri_lens/app/modules/home/data/repository/home_repository.dart';
+import 'package:neutri_lens/app/modules/home/domain/abstract_repositories/home_repository.dart';
 import '../../data/models/get_all_products_model.dart';
 
 class HomeController extends GetxController {
   final searchController = TextEditingController();
-  final HomeRepository productsRepository;
+  final HomeRepository homeRepository;
   final ScrollController scrollController = ScrollController();
 
-  HomeController({required this.productsRepository});
+  HomeController({required this.homeRepository});
 
   final RxBool isLoading = false.obs;
   final RxBool isLoadingMore = false.obs;
@@ -84,9 +84,7 @@ class HomeController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
-    final result = await productsRepository.getProducts(
-      page: currentPage.value,
-    );
+    final result = await homeRepository.getProducts(page: currentPage.value);
 
     result.fold(
       (error) {
@@ -109,7 +107,7 @@ class HomeController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
-    final result = await productsRepository.searchProducts(
+    final result = await homeRepository.searchProducts(
       query: searchQuery.value,
       page: currentPage.value,
     );
@@ -139,8 +137,8 @@ class HomeController extends GetxController {
 
     // Check if we're searching or loading all products
     final result = searchQuery.value.isEmpty
-        ? await productsRepository.getProducts(page: currentPage.value)
-        : await productsRepository.searchProducts(
+        ? await homeRepository.getProducts(page: currentPage.value)
+        : await homeRepository.searchProducts(
             query: searchQuery.value,
             page: currentPage.value,
           );

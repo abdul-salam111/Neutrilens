@@ -4,8 +4,7 @@ class ApiKeys {
   static final registerUserUrl = "$baseUrl/auth/register";
   static final loginUserUrl = "$baseUrl/auth/login";
   static final getUserUrl = "$baseUrl/user/profile";
-  static final getSuggestedProductsUrl =
-      "$baseUrl/scans/alternative-products?barcode=";
+  static final getSuggestedProductsUrl = "$baseUrl/scan/scan-temp";
   static final uploadScannedProductUrl =
       "https://bfd7e08bbfa2.ngrok-free.app/scan/";
 }

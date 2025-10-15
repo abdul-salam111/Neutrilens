@@ -118,7 +118,7 @@ class ResultView extends GetView<ResultController> {
                                 crossAxisAlignment: crossAxisStart,
                                 children: [
                                   Text(
-                                    "Eiyo Score",
+                                    "Health Score",
                                     style: context.titleMedium!.copyWith(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -371,6 +371,66 @@ class ResultView extends GetView<ResultController> {
                                       },
                                     ),
                                   ),
+                                ),
+                              ),
+                              heightBox(20),
+                              Text(
+                                "Similar good food choices",
+                                style: context.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              heightBox(10),
+                              Obx(
+                                () => SizedBox(
+                                  height: 100,
+                                  child: controller.isLoadingSuggested.value
+                                      ? Text(
+                                          "Please, wait for the suggested products...",
+                                        )
+                                      : SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: List.generate(
+                                              controller
+                                                  .suggestedProducts
+                                                  .length,
+                                              (index) {
+                                                final product = controller
+                                                    .suggestedProducts[index];
+
+                                                return Container(
+                                                  margin:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                      ),
+
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade200,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          product.imageUrl ??
+                                                          "",
+                                                      width: 90,
+                                                      height: 100,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
                                 ),
                               ),
                             ],

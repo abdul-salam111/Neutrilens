@@ -62,13 +62,8 @@ class HomeView extends GetView<HomeController> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Your fitness looking",
-                          style: context.bodyMedium,
-                        ),
-                        TextSpan(
-                          text: " Good",
+                          text: "how can we help you?",
                           style: context.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),

@@ -33,7 +33,7 @@ class SigninView extends GetView<SigninController> {
                   SizedBox(
                     width: context.screenWidth * 0.8,
                     child: Text(
-                      "Mauris urna velit, congue et aliquam non, imperdiet id massa.",
+                      "Welcome, again. Please, login to continue.",
                       style: context.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.darkGreyColor,

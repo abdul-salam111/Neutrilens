@@ -63,7 +63,7 @@ class OnboardingView extends GetView<OnboardingController> {
                 heightBox(context.screenHeight * 0.04),
                 Center(
                   child: Text(
-                    "Welcome to NeutriLens",
+                    "Welcome to, Eiyo!",
                     style: context.headlineSmall!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

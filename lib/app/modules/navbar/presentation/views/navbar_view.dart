@@ -9,27 +9,29 @@ import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/modules/home/presentation/views/home_view.dart';
 import 'package:neutri_lens/app/modules/profile/views/profile_view.dart';
 
-import 'package:neutri_lens/app/modules/settings/views/settings_view.dart';
+import 'package:neutri_lens/app/modules/settings/presentation/views/settings_view.dart';
 import 'package:neutri_lens/app/modules/trends/views/trends_view.dart';
 import 'package:neutri_lens/app/routes/app_pages.dart';
 
 import '../controllers/navbar_controller.dart';
 
 class NavbarView extends GetView<NavbarController> {
-  NavbarView({super.key});
-  final List<Widget> pages = [
-    HomeView(),
-    TrendsView(),
-
-    SettingsView(),
-    ProfileView(),
-  ];
-
+  const NavbarView({super.key});
+  
   @override
+
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        body: pages[controller.currentIndex.value],
+        body:IndexedStack(
+            index: controller.currentIndex.value,
+         children: [
+            HomeView(),
+            TrendsView(),
+            SettingsView(),
+            ProfileView(),
+          ],
+        ),
         bottomNavigationBar: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 12,

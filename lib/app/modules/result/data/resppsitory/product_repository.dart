@@ -8,7 +8,7 @@ import '../models/get_product_result_model/get_product_result_model.dart';
 abstract interface class ProductRepository {
   //Future<Either<AppException, GetProductResultModel>> getAllProducts();
   Future<Either<AppException, bool>> uploadScannedProduct(UploadProductRecordModel uploadProductRecordModel);
-  Future<Either<AppException, GetSuggestedProductModel>> getSuggestedProducts({required String qrCode});
+  Future<Either<AppException, List<GetSuggestedProductModel>>> getSuggestedProducts({required String qrCode});
   Future<Either<AppException, GetProductResultModel>> getProductResult({
     required String barCode,
   });

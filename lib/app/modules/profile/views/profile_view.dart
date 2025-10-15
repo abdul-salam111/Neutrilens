@@ -68,7 +68,7 @@ class ProfileView extends GetView<ProfileController> {
                   hintText:
                       " ${SessionController().getUserDetails.ageFrom} - ${SessionController().getUserDetails.ageTo}",
                   labelfontSize: 14,
-                  label: "Age (Years)",
+                  label: "Age",
                   labelColor: Colors.black,
                   borderColor: AppColors.darkGreyColor.withAlpha(90),
                 ),
