@@ -57,7 +57,7 @@ class _ArcPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokeWidth = 6.0;
+    final strokeWidth = 10.0;
     final center = size.center(Offset.zero);
     final radius = size.width / 2 - strokeWidth;
 

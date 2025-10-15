@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:neutri_lens/app/modules/home/data/models/get_all_products_model.dart';
 import '../../../../core/core.dart';
 
-class ProductsRepository {
+class HomeRepository {
   final DioHelper _dio = DioHelper();
 
   Future<Either<AppException, GetAllProductsModel>> getProducts({

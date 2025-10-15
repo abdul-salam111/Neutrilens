@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:neutri_lens/app/routes/app_pages.dart';
 
 import '../../../../core/core.dart';
+import '../../../../core/data/local_data/secure_storage/storage.dart';
 import '../controllers/onboarding_controller.dart';
 
 class OnboardingView extends GetView<OnboardingController> {
@@ -14,7 +15,8 @@ class OnboardingView extends GetView<OnboardingController> {
     return Scaffold(
       bottomNavigationBar: SafeArea(
         child: GestureDetector(
-          onTap: () {
+          onTap: () async {
+            await storage.setValues('onboarding', 'true');
             Get.toNamed(Routes.SIGNIN);
           },
           child: Container(
@@ -59,16 +61,19 @@ class OnboardingView extends GetView<OnboardingController> {
                 heightBox(context.screenHeight * 0.1),
                 Image.asset(AppImages.blackappLogo, height: 100, width: 200),
                 heightBox(context.screenHeight * 0.04),
-                Text(
-                  "Welcome to NeutriLens",
-                  style: context.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.bold,
+                Center(
+                  child: Text(
+                    "Welcome to NeutriLens",
+                    style: context.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: textAlignCenter,
                   ),
                 ),
                 heightBox(5),
                 Text(
                   "Smarter Food, Better Choices",
-                  style: context.bodyMedium!.copyWith(
+                  style: context.labelLarge!.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.darkGreyColor,
                   ),

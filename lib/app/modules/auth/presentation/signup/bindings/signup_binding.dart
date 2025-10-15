@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 
+import '../../../data/repository/auth_repository.dart';
+import '../../../data/repository/auth_repository_impl.dart';
 import '../controllers/signup_controller.dart';
 
 class SignupBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SignupController>(
-      () => SignupController(),
-    );
+    Get.lazyPut<AuthRepository>(() => AuthRepositoryImpl());
+    Get.lazyPut<SignupController>(() => SignupController(Get.find()));
   }
 }

@@ -100,14 +100,20 @@ class SigninView extends GetView<SigninController> {
                         SizedBox(
                           width: double.infinity,
                           height: 45,
-                          child: CustomButton(
-                            text: "Log In",
-                            onPressed: () {
-                              Get.offAllNamed(Routes.NAVBAR);
-                            },
+                          child: Obx(
+                            () => CustomButton(
+                              isLoading: controller.isloading.value,
+                              text: "Log In",
+                              onPressed: () async {
+                                if (controller.formKey.currentState!
+                                    .validate()) {
+                                  await controller.login();
+                                }
+                              },
 
-                            radius: 10,
-                            textColor: AppColors.appDarkThemeBackground,
+                              radius: 10,
+                              textColor: AppColors.appDarkThemeBackground,
+                            ),
                           ),
                         ),
                       ],

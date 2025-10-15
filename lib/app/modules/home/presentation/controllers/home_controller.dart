@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neutri_lens/app/modules/home/data/repository/products_repository.dart';
+import 'package:neutri_lens/app/modules/home/data/repository/home_repository.dart';
 import '../../data/models/get_all_products_model.dart';
 
 class HomeController extends GetxController {
   final searchController = TextEditingController();
-  final ProductsRepository productsRepository;
+  final HomeRepository productsRepository;
   final ScrollController scrollController = ScrollController();
 
   HomeController({required this.productsRepository});
@@ -15,7 +15,7 @@ class HomeController extends GetxController {
   final RxString errorMessage = ''.obs;
   final RxInt currentPage = 1.obs;
   final RxBool hasMoreData = true.obs;
-  final RxString searchQuery = ''.obs;  // Store current search query
+  final RxString searchQuery = ''.obs; // Store current search query
 
   final RxList<Product> products = <Product>[].obs;
 
@@ -24,7 +24,7 @@ class HomeController extends GetxController {
     super.onInit();
     getProducts();
     _setupScrollListener();
-    _setupSearchListener();  // Listen to search field changes
+    _setupSearchListener(); // Listen to search field changes
   }
 
   void _setupScrollListener() {
@@ -62,7 +62,7 @@ class HomeController extends GetxController {
     currentPage.value = 1;
     products.clear();
     hasMoreData.value = true;
-    
+
     if (searchQuery.value.isEmpty) {
       // If search is empty, load all products
       getProducts();
@@ -78,7 +78,7 @@ class HomeController extends GetxController {
       products.clear();
       hasMoreData.value = true;
       searchQuery.value = '';
-      searchController.clear();  // Clear search field on refresh
+      searchController.clear(); // Clear search field on refresh
     }
 
     isLoading.value = true;

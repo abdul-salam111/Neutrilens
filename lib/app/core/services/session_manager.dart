@@ -1,11 +1,11 @@
+import 'dart:convert';
+
+import 'package:neutri_lens/app/modules/auth/data/models/user_model/user_model.dart';
 
 import '../data/local_data/secure_storage/storage.dart';
 
-
-
 class SessionController {
-//  GetLoginResponse getUserDetails = GetLoginResponse();
-
+  UserModel getUserDetails = UserModel();
   static final SessionController _session = SessionController._internal();
   bool islogin = false;
   String? userId;
@@ -17,27 +17,19 @@ class SessionController {
     return _session;
   }
 
-// get user details as a param and save in shared pref
-  Future<void> saveUserInStorage() async {
-    // await storage.setValues(StorageKeys.userDetails, jsonEncode(user));
-    // await storage.setValues(StorageKeys.loggedIn, 'true');
-    //  await storage.setValues(
-    //     StorageKeys.userId,
-    //     user.customer!.customerId!.toString(),
-    //   );
-    //   await storage.setValues(
-    //     StorageKeys.token,
-    //     user.authToken!.accessToken!,
-    //   );
+  // get user details as a param and save in shared pref
+  Future<void> saveUserInStorage(UserModel user) async {
+    await storage.setValues(StorageKeys.userDetails, jsonEncode(user));
+    await storage.setValues(StorageKeys.loggedIn, 'true');
   }
 
   Future<void> getUserfromSharedpref() async {
     try {
       final userData = await storage.readValues(StorageKeys.userDetails);
       if (userData != null) {
-        // SessionController().getUserDetails = GetLoginResponse.fromJson(
-        //   jsonDecode(userData),
-        // );
+        SessionController().getUserDetails = UserModel.fromJson(
+          jsonDecode(userData),
+        );
       }
       final isLoggedIn = await storage.readValues(StorageKeys.loggedIn);
       SessionController().islogin = (isLoggedIn == 'true' ? true : false);

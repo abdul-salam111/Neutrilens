@@ -11,8 +11,9 @@ class DioHelper {
     receiveDataWhenStatusError: true,
     contentType: "application/json",
     responseType: ResponseType.json,
-    sendTimeout: const Duration(seconds: 10),
-    receiveTimeout: const Duration(seconds: 10),
+    sendTimeout: const Duration(seconds: 30),
+    receiveTimeout: const Duration(seconds: 30),
+  
   );
 
   Future<dynamic> getApi({
@@ -173,14 +174,14 @@ class DioHelper {
           "Receiving time out. Please, check your internet connection.",
         );
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.data['Result'];
+        final statusCode = error.response?.statusCode;
         switch (statusCode) {
           case 401:
             throw UnauthorizedException(
-              "Session expired. Please log in again to continue.",
+              "Invalid credentials. Please, try again.",
             );
-          case 4001:
-            throw InvalidInputException("The entered OTP is incorrect!");
+          case 404:
+            throw InternalServerErrorException("Something, went wrong!");
           case 4002:
             throw InvalidInputException("Invalid Input");
           case 6001:

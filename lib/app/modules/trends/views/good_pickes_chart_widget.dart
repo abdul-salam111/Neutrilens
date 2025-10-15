@@ -34,7 +34,7 @@ class GoodPicksChart extends StatefulWidget {
     this.minY,
     this.maxY,
     this.lineColor,
-    this.lineWidth = 3,
+    this.lineWidth = 5,
     this.showDots = false,
     this.isCurved = true,
   });
@@ -62,10 +62,7 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
               top: 24,
               bottom: 12,
             ),
-            child: LineChart(
-              mainData(),
-             
-            ),
+            child: LineChart(mainData()),
           ),
         ),
       ],

@@ -1,13 +1,13 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/core.dart';
+import 'package:neutri_lens/app/core/data/local_data/secure_storage/storage.dart';
 import 'package:neutri_lens/app/core/widgets/custom_button.dart';
 import 'package:neutri_lens/app/core/widgets/custom_textfield.dart';
-
+import '../../../core/services/session_manager.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -34,21 +34,21 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 heightBox(10),
                 Text(
-                  "John Doe",
+                  " ${SessionController().getUserDetails.fullName}",
                   style: context.bodyLarge!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 heightBox(2),
                 Text(
-                  "Abdulsalam.0302@gmail.com",
+                  " ${SessionController().getUserDetails.username}",
                   style: context.bodyMedium!.copyWith(
                     fontWeight: FontWeight.normal,
                   ),
                 ),
                 heightBox(30),
                 CustomTextFormField(
-                  hintText: "Abdul Salam",
+                  hintText: " ${SessionController().getUserDetails.fullName}",
                   label: "Full Name",
                   labelfontSize: 14,
                   labelColor: Colors.black,
@@ -56,7 +56,8 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 heightBox(10),
                 CustomTextFormField(
-                  hintText: "abdulsalam.0302@gmail.com",
+                  readonly: true,
+                  hintText: " ${SessionController().getUserDetails.username}",
                   label: "Email",
                   labelfontSize: 14,
                   labelColor: Colors.black,
@@ -64,7 +65,8 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 heightBox(10),
                 CustomTextFormField(
-                  hintText: "20",
+                  hintText:
+                      " ${SessionController().getUserDetails.ageFrom} - ${SessionController().getUserDetails.ageTo}",
                   labelfontSize: 14,
                   label: "Age (Years)",
                   labelColor: Colors.black,
@@ -80,7 +82,12 @@ class ProfileView extends GetView<ProfileController> {
                   width: 200,
                   child: CustomButton(
                     text: "Log Out",
-                    onPressed: () {},
+                    onPressed: () async {
+                      await storage.clearValues(StorageKeys.userDetails);
+                      await storage.clearValues(StorageKeys.loggedIn);
+                      await storage.clearValues(StorageKeys.token);
+                      Get.offAllNamed(Routes.SIGNIN);
+                    },
                     backgroundColor: AppColors.appPrimaryColor,
                   ),
                 ),

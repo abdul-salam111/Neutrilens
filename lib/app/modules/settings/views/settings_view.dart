@@ -11,21 +11,20 @@ class SettingsView extends GetView<SettingsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings'), centerTitle: false),
-      body: Padding(
-        padding: screenPadding,
-        child: Column(
-          crossAxisAlignment: crossAxisStart,
-          children: [
-            heightBox(20),
-            Text(
-              "Selected Goals",
-              style: context.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-            ),
-            heightBox(10),
-            SizedBox(
-              height: context.screenHeight * 0.34,
-              child: ListView.builder(
-                itemBuilder: (context, index) {
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: screenPadding,
+          child: Column(
+            crossAxisAlignment: crossAxisStart,
+            children: [
+              heightBox(20),
+              Text(
+                "Selected Goals",
+                style: context.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+              ),
+              heightBox(10),
+              Column(
+                children: List.generate(controller.goals.length, (index) {
                   return Obx(
                     () => CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
@@ -44,37 +43,36 @@ class SettingsView extends GetView<SettingsController> {
                       onChanged: (bool? value) {},
                     ),
                   );
-                },
-                itemCount: controller.goals.length,
+                }),
               ),
-            ),
-
-            Text(
-              "Allergens to Avoid",
-              style: context.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Obx(
-              () => Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: controller.allergensToAvoid.map((item) {
-                  final isSelected = controller.selectedAllergens.contains(
-                    item,
-                  );
-                  return ChoiceChip(
-                    side: BorderSide(color: Colors.transparent),
-                    checkmarkColor: Colors.black,
-                    backgroundColor: AppColors.lightGreyColor,
-                    label: Text(item, style: context.bodyMedium),
-                    selected: isSelected,
-                    selectedColor: AppColors.appPrimaryColor,
-                    onSelected: (_) {},
-                  );
-                }).toList(),
+              heightBox(20),
+              Text(
+                "Allergens to Avoid",
+                style: context.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+              SizedBox(height: 8),
+              Obx(
+                () => Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: controller.allergensToAvoid.map((item) {
+                    final isSelected = controller.selectedAllergens.contains(
+                      item,
+                    );
+                    return ChoiceChip(
+                      side: BorderSide(color: Colors.transparent),
+                      checkmarkColor: Colors.black,
+                      backgroundColor: AppColors.lightGreyColor,
+                      label: Text(item, style: context.bodyMedium),
+                      selected: isSelected,
+                      selectedColor: AppColors.appPrimaryColor,
+                      onSelected: (_) {},
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

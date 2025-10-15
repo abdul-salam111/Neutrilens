@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neutri_lens/app/core/core.dart';
+import 'package:neutri_lens/app/core/services/session_manager.dart';
 import 'package:neutri_lens/app/core/widgets/custom_searchfield.dart';
 import '../../../../routes/app_pages.dart';
 import '../controllers/home_controller.dart';
@@ -50,7 +51,7 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   heightBox(Platform.isAndroid ? 40 : 60),
                   Text(
-                    "Hello, John",
+                    "Hello, ${SessionController().getUserDetails.fullName}",
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       fontSize: 30,

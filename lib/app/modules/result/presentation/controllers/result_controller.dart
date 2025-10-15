@@ -1,8 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neutri_lens/app/modules/result/data/models/get_product_result_model.dart';
-import 'package:neutri_lens/app/modules/result/data/resppsitory/get_product_result_repo.dart';
+import 'package:neutri_lens/app/modules/result/data/models/get_product_result_model/get_product_result_model.dart';
+import 'package:neutri_lens/app/modules/result/data/resppsitory/product_repository.dart';
+
+import '../../../../core/utils/apptoast_util.dart';
+import '../../data/models/upload_product_record/upload_product_record_model.dart';
 
 class NutriLensScores {
   final double foodScore;
@@ -37,7 +40,7 @@ class NutriLensScores {
 }
 
 class ResultController extends GetxController {
-  final GetProductResultRepo _getProductResultRepo;
+  final ProductRepository _getProductResultRepo;
   ResultController(this._getProductResultRepo);
 
   final isLoading = false.obs;
@@ -334,9 +337,37 @@ class ResultController extends GetxController {
     return 'unknown';
   }
 
+  void getSuggestedProduct() async {
+    final response = await _getProductResultRepo.getSuggestedProducts(
+      qrCode: Get.arguments.toString(),
+    );
+
+    response.fold(
+      (failure) {
+        AppToasts.showErrorToast(Get.context!, failure.toString());
+      },
+      (model) {
+        isLoading.value = false;
+      },
+    );
+  }
+
   @override
   void onInit() {
     super.onInit();
-    getProductDetails();
+    getProductDetails().then((_) => uploadScannedProduct());
+  }
+
+  uploadScannedProduct() async {
+    final response = await _getProductResultRepo.uploadScannedProduct(
+      UploadProductRecordModel(
+        barcode: Get.arguments.toString(),
+        productName: getProductResultModel.value?.product?.productName,
+        foodIqScore: nutriLensScore.value,
+      ),
+    );
+    response.fold((failure) {
+      AppToasts.showErrorToast(Get.context!, failure.toString());
+    }, (model) {});
   }
 }
