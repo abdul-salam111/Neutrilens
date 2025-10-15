@@ -8,7 +8,6 @@ import '../controllers/result_controller.dart';
 
 class ResultView extends GetView<ResultController> {
   const ResultView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -383,7 +382,7 @@ class ResultView extends GetView<ResultController> {
                               heightBox(10),
                               Obx(
                                 () => SizedBox(
-                                  height: 100,
+                                  height: context.screenHeight * 0.19,
                                   child: controller.isLoadingSuggested.value
                                       ? Text(
                                           "Please, wait for the suggested products...",
@@ -400,6 +399,8 @@ class ResultView extends GetView<ResultController> {
                                                     .suggestedProducts[index];
 
                                                 return Container(
+                                                  width: 120,
+                                                  padding: padding5,
                                                   margin:
                                                       const EdgeInsets.symmetric(
                                                         horizontal: 8,
@@ -412,19 +413,34 @@ class ResultView extends GetView<ResultController> {
                                                           8,
                                                         ),
                                                   ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        mainAxisSpaceBetween,
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                        child: CachedNetworkImage(
+                                                          imageUrl:
+                                                              product
+                                                                  .imageUrl ??
+                                                              "",
+                                                          width: 120,
+                                                          height: 100,
+                                                          fit: BoxFit.cover,
                                                         ),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl:
-                                                          product.imageUrl ??
-                                                          "",
-                                                      width: 90,
-                                                      height: 100,
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                                      ),
+                                                      heightBox(5),
+                                                      Text(
+                                                        product.productName ??
+                                                            "",
+                                                        style:
+                                                            context.bodyMedium,
+                                                        maxLines: 1,
+                                                      ),
+                                                    ],
                                                   ),
                                                 );
                                               },
