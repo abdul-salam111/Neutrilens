@@ -30,7 +30,6 @@ class SigninController extends GetxController {
     response.fold(
       (failure) {
         isloading.value = false;
-
         AppToasts.showErrorToast(Get.context!, failure.toString());
       },
       (token) async {
@@ -38,7 +37,7 @@ class SigninController extends GetxController {
         await storage.setValues(StorageKeys.token, token);
         await getLoggedInUserDetails();
         isloading.value = false;
-        Get.offAllNamed(Routes.NAVBAR);
+        //navigation to the navbar is also over there in the get user details method
       },
     );
   }
@@ -52,6 +51,7 @@ class SigninController extends GetxController {
       (user) async {
         await SessionController().saveUserInStorage(user);
         await SessionController().getUserfromSharedpref();
+        await Get.offAllNamed(Routes.NAVBAR);
       },
     );
   }

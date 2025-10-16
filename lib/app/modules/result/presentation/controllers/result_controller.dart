@@ -363,8 +363,9 @@ class ResultController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getProductDetails().then((_) => getSuggestedProduct());
-    // .then((_) => uploadScannedProduct());
+    getProductDetails()
+        .then((_) => getSuggestedProduct())
+        .then((_) => uploadScannedProduct());
   }
 
   uploadScannedProduct() async {

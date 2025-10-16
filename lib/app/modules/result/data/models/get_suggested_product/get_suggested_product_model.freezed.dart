@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GetSuggestedProductModel {
 
-@JsonKey(name: "product_name") String? get productName;@JsonKey(name: "brand") String? get brand;@JsonKey(name: "nutrition_grade") String? get nutritionGrade;@JsonKey(name: "image_url") String? get imageUrl;
+@JsonKey(name: "product_name") String? get productName;@JsonKey(name: "brand") String? get brand;@JsonKey(name: "nutrition_grade") String? get nutritionGrade;@JsonKey(name: "image_url") String? get imageUrl;@JsonKey(name: "barcode") String? get barcode;
 /// Create a copy of GetSuggestedProductModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GetSuggestedProductModelCopyWith<GetSuggestedProductModel> get copyWith => _$Ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetSuggestedProductModel&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.nutritionGrade, nutritionGrade) || other.nutritionGrade == nutritionGrade)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetSuggestedProductModel&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.nutritionGrade, nutritionGrade) || other.nutritionGrade == nutritionGrade)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.barcode, barcode) || other.barcode == barcode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,productName,brand,nutritionGrade,imageUrl);
+int get hashCode => Object.hash(runtimeType,productName,brand,nutritionGrade,imageUrl,barcode);
 
 @override
 String toString() {
-  return 'GetSuggestedProductModel(productName: $productName, brand: $brand, nutritionGrade: $nutritionGrade, imageUrl: $imageUrl)';
+  return 'GetSuggestedProductModel(productName: $productName, brand: $brand, nutritionGrade: $nutritionGrade, imageUrl: $imageUrl, barcode: $barcode)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $GetSuggestedProductModelCopyWith<$Res>  {
   factory $GetSuggestedProductModelCopyWith(GetSuggestedProductModel value, $Res Function(GetSuggestedProductModel) _then) = _$GetSuggestedProductModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "product_name") String? productName,@JsonKey(name: "brand") String? brand,@JsonKey(name: "nutrition_grade") String? nutritionGrade,@JsonKey(name: "image_url") String? imageUrl
+@JsonKey(name: "product_name") String? productName,@JsonKey(name: "brand") String? brand,@JsonKey(name: "nutrition_grade") String? nutritionGrade,@JsonKey(name: "image_url") String? imageUrl,@JsonKey(name: "barcode") String? barcode
 });
 
 
@@ -65,12 +65,13 @@ class _$GetSuggestedProductModelCopyWithImpl<$Res>
 
 /// Create a copy of GetSuggestedProductModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? productName = freezed,Object? brand = freezed,Object? nutritionGrade = freezed,Object? imageUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? productName = freezed,Object? brand = freezed,Object? nutritionGrade = freezed,Object? imageUrl = freezed,Object? barcode = freezed,}) {
   return _then(_self.copyWith(
 productName: freezed == productName ? _self.productName : productName // ignore: cast_nullable_to_non_nullable
 as String?,brand: freezed == brand ? _self.brand : brand // ignore: cast_nullable_to_non_nullable
 as String?,nutritionGrade: freezed == nutritionGrade ? _self.nutritionGrade : nutritionGrade // ignore: cast_nullable_to_non_nullable
 as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "product_name")  String? productName, @JsonKey(name: "brand")  String? brand, @JsonKey(name: "nutrition_grade")  String? nutritionGrade, @JsonKey(name: "image_url")  String? imageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "product_name")  String? productName, @JsonKey(name: "brand")  String? brand, @JsonKey(name: "nutrition_grade")  String? nutritionGrade, @JsonKey(name: "image_url")  String? imageUrl, @JsonKey(name: "barcode")  String? barcode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetSuggestedProductModel() when $default != null:
-return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUrl);case _:
+return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUrl,_that.barcode);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "product_name")  String? productName, @JsonKey(name: "brand")  String? brand, @JsonKey(name: "nutrition_grade")  String? nutritionGrade, @JsonKey(name: "image_url")  String? imageUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "product_name")  String? productName, @JsonKey(name: "brand")  String? brand, @JsonKey(name: "nutrition_grade")  String? nutritionGrade, @JsonKey(name: "image_url")  String? imageUrl, @JsonKey(name: "barcode")  String? barcode)  $default,) {final _that = this;
 switch (_that) {
 case _GetSuggestedProductModel():
-return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUrl);case _:
+return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUrl,_that.barcode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "product_name")  String? productName, @JsonKey(name: "brand")  String? brand, @JsonKey(name: "nutrition_grade")  String? nutritionGrade, @JsonKey(name: "image_url")  String? imageUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "product_name")  String? productName, @JsonKey(name: "brand")  String? brand, @JsonKey(name: "nutrition_grade")  String? nutritionGrade, @JsonKey(name: "image_url")  String? imageUrl, @JsonKey(name: "barcode")  String? barcode)?  $default,) {final _that = this;
 switch (_that) {
 case _GetSuggestedProductModel() when $default != null:
-return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUrl);case _:
+return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUrl,_that.barcode);case _:
   return null;
 
 }
@@ -212,13 +213,14 @@ return $default(_that.productName,_that.brand,_that.nutritionGrade,_that.imageUr
 @JsonSerializable()
 
 class _GetSuggestedProductModel implements GetSuggestedProductModel {
-  const _GetSuggestedProductModel({@JsonKey(name: "product_name") this.productName, @JsonKey(name: "brand") this.brand, @JsonKey(name: "nutrition_grade") this.nutritionGrade, @JsonKey(name: "image_url") this.imageUrl});
+  const _GetSuggestedProductModel({@JsonKey(name: "product_name") this.productName, @JsonKey(name: "brand") this.brand, @JsonKey(name: "nutrition_grade") this.nutritionGrade, @JsonKey(name: "image_url") this.imageUrl, @JsonKey(name: "barcode") this.barcode});
   factory _GetSuggestedProductModel.fromJson(Map<String, dynamic> json) => _$GetSuggestedProductModelFromJson(json);
 
 @override@JsonKey(name: "product_name") final  String? productName;
 @override@JsonKey(name: "brand") final  String? brand;
 @override@JsonKey(name: "nutrition_grade") final  String? nutritionGrade;
 @override@JsonKey(name: "image_url") final  String? imageUrl;
+@override@JsonKey(name: "barcode") final  String? barcode;
 
 /// Create a copy of GetSuggestedProductModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetSuggestedProductModel&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.nutritionGrade, nutritionGrade) || other.nutritionGrade == nutritionGrade)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetSuggestedProductModel&&(identical(other.productName, productName) || other.productName == productName)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.nutritionGrade, nutritionGrade) || other.nutritionGrade == nutritionGrade)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.barcode, barcode) || other.barcode == barcode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,productName,brand,nutritionGrade,imageUrl);
+int get hashCode => Object.hash(runtimeType,productName,brand,nutritionGrade,imageUrl,barcode);
 
 @override
 String toString() {
-  return 'GetSuggestedProductModel(productName: $productName, brand: $brand, nutritionGrade: $nutritionGrade, imageUrl: $imageUrl)';
+  return 'GetSuggestedProductModel(productName: $productName, brand: $brand, nutritionGrade: $nutritionGrade, imageUrl: $imageUrl, barcode: $barcode)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$GetSuggestedProductModelCopyWith<$Res> implements $GetSug
   factory _$GetSuggestedProductModelCopyWith(_GetSuggestedProductModel value, $Res Function(_GetSuggestedProductModel) _then) = __$GetSuggestedProductModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "product_name") String? productName,@JsonKey(name: "brand") String? brand,@JsonKey(name: "nutrition_grade") String? nutritionGrade,@JsonKey(name: "image_url") String? imageUrl
+@JsonKey(name: "product_name") String? productName,@JsonKey(name: "brand") String? brand,@JsonKey(name: "nutrition_grade") String? nutritionGrade,@JsonKey(name: "image_url") String? imageUrl,@JsonKey(name: "barcode") String? barcode
 });
 
 
@@ -270,12 +272,13 @@ class __$GetSuggestedProductModelCopyWithImpl<$Res>
 
 /// Create a copy of GetSuggestedProductModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? productName = freezed,Object? brand = freezed,Object? nutritionGrade = freezed,Object? imageUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? productName = freezed,Object? brand = freezed,Object? nutritionGrade = freezed,Object? imageUrl = freezed,Object? barcode = freezed,}) {
   return _then(_GetSuggestedProductModel(
 productName: freezed == productName ? _self.productName : productName // ignore: cast_nullable_to_non_nullable
 as String?,brand: freezed == brand ? _self.brand : brand // ignore: cast_nullable_to_non_nullable
 as String?,nutritionGrade: freezed == nutritionGrade ? _self.nutritionGrade : nutritionGrade // ignore: cast_nullable_to_non_nullable
 as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

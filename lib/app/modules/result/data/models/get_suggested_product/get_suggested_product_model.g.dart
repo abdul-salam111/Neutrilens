@@ -13,6 +13,7 @@ _GetSuggestedProductModel _$GetSuggestedProductModelFromJson(
   brand: json['brand'] as String?,
   nutritionGrade: json['nutrition_grade'] as String?,
   imageUrl: json['image_url'] as String?,
+  barcode: json['barcode'] as String?,
 );
 
 Map<String, dynamic> _$GetSuggestedProductModelToJson(
@@ -22,4 +23,5 @@ Map<String, dynamic> _$GetSuggestedProductModelToJson(
   'brand': instance.brand,
   'nutrition_grade': instance.nutritionGrade,
   'image_url': instance.imageUrl,
+  'barcode': instance.barcode,
 };

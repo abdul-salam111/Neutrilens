@@ -84,9 +84,10 @@ class ProfileView extends GetView<ProfileController> {
                     text: "Log Out",
                     onPressed: () async {
                       await storage.clearValues(StorageKeys.userDetails);
+
                       await storage.clearValues(StorageKeys.loggedIn);
                       await storage.clearValues(StorageKeys.token);
-                      Get.offAllNamed(Routes.SIGNIN);
+                      await Get.offAllNamed(Routes.SIGNIN);
                     },
                     backgroundColor: AppColors.appPrimaryColor,
                   ),

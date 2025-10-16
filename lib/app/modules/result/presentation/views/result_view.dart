@@ -384,8 +384,16 @@ class ResultView extends GetView<ResultController> {
                                 () => SizedBox(
                                   height: context.screenHeight * 0.19,
                                   child: controller.isLoadingSuggested.value
-                                      ? Text(
-                                          "Please, wait for the suggested products...",
+                                      ? Center(
+                                          child: Text(
+                                            "Please, wait for the suggested products...",
+                                          ),
+                                        )
+                                      : controller.suggestedProducts.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            "No similar products found",
+                                          ),
                                         )
                                       : SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
@@ -398,49 +406,258 @@ class ResultView extends GetView<ResultController> {
                                                 final product = controller
                                                     .suggestedProducts[index];
 
-                                                return Container(
-                                                  width: 120,
-                                                  padding: padding5,
-                                                  margin:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                      ),
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    Get.generalDialog(
+                                                      pageBuilder:
+                                                          (
+                                                            context,
+                                                            animation,
+                                                            secondaryAnimation,
+                                                          ) {
+                                                            return Dialog(
+                                                              constraints:
+                                                                  BoxConstraints(
+                                                                    minHeight:
+                                                                        context
+                                                                            .screenHeight *
+                                                                        0.5,
+                                                                    minWidth:
+                                                                        context
+                                                                            .screenWidth *
+                                                                        0.8,
+                                                                  ),
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        15,
+                                                                      ),
+                                                                ),
+                                                                width:
+                                                                    double
+                                                                        .infinity -
+                                                                    80,
+                                                                height:
+                                                                    context
+                                                                        .screenHeight *
+                                                                    0.6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Stack(
+                                                                      alignment:
+                                                                          topRight,
+                                                                      children: [
+                                                                        ClipRRect(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(
+                                                                                8,
+                                                                              ),
+                                                                          child: CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                product.imageUrl ??
+                                                                                "",
+                                                                            width:
+                                                                                double.infinity,
+                                                                            height:
+                                                                                context.height *
+                                                                                0.4,
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
+                                                                        ),
+                                                                        InkWell(
+                                                                          onTap: () {
+                                                                            Get.back();
+                                                                          },
+                                                                          child: Padding(
+                                                                            padding: const EdgeInsets.all(
+                                                                              8.0,
+                                                                            ),
+                                                                            child: CircleAvatar(
+                                                                              backgroundColor: Colors.white,
+                                                                              child: Icon(
+                                                                                Icons.close,
+                                                                                color: Colors.red,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
 
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey.shade200,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
+                                                                    Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                            8.0,
+                                                                          ),
+                                                                      child: Column(
+                                                                        crossAxisAlignment:
+                                                                            crossAxisStart,
+                                                                        children: [
+                                                                          RichText(
+                                                                            text: TextSpan(
+                                                                              style: context.bodyLarge,
+                                                                              children: [
+                                                                                TextSpan(
+                                                                                  text: "Product Name: ",
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.black,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                                TextSpan(
+                                                                                  text:
+                                                                                      product.productName ??
+                                                                                      "",
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.grey,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          heightBox(
+                                                                            5,
+                                                                          ),
+                                                                          RichText(
+                                                                            text: TextSpan(
+                                                                              style: context.bodyLarge,
+                                                                              children: [
+                                                                                TextSpan(
+                                                                                  text: "Brand: ",
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.black,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                                TextSpan(
+                                                                                  text:
+                                                                                      product.brand ??
+                                                                                      "",
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.grey,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          heightBox(
+                                                                            5,
+                                                                          ),
+                                                                          RichText(
+                                                                            text: TextSpan(
+                                                                              style: context.bodyLarge,
+                                                                              children: [
+                                                                                TextSpan(
+                                                                                  text: "Health Score: ",
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.black,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                                TextSpan(
+                                                                                  text: "${controller.mapNutriScoreLetterTo100(product.nutritionGrade)}%",
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.grey,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                      transitionBuilder:
+                                                          (
+                                                            context,
+                                                            animation,
+                                                            secondaryAnimation,
+                                                            child,
+                                                          ) {
+                                                            return FadeTransition(
+                                                              opacity:
+                                                                  animation,
+                                                              child: ScaleTransition(
+                                                                scale:
+                                                                    Tween<double>(
+                                                                      begin:
+                                                                          0.7,
+                                                                      end: 1.0,
+                                                                    ).animate(
+                                                                      CurvedAnimation(
+                                                                        parent:
+                                                                            animation,
+                                                                        curve: Curves
+                                                                            .easeOutCubic,
+                                                                      ),
+                                                                    ),
+                                                                child: child,
+                                                              ),
+                                                            );
+                                                          },
+                                                      transitionDuration:
+                                                          const Duration(
+                                                            milliseconds: 400,
+                                                          ),
+                                                      barrierDismissible: true,
+                                                      barrierLabel: '',
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 120,
+                                                    padding: padding5,
+                                                    margin:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 8,
                                                         ),
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        mainAxisSpaceBetween,
-                                                    children: [
-                                                      ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              8,
-                                                            ),
-                                                        child: CachedNetworkImage(
-                                                          imageUrl:
-                                                              product
-                                                                  .imageUrl ??
+
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade200,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8,
+                                                          ),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          mainAxisSpaceBetween,
+                                                      children: [
+                                                        ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                8,
+                                                              ),
+                                                          child: CachedNetworkImage(
+                                                            imageUrl:
+                                                                product
+                                                                    .imageUrl ??
+                                                                "",
+                                                            width: 120,
+                                                            height: 100,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                        heightBox(5),
+                                                        Text(
+                                                          product.productName ??
                                                               "",
-                                                          width: 120,
-                                                          height: 100,
-                                                          fit: BoxFit.cover,
+                                                          style: context
+                                                              .bodyMedium,
+                                                          maxLines: 1,
+                                                          textAlign:
+                                                              textAlignCenter,
                                                         ),
-                                                      ),
-                                                      heightBox(5),
-                                                      Text(
-                                                        product.productName ??
-                                                            "",
-                                                        style:
-                                                            context.bodyMedium,
-                                                        maxLines: 1,
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 );
                                               },

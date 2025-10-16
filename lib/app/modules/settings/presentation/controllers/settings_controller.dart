@@ -40,7 +40,8 @@ class SettingsController extends GetxController {
   }
 
   @override
-  void onInit() {
+
+  void onInit() async {
     super.onInit();
     getGoalsAndDietList();
     selectedGoalsIndex.value = SessionController().getUserDetails.goals ?? [];

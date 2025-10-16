@@ -24,18 +24,12 @@ class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
-  // @override
-  // Future<Either<AppException, GetProductResultModel>> getAllProducts() {
-  //   // TODO: implement getAllProducts
-  //   throw UnimplementedError();
-  // }
-
   @override
   Future<Either<AppException, List<GetSuggestedProductModel>>>
   getSuggestedProducts({required String qrCode}) async {
     try {
       final response = await _dio.getApi(
-        url: "https://bfd7e08bbfa2.ngrok-free.app/scan/scan-temp",
+        url: "${ApiKeys.getSuggestedProductsUrl}$qrCode",
       );
 
       if (response is List) {
