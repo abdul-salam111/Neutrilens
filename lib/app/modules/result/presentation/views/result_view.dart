@@ -416,17 +416,20 @@ class ResultView extends GetView<ResultController> {
                                                             secondaryAnimation,
                                                           ) {
                                                             return Dialog(
-                                                              constraints:
-                                                                  BoxConstraints(
-                                                                    minHeight:
-                                                                        context
-                                                                            .screenHeight *
-                                                                        0.5,
-                                                                    minWidth:
-                                                                        context
-                                                                            .screenWidth *
-                                                                        0.8,
-                                                                  ),
+                                                              constraints: BoxConstraints(
+                                                                minHeight:
+                                                                    context
+                                                                        .screenHeight *
+                                                                    0.6,
+                                                                maxHeight:
+                                                                    context
+                                                                        .screenHeight *
+                                                                    0.6,
+                                                                minWidth:
+                                                                    context
+                                                                        .screenWidth *
+                                                                    0.8,
+                                                              ),
                                                               child: Container(
                                                                 decoration: BoxDecoration(
                                                                   color: Colors
@@ -440,10 +443,7 @@ class ResultView extends GetView<ResultController> {
                                                                     double
                                                                         .infinity -
                                                                     80,
-                                                                height:
-                                                                    context
-                                                                        .screenHeight *
-                                                                    0.6,
+
                                                                 child: Column(
                                                                   children: [
                                                                     Stack(
