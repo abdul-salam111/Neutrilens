@@ -3,7 +3,7 @@ import 'package:neutri_lens/app/modules/home/domain/abstract_repositories/home_r
 import 'package:neutri_lens/app/modules/home/data/repository_impl/home_repository_impl.dart';
 
 import '../../../../core/data/network_manager/dio_helper.dart';
-import '../../data/datasources/remote_datasource/home_remote_data_source_impl.dart';
+import '../../data/datasources/remote_data_source/home_remote_data_source_impl.dart';
 import '../controllers/home_controller.dart';
 
 class HomeBinding extends Bindings {

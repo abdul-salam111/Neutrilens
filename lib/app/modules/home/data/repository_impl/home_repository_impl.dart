@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:neutri_lens/app/modules/home/data/models/get_all_products_model.dart';
 import 'package:neutri_lens/app/modules/home/domain/abstract_repositories/home_repository.dart';
 import '../../../../core/core.dart';
-import '../datasources/remote_datasource/home_remote_data_source.dart';
+import '../datasources/remote_data_source/home_remote_data_source.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
   final HomeRemoteDataSource remoteDataSource;

@@ -1,36 +1,31 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:io';
-
 import 'package:ai_barcode_scanner/ai_barcode_scanner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:neutri_lens/app/core/core.dart';
+import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
 import 'package:neutri_lens/app/modules/home/presentation/views/home_view.dart';
 import 'package:neutri_lens/app/modules/profile/views/profile_view.dart';
-
 import 'package:neutri_lens/app/modules/settings/presentation/views/settings_view.dart';
-import 'package:neutri_lens/app/modules/trends/views/trends_view.dart';
+import 'package:neutri_lens/app/modules/trends/presentation/views/trends_view.dart';
 import 'package:neutri_lens/app/routes/app_pages.dart';
-
+import '../../../result/presentation/bindings/result_binding.dart';
+import '../../../result/presentation/controllers/result_controller.dart';
 import '../controllers/navbar_controller.dart';
 
 class NavbarView extends GetView<NavbarController> {
   const NavbarView({super.key});
-  
-  @override
 
+  @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        body:IndexedStack(
-            index: controller.currentIndex.value,
-         children: [
-            HomeView(),
-            TrendsView(),
-            SettingsView(),
-            ProfileView(),
-          ],
+        body: IndexedStack(
+          index: controller.currentIndex.value,
+          children: [HomeView(), TrendsView(), SettingsView(), ProfileView()],
         ),
         bottomNavigationBar: Container(
           padding: EdgeInsets.symmetric(
@@ -61,8 +56,12 @@ class NavbarView extends GetView<NavbarController> {
               _buildNavItem(Icons.trending_up, Icons.trending_up, "Trends", 1),
               GestureDetector(
                 onTap: () async {
+                  // create controller here so we can stop/start scanning
+                  final mobileController = MobileScannerController();
+
                   await Get.to(() {
                     return AiBarcodeScanner(
+                      controller: mobileController, // pass controller
                       scanWindow: Rect.fromCenter(
                         center: Offset(
                           MediaQuery.of(context).size.width / 2,
@@ -72,13 +71,82 @@ class NavbarView extends GetView<NavbarController> {
                         height: 100,
                       ),
                       onDetectError: (error, stacktrace) {
-                        if (kDebugMode) {
-                          print(stacktrace);
-                        }
+                        if (kDebugMode) print(stacktrace);
                       },
                       onDetect: (capture) async {
-                        final code = capture.barcodes.first.rawValue;
-                        Get.offNamed(Routes.RESULT, arguments: code);
+                        // Pause scanning immediately to avoid multiple onDetect calls
+                        try {
+                          await mobileController.stop(); // pause scanner
+                          final code = capture.barcodes.first.rawValue;
+                          if (code == null || code.isEmpty) {
+                            // show error and resume scanner
+                            await _showErrorDialogAndResume(
+                              "No barcode detected.",
+                              mobileController,
+                            );
+                            return;
+                          }
+                          Get.dialog(
+                            WillPopScope(
+                              onWillPop: () async => false,
+                              child: Center(
+                                child: Container(
+                                  width: context.screenWidth * 0.5,
+                                  padding: const EdgeInsets.all(30),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      LoadingIndicator(size: 24),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Loading product details...",
+                                        style: context.bodyMedium,
+                                        textAlign: textAlignCenter,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            barrierDismissible: false,
+                          );
+                          // init binding + controller
+                          ResultBinding().dependencies();
+                          final resultController =
+                              Get.isRegistered<ResultController>()
+                              ? Get.find<ResultController>()
+                              : Get.put(ResultController(Get.find()));
+
+                          await resultController.getProductDetails(code);
+                          // ✅ After successful API call
+                          if (resultController.errorMessage.value != null) {
+                            await _showErrorDialogAndResume(
+                              "Barcode not found.",
+                              mobileController,
+                            );
+                          } else {
+                            // close loader if still open
+                            if (Get.isDialogOpen == true) Get.back();
+                            Get.back();
+                            Get.toNamed(Routes.RESULT, arguments: code);
+                          }
+
+                          // close loader
+                          if (Get.isDialogOpen == true) Get.back();
+                        } catch (e) {
+                          // ensure loader closed
+                          if (Get.isDialogOpen == true) Get.back();
+
+                          // show error dialog and resume scanner when user presses Close
+                          await _showErrorDialogAndResume(
+                            e.toString(),
+                            mobileController,
+                          );
+                        }
                       },
                     );
                   });
@@ -86,7 +154,6 @@ class NavbarView extends GetView<NavbarController> {
                 child: CircleAvatar(
                   radius: 28,
                   backgroundColor: Colors.black,
-
                   child: Icon(
                     Iconsax.scan,
                     color: AppColors.appPrimaryColor,
@@ -106,6 +173,39 @@ class NavbarView extends GetView<NavbarController> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showErrorDialogAndResume(
+    String message,
+    MobileScannerController controller,
+  ) async {
+    await Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text(
+          "Message",
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              // close dialog
+              Get.back();
+              // resume scanning
+              try {
+                await controller.start();
+              } catch (_) {
+                // ignore start errors (optionally log)
+              }
+            },
+            child: const Text("Close", style: TextStyle(color: Colors.black)),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 part 'get_product_result_model.freezed.dart';
 part 'get_product_result_model.g.dart';
 
@@ -25,8 +26,7 @@ abstract class Product with _$Product {
     @JsonKey(name: "nutriscore_grade") String? nutriscoreGrade,
     @JsonKey(name: "nutriscore_score") int? nutriscoreScore,
     @JsonKey(name: "product_name") String? productName,
-    // Added fields for NutriLens scoring
-    @JsonKey(name: "nova_group") int? novaGroup,
+    // REMOVED: nova_group from Product level (it's in nutriments)
     @JsonKey(name: "additives_n") int? additivesN,
   }) = _Product;
 
@@ -37,16 +37,18 @@ abstract class Product with _$Product {
 @freezed
 abstract class Nutriments with _$Nutriments {
   const factory Nutriments({
+    // Basic nutrients
     @JsonKey(name: "fat") double? fat,
     @JsonKey(name: "fiber") double? fiber,
     @JsonKey(name: "salt") double? salt,
     @JsonKey(name: "saturated-fat") double? saturatedFat,
     @JsonKey(name: "sodium") double? sodium,
     @JsonKey(name: "sugars") double? sugars,
-    // Added fields for fallback calculation
     @JsonKey(name: "energy-kcal") double? energyKcal,
     @JsonKey(name: "proteins") double? proteins,
-    // Per 100g values (more reliable)
+    @JsonKey(name: "carbohydrates") double? carbohydrates,
+    
+    // Per 100g values (MOST IMPORTANT - always prefer these)
     @JsonKey(name: "fat_100g") double? fat100g,
     @JsonKey(name: "fiber_100g") double? fiber100g,
     @JsonKey(name: "salt_100g") double? salt100g,
@@ -55,6 +57,15 @@ abstract class Nutriments with _$Nutriments {
     @JsonKey(name: "sugars_100g") double? sugars100g,
     @JsonKey(name: "energy-kcal_100g") double? energyKcal100g,
     @JsonKey(name: "proteins_100g") double? proteins100g,
+    @JsonKey(name: "carbohydrates_100g") double? carbohydrates100g,
+    
+    // CRITICAL: NOVA group is inside nutriments!
+    @JsonKey(name: "nova-group") int? novaGroup,
+    @JsonKey(name: "nova-group_100g") int? novaGroup100g,
+    
+    // Nutrition scores
+    @JsonKey(name: "nutrition-score-fr") int? nutritionScoreFr,
+    @JsonKey(name: "nutrition-score-fr_100g") int? nutritionScoreFr100g,
   }) = _Nutriments;
 
   factory Nutriments.fromJson(Map<String, dynamic> json) =>

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
-
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {
@@ -11,7 +9,28 @@ class SettingsView extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), centerTitle: false),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: false,
+        backgroundColor: AppColors.appPrimaryColor,
+        actions: [
+          Obx(
+            () => TextButton.icon(
+              onPressed: () async {
+                controller.isEdit.value = !controller.isEdit.value;
+              },
+              label: Text(
+                controller.isEdit.value ? "Update" : "Edit",
+                style: context.bodyMedium,
+              ),
+              icon: Icon(
+                controller.isEdit.value ? Icons.done : Icons.edit,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: screenPadding,
@@ -37,7 +56,9 @@ class SettingsView extends GetView<SettingsController> {
                               visualDensity: VisualDensity(vertical: -4),
                               controlAffinity: ListTileControlAffinity.leading,
                               checkColor: AppColors.blackTextColor,
-                              side: BorderSide(color: AppColors.blackTextColor),
+                              side: BorderSide(
+                                color: AppColors.appPrimaryColor,
+                              ),
                               activeColor: AppColors.appPrimaryColor,
                               title: Text(
                                 controller.goals[index].name ?? "",
@@ -47,7 +68,19 @@ class SettingsView extends GetView<SettingsController> {
                                   controller.selectedGoalsIndex.contains(index)
                                   ? true
                                   : false,
-                              onChanged: (bool? value) {},
+                              onChanged: controller.isEdit.value
+                                  ? (value) {
+                                      if (value!) {
+                                        controller.selectedGoalsIndex.add(
+                                          index,
+                                        );
+                                      } else {
+                                        controller.selectedGoalsIndex.remove(
+                                          index,
+                                        );
+                                      }
+                                    }
+                                  : (val) {},
                             ),
                           );
                         }),
@@ -55,7 +88,7 @@ class SettingsView extends GetView<SettingsController> {
               ),
               heightBox(20),
               Text(
-                "Allergens to Avoid",
+                "Food Types",
                 style: context.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
@@ -67,14 +100,32 @@ class SettingsView extends GetView<SettingsController> {
                     final isSelected = controller.selectedAllergens.contains(
                       item.id,
                     );
+
                     return ChoiceChip(
-                      side: BorderSide(color: Colors.transparent),
-                      checkmarkColor: Colors.black,
-                      backgroundColor: AppColors.lightGreyColor,
-                      label: Text(item.name ?? "", style: context.bodyMedium),
+                      label: Text(
+                        item.name ?? "",
+                        style: context.bodyMedium!.copyWith(
+                          color: Colors.black,
+                        ),
+                      ),
                       selected: isSelected,
+                      checkmarkColor: Colors.black,
+                      side: const BorderSide(color: AppColors.appPrimaryColor),
+                      backgroundColor: Colors.white,
                       selectedColor: AppColors.appPrimaryColor,
-                      onSelected: (_) {},
+                      disabledColor: isSelected
+                          ? AppColors.appPrimaryColor
+                          : Colors
+                                .white, // ✅ consistent color even when disabled
+                      onSelected: (_) {
+                        if (!controller.isEdit.value)
+                          return; // ✅ ignore taps when not editing
+                        if (isSelected) {
+                          controller.selectedAllergens.remove(item.id);
+                        } else {
+                          controller.selectedAllergens.add(item.id!);
+                        }
+                      },
                     );
                   }).toList(),
                 ),

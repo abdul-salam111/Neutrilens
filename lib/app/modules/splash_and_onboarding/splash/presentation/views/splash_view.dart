@@ -9,14 +9,14 @@ class SplashView extends GetView<SplashController> {
   const SplashView({super.key});
   @override
   Widget build(BuildContext context) {
-      Get.put(SplashController());
+    Get.put(SplashController());
     return Scaffold(
       backgroundColor: ThemeService.getThemedColor(
         lightColor: AppColors.appPrimaryColor,
         darkColor: AppColors.appPrimaryColor,
       ),
       body: Center(
-        child: Image.asset(AppImages.appLogo, height: 100, width: 100),
+        child: Image.asset(AppImages.appLogo, height: 130, width: 130),
       ),
     );
   }

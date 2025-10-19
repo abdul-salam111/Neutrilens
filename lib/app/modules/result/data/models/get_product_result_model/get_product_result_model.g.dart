@@ -38,7 +38,6 @@ _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
   nutriscoreGrade: json['nutriscore_grade'] as String?,
   nutriscoreScore: (json['nutriscore_score'] as num?)?.toInt(),
   productName: json['product_name'] as String?,
-  novaGroup: (json['nova_group'] as num?)?.toInt(),
   additivesN: (json['additives_n'] as num?)?.toInt(),
 );
 
@@ -50,7 +49,6 @@ Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
   'nutriscore_grade': instance.nutriscoreGrade,
   'nutriscore_score': instance.nutriscoreScore,
   'product_name': instance.productName,
-  'nova_group': instance.novaGroup,
   'additives_n': instance.additivesN,
 };
 
@@ -63,6 +61,7 @@ _Nutriments _$NutrimentsFromJson(Map<String, dynamic> json) => _Nutriments(
   sugars: (json['sugars'] as num?)?.toDouble(),
   energyKcal: (json['energy-kcal'] as num?)?.toDouble(),
   proteins: (json['proteins'] as num?)?.toDouble(),
+  carbohydrates: (json['carbohydrates'] as num?)?.toDouble(),
   fat100g: (json['fat_100g'] as num?)?.toDouble(),
   fiber100g: (json['fiber_100g'] as num?)?.toDouble(),
   salt100g: (json['salt_100g'] as num?)?.toDouble(),
@@ -71,6 +70,11 @@ _Nutriments _$NutrimentsFromJson(Map<String, dynamic> json) => _Nutriments(
   sugars100g: (json['sugars_100g'] as num?)?.toDouble(),
   energyKcal100g: (json['energy-kcal_100g'] as num?)?.toDouble(),
   proteins100g: (json['proteins_100g'] as num?)?.toDouble(),
+  carbohydrates100g: (json['carbohydrates_100g'] as num?)?.toDouble(),
+  novaGroup: (json['nova-group'] as num?)?.toInt(),
+  novaGroup100g: (json['nova-group_100g'] as num?)?.toInt(),
+  nutritionScoreFr: (json['nutrition-score-fr'] as num?)?.toInt(),
+  nutritionScoreFr100g: (json['nutrition-score-fr_100g'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$NutrimentsToJson(_Nutriments instance) =>
@@ -83,6 +87,7 @@ Map<String, dynamic> _$NutrimentsToJson(_Nutriments instance) =>
       'sugars': instance.sugars,
       'energy-kcal': instance.energyKcal,
       'proteins': instance.proteins,
+      'carbohydrates': instance.carbohydrates,
       'fat_100g': instance.fat100g,
       'fiber_100g': instance.fiber100g,
       'salt_100g': instance.salt100g,
@@ -91,4 +96,9 @@ Map<String, dynamic> _$NutrimentsToJson(_Nutriments instance) =>
       'sugars_100g': instance.sugars100g,
       'energy-kcal_100g': instance.energyKcal100g,
       'proteins_100g': instance.proteins100g,
+      'carbohydrates_100g': instance.carbohydrates100g,
+      'nova-group': instance.novaGroup,
+      'nova-group_100g': instance.novaGroup100g,
+      'nutrition-score-fr': instance.nutritionScoreFr,
+      'nutrition-score-fr_100g': instance.nutritionScoreFr100g,
     };

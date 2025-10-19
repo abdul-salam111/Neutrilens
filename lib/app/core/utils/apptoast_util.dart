@@ -81,3 +81,13 @@ class AppToasts {
     }
   }
 }
+
+// Add this method in your HomeView class or as a standalone function
+void dismissKeyboard(BuildContext context) {
+  final currentFocus = FocusScope.of(context);
+  if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+    currentFocus.focusedChild!.unfocus();
+  }
+  // Alternative method that always works:
+  FocusManager.instance.primaryFocus?.unfocus();
+}

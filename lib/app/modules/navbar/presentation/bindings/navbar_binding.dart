@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
+import 'package:neutri_lens/app/modules/profile/bindings/profile_binding.dart';
 import '../../../home/presentation/bindings/home_binding.dart';
 import '../../../settings/presentation/bindings/settings_binding.dart';
+import '../../../trends/presentation/bindings/trends_binding.dart';
 import '../controllers/navbar_controller.dart';
 
 class NavbarBinding extends Bindings {
@@ -9,5 +11,7 @@ class NavbarBinding extends Bindings {
     Get.lazyPut(() => NavbarController());
     HomeBinding().dependencies();
     SettingsBinding().dependencies();
+    TrendsBinding().dependencies();
+    ProfileBinding().dependencies();
   }
 }

@@ -1,40 +1,44 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/services/session_manager.dart';
-import 'package:neutri_lens/app/core/widgets/custom_searchfield.dart';
+
+import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
+import 'package:neutri_lens/app/modules/result/presentation/bindings/result_binding.dart';
+import '../../../../core/utils/grade_color.dart';
 import '../../../../routes/app_pages.dart';
+import '../../../result/presentation/controllers/result_controller.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Discover'),
-      //   centerTitle: false,
-      //   actions: [
-      //     GestureDetector(
-      //       onTap: () {},
-      //       child: CircleAvatar(
-      //         backgroundColor: AppColors.lightGreyColor,
-      //         child: Icon(
-      //           Iconsax.notification,
-      //           color: AppColors.appPrimaryColor,
-      //         ),
-      //       ),
-      //     ),
-      //     widthBox(10),
-      //   ],
-      // ),
-      body: UnfocusWrapper(
-        child: Column(
+    return UnfocusWrapper(
+      child: Scaffold(
+        // appBar: AppBar(
+        //   title: const Text('Discover'),
+        //   centerTitle: false,
+        //   actions: [
+        //     GestureDetector(
+        //       onTap: () {},
+        //       child: CircleAvatar(
+        //         backgroundColor: AppColors.lightGreyColor,
+        //         child: Icon(
+        //           Iconsax.notification,
+        //           color: AppColors.appPrimaryColor,
+        //         ),
+        //       ),
+        //     ),
+        //     widthBox(10),
+        //   ],
+        // ),
+        body: Column(
           crossAxisAlignment: crossAxisStart,
           children: [
             Container(
@@ -62,7 +66,7 @@ class HomeView extends GetView<HomeController> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "how can we help you?",
+                          text: "Let's find healthy products!",
                           style: context.bodyMedium!.copyWith(
                             color: Colors.white,
                           ),
@@ -71,10 +75,44 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   heightBox(10),
-                  CustomSearchField(
-                    controller: controller.searchController,
-                    hintText: "Search for keywords",
+                  SizedBox(
+                    child: TextField(
+                      autofocus: false,
+                      controller: controller.searchController,
+
+                      cursorColor: Colors.black,
+                      style: context.bodyMedium!.copyWith(
+                        color: AppColors.greyColor,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero,
+                        hintText: "Search for keywords",
+                        hintStyle: context.bodyMedium!.copyWith(
+                          color: AppColors.greyColor,
+                        ),
+                        fillColor: AppColors.whiteTextColor,
+                        filled: true,
+                        prefixIcon: Icon(
+                          Iconsax.search_normal,
+                          color: AppColors.greyColor,
+                          size: 20,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: AppColors.greyColor),
+                        ),
+                      ),
+                    ),
                   ),
+
                   heightBox(10),
                 ],
               ),
@@ -116,6 +154,8 @@ class HomeView extends GetView<HomeController> {
                 return RefreshIndicator(
                   onRefresh: controller.refreshProducts,
                   child: ListView.builder(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
                     padding: screenPadding,
                     controller: controller.scrollController,
                     itemCount:
@@ -134,9 +174,82 @@ class HomeView extends GetView<HomeController> {
                       }
 
                       final product = controller.products[index];
+
                       return InkWell(
-                        onTap: () =>
-                            Get.toNamed(Routes.RESULT, arguments: product.code),
+                        onTap: () async {
+                          dismissKeyboard(context);
+                          final productCode = product.code;
+                          if (productCode == null || productCode.isEmpty) {
+                            Get.snackbar(
+                              "Error",
+                              "Invalid product code",
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
+
+                          Get.dialog(
+                            WillPopScope(
+                              onWillPop: () async => false,
+                              child: Center(
+                                child: Container(
+                                  width: context.screenWidth * 0.5,
+                                  padding: const EdgeInsets.all(30),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      LoadingIndicator(size: 24),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Loading product details...",
+                                        style: context.bodyMedium,
+                                        textAlign: textAlignCenter,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            barrierDismissible: false,
+                          );
+
+                          try {
+                            ResultBinding().dependencies();
+                            final resultController =
+                                Get.isRegistered<ResultController>()
+                                ? Get.find<ResultController>()
+                                : Get.put(ResultController(Get.find()));
+
+                            // Fetch product details
+                            await resultController.getProductDetails(
+                              productCode,
+                            );
+
+                            // Close loading dialog
+                            Get.back();
+
+                            // Navigate to result page
+                            Get.toNamed(Routes.RESULT, arguments: productCode);
+                          } catch (e) {
+                            // Close loading dialog
+                            Get.back();
+
+                            // Show error message
+                            Get.snackbar(
+                              "Error",
+                              "Failed to load product details: ${e.toString()}",
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
+                        },
                         child: Container(
                           padding: defaultPadding,
                           margin: const EdgeInsets.only(top: 10),
@@ -157,19 +270,23 @@ class HomeView extends GetView<HomeController> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: product.imageFrontSmallUrl!,
-                                    height: Platform.isAndroid ? 100 : 100,
-                                    width: Platform.isAndroid ? 100 : 100,
-                                    fit: BoxFit.cover,
+                                  child: product.imageFrontSmallUrl != null
+                                      ? CachedNetworkImage(
+                                          imageUrl: product.imageFrontSmallUrl!,
+                                          height: Platform.isAndroid
+                                              ? 100
+                                              : 100,
+                                          width: Platform.isAndroid ? 100 : 100,
+                                          fit: BoxFit.cover,
 
-                                    errorWidget: (context, url, error) =>
-                                        Image.asset(
-                                          AppImages.appLogo,
-                                          height: 90,
-                                          width: 90,
-                                        ),
-                                  ),
+                                          errorWidget: (context, url, error) =>
+                                              Image.asset(
+                                                AppImages.appLogo,
+                                                height: 90,
+                                                width: 90,
+                                              ),
+                                        )
+                                      : SizedBox.shrink(),
                                 ),
                               ),
                               widthBox(10),
@@ -242,59 +359,9 @@ class HomeView extends GetView<HomeController> {
                                     heightBox(8),
 
                                     /// NutriScore + FoodIQ
-                                    Wrap(
-                                      spacing: 10,
-                                      runSpacing: 5,
-                                      children: [
-                                        if (product.nutriscoreGrade != null &&
-                                            product.nutriscoreGrade!.isNotEmpty)
-                                          Container(
-                                            width: 70,
-                                            padding: padding5,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              color: _getGradeColor(
-                                                product.nutriscoreGrade ??
-                                                    "unknown",
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                _getStatus(
-                                                  product.nutriscoreGrade ??
-                                                      "unknown",
-                                                ),
-                                                style: context.bodySmall!
-                                                    .copyWith(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 10,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        Container(
-                                          width: 70,
-                                          padding: padding5,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              50,
-                                            ),
-                                            color: AppColors.lightGreyColor,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              "FoodIQ",
-                                              style: context.bodySmall!
-                                                  .copyWith(
-                                                    color: Colors.black,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    buildGradeBadge(
+                                      context,
+                                      product.nutriscoreGrade,
                                     ),
                                   ],
                                 ),
@@ -314,38 +381,31 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Color _getGradeColor(String grade) {
-    switch (grade.toLowerCase()) {
-      case 'a':
-        return Colors.green;
-      case 'b':
-        return Colors.lightGreen;
-      case 'c':
-        return Colors.yellow.shade700;
-      case 'd':
-        return Colors.orange;
-      case 'e':
-        return Colors.red;
-      default:
-        return Colors.grey;
+  Widget buildGradeBadge(BuildContext context, String? grade) {
+    if (grade == null || grade.isEmpty) {
+      return const SizedBox.shrink(); // Don't show badge if unknown
     }
-  }
 
-  String _getStatus(String grade) {
-    switch (grade.toLowerCase()) {
-      case 'a':
-        return "Very good";
-      case 'b':
-        return "Good";
-      case 'c':
-        return "Average";
-      case 'd':
-        return "Poor";
-      case 'e':
-        return "Very Poor";
-
-      default:
-        return "Unknown";
-    }
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        width: 70,
+        padding: padding5,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: getGradeColor(grade),
+        ),
+        child: Center(
+          child: Text(
+            getGradeText(grade),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 11,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

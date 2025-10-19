@@ -18,8 +18,8 @@ import '../modules/splash_and_onboarding/onboarding/bindings/onboarding_binding.
 import '../modules/splash_and_onboarding/onboarding/views/onboarding_view.dart';
 import '../modules/splash_and_onboarding/splash/presentation/bindings/splash_binding.dart';
 import '../modules/splash_and_onboarding/splash/presentation/views/splash_view.dart';
-import '../modules/trends/bindings/trends_binding.dart';
-import '../modules/trends/views/trends_view.dart';
+import '../modules/trends/presentation/bindings/trends_binding.dart';
+import '../modules/trends/presentation/views/trends_view.dart';
 
 // ignore_for_file: constant_identifier_names
 

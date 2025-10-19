@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/modules/result/data/models/get_product_result_model/get_product_result_model.dart';
 import 'package:neutri_lens/app/modules/result/data/models/get_suggested_product/get_suggested_product_model.dart';
-import 'package:neutri_lens/app/modules/result/data/resppsitory/product_repository.dart';
-
-import '../../../../core/utils/apptoast_util.dart';
+import 'package:neutri_lens/app/modules/result/domain/abstract_repositories/product_repository.dart';
 import '../../data/models/upload_product_record/upload_product_record_model.dart';
 
 class NutriLensScores {
@@ -51,14 +49,14 @@ class ResultController extends GetxController {
   final Rx<String> grade = "".obs;
   final List<Map<String, dynamic>> nutritionDetails = [];
 
-  // New score-related observables
+  // Score-related observables
   final Rx<double> foodScore = 0.0.obs;
   final Rx<double> processedScore = 0.0.obs;
   final Rx<double> nutriLensScore = 0.0.obs;
   final Rx<String> scoringMethod = "".obs;
   final RxList<String> scoreExplanation = <String>[].obs;
 
-  // Helper functions from client's code
+  // Helper functions
   double? mapNutriScoreLetterTo100(String? letter) {
     if (letter == null) return null;
     const tbl = {'a': 95, 'b': 80, 'c': 65, 'd': 45, 'e': 25};
@@ -80,27 +78,32 @@ class ResultController extends GetxController {
     double score = 100;
     final explain = <String>[];
 
-    // Use 100g values preferentially, fall back to regular values
+    // Sugar penalty - use 100g values
     double sugars = nutriments.sugars100g ?? nutriments.sugars ?? 0;
     score -= 1.5 * sugars;
     if (sugars > 0) explain.add("Sugar -${(1.5 * sugars).round()}");
 
+    // Saturated fat penalty
     double satFat = nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0;
     score -= 2.0 * satFat;
     if (satFat > 0) explain.add("SatFat -${(2 * satFat).round()}");
 
-    // Sodium calculation (prefer sodium_100g, then salt_100g conversion)
+    // Sodium calculation (FIXED: proper salt to sodium conversion)
     double? sodium = nutriments.sodium100g ?? nutriments.sodium;
     if (sodium == null) {
       double? salt = nutriments.salt100g ?? nutriments.salt;
       if (salt != null) {
-        sodium = salt * 400; // salt → sodium conversion
+        // FIXED: salt to sodium conversion
+        // 1g salt = 0.4g sodium (salt is ~40% sodium)
+        sodium = salt * 0.4;
       }
     }
     if (sodium != null) {
-      double penalty = min(sodium / 10.0, 20);
+      // Sodium penalty (in mg): max 20 points deduction
+      double sodiumMg = sodium * 1000; // convert g to mg
+      double penalty = min(sodiumMg / 100.0, 20);
       score -= penalty;
-      explain.add("Sodium -${penalty.round()}");
+      if (penalty > 0) explain.add("Sodium -${penalty.round()}");
     }
 
     // Energy penalty
@@ -159,15 +162,15 @@ class ResultController extends GetxController {
     }
 
     if (food == null && nutriScore != null) {
-      // numeric fallback
+      // Numeric fallback from nutriscore_score
       food = clampValue(100 * (40 - nutriScore) / 55, 0, 100);
       explain.add("From nutriscore_score = $nutriScore");
       method = "direct";
     }
 
     if (food == null) {
+      // Full fallback calculation
       food = fallbackFoodScore(product.nutriments);
-      // Get explanation for fallback
       final nutriments = product.nutriments;
 
       if (nutriments != null) {
@@ -181,11 +184,12 @@ class ResultController extends GetxController {
         double? sodium = nutriments.sodium100g ?? nutriments.sodium;
         if (sodium == null) {
           double? salt = nutriments.salt100g ?? nutriments.salt;
-          if (salt != null) sodium = salt * 400;
+          if (salt != null) sodium = salt * 0.4; // FIXED conversion
         }
         if (sodium != null) {
-          double penalty = min(sodium / 10.0, 20);
-          explain.add("Sodium -${penalty.round()}");
+          double sodiumMg = sodium * 1000;
+          double penalty = min(sodiumMg / 100.0, 20);
+          if (penalty > 0) explain.add("Sodium -${penalty.round()}");
         }
 
         double kcal = nutriments.energyKcal100g ?? nutriments.energyKcal ?? 0;
@@ -205,14 +209,27 @@ class ResultController extends GetxController {
       method = "fallback";
     }
 
-    // --- Processed score ---
-    int? nova = product.novaGroup;
+    // --- Processed score (FIXED: NOVA is in nutriments!) ---
+    // CRITICAL: NOVA group is inside nutriments, not at product level
+    int? nova = product.nutriments?.novaGroup;
+
+    if (nova != null) {
+      print("✅ Found NOVA group in nutriments: $nova");
+    } else {
+      print("⚠️ NOVA group not found in nutriments");
+    }
+
     double? processed = mapNovaTo100(nova);
 
     if (processed == null) {
       // Fallback based on additives
       int additives = product.additivesN ?? 0;
       processed = max(15, 95 - additives * 10).toDouble();
+      print(
+        "📊 Using additives fallback: $additives additives = $processed score",
+      );
+    } else {
+      print("✅ Using NOVA group $nova = $processed score");
     }
 
     // --- Combined NutriLens score ---
@@ -249,10 +266,17 @@ class ResultController extends GetxController {
     return 'e';
   }
 
-  Future getProductDetails() async {
+  String _getNutrientLevel(String tag) {
+    if (tag.contains('high')) return 'high';
+    if (tag.contains('moderate')) return 'moderate';
+    if (tag.contains('low')) return 'low';
+    return 'unknown';
+  }
+
+  Future getProductDetails(String code) async {
     isLoading.value = true;
     errorMessage.value = null;
-    final barCode = Get.arguments.toString();
+    final barCode = code;
     final result = await _getProductResultRepo.getProductResult(
       barCode: barCode,
     );
@@ -266,10 +290,10 @@ class ResultController extends GetxController {
         isLoading.value = false;
         getProductResultModel.value = model;
 
-        // Compute NutriLens scores using client's algorithm
+        // Compute NutriLens scores
         final scores = computeNutriLensScores(model.product);
 
-        // Update observables with computed scores
+        // Update observables
         foodScore.value = scores.foodScore;
         processedScore.value = scores.processedScore;
         nutriLensScore.value = scores.nutriLensScore;
@@ -278,106 +302,131 @@ class ResultController extends GetxController {
           scores.debug["explainFood"] ?? [],
         );
 
-        // Set grade based on NutriLens score (not just nutriscore_grade)
+        // Set grade based on NutriLens score
         grade.value = getScoreGrade(scores.nutriLensScore);
         backgroundColor.value = getScoreColor(scores.nutriLensScore);
+
+        // Debug logging
+        print("🎯 Food Score: ${scores.foodScore}");
+        print("🏭 Processed Score: ${scores.processedScore}");
+        print("⭐ NutriLens Score: ${scores.nutriLensScore}");
+        print("📊 Method: ${scores.method}");
+        print("🔍 Debug: ${scores.debug}");
 
         // Build nutrition details
         nutritionDetails.clear();
         final nutriments = model.product?.nutriments;
         final nutrientTags = model.product?.nutrientLevelsTags ?? [];
 
-        if (nutriments == null) return;
+        if (nutriments != null) {
+          for (int i = 0; i < nutrientTags.length; i++) {
+            final tag = nutrientTags[i];
 
-        for (int i = 0; i < nutrientTags.length; i++) {
-          final tag = nutrientTags[i];
+            String? nutrientValue;
+            String? nutrientUnit;
+            String displayName = '';
 
-          String? nutrientValue;
-          String? nutrientUnit;
-          String displayName = '';
+            if (tag.contains('fat') && !tag.contains('saturated')) {
+              nutrientValue = '${nutriments.fat100g ?? nutriments.fat ?? 0}';
+              nutrientUnit = 'g';
+              displayName = 'Fat';
+            } else if (tag.contains('saturated-fat')) {
+              nutrientValue =
+                  '${nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0}';
+              nutrientUnit = 'g';
+              displayName = 'Saturated Fat';
+            } else if (tag.contains('sugars')) {
+              nutrientValue =
+                  '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
+              nutrientUnit = 'g';
+              displayName = 'Sugars';
+            } else if (tag.contains('salt')) {
+              nutrientValue = '${nutriments.salt100g ?? nutriments.salt ?? 0}';
+              nutrientUnit = 'g';
+              displayName = 'Salt';
+            }
 
-          // Get value and unit based on tag
-          if (tag.contains('fat') && !tag.contains('saturated')) {
-            nutrientValue = '${nutriments.fat100g ?? nutriments.fat ?? 0}';
-            nutrientUnit = 'g';
-            displayName = 'Fat';
-          } else if (tag.contains('saturated-fat')) {
-            nutrientValue =
-                '${nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0}';
-            nutrientUnit = 'g';
-            displayName = 'Saturated Fat';
-          } else if (tag.contains('sugars')) {
-            nutrientValue =
-                '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
-            nutrientUnit = 'g';
-            displayName = 'Sugars';
-          } else if (tag.contains('salt')) {
-            nutrientValue = '${nutriments.salt100g ?? nutriments.salt ?? 0}';
-            nutrientUnit = 'g';
-            displayName = 'Salt';
-          }
-
-          if (nutrientValue != null) {
-            nutritionDetails.add({
-              "tag": tag,
-              "display_name": displayName,
-              "value": nutrientValue,
-              "unit": nutrientUnit,
-              "level": _getNutrientLevel(tag),
-            });
+            if (nutrientValue != null) {
+              nutritionDetails.add({
+                "tag": tag,
+                "display_name": displayName,
+                "value": nutrientValue,
+                "unit": nutrientUnit,
+                "level": _getNutrientLevel(tag),
+              });
+            }
           }
         }
+
+        uploadScannedProduct(barCode, model.product?.productName ?? "Unknown");
+        return;
       },
     );
   }
 
-  String _getNutrientLevel(String tag) {
-    if (tag.contains('high')) return 'high';
-    if (tag.contains('moderate')) return 'moderate';
-    if (tag.contains('low')) return 'low';
-    return 'unknown';
-  }
-
-  RxList<GetSuggestedProductModel> suggestedProducts =
-      <GetSuggestedProductModel>[].obs;
-  final isLoadingSuggested = false.obs;
-
-  void getSuggestedProduct() async {
+  getSuggestedProduct(String code) async {
     isLoadingSuggested.value = true;
+
     final response = await _getProductResultRepo.getSuggestedProducts(
-      qrCode: Get.arguments.toString(),
+      qrCode: code,
     );
 
     response.fold(
       (failure) {
         isLoadingSuggested.value = false;
-        AppToasts.showErrorToast(Get.context!, failure.toString());
       },
       (model) {
         isLoadingSuggested.value = false;
         suggestedProducts.value = model;
+        suggestedProducts.refresh();
       },
     );
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    getProductDetails()
-        .then((_) => getSuggestedProduct())
-        .then((_) => uploadScannedProduct());
-  }
-
-  uploadScannedProduct() async {
+  Future uploadScannedProduct(String barcode, String productName) async {
     final response = await _getProductResultRepo.uploadScannedProduct(
       UploadProductRecordModel(
-        barcode: Get.arguments.toString(),
-        productName: getProductResultModel.value?.product?.productName,
+        barcode: barcode,
+        productName: productName,
         foodIqScore: nutriLensScore.value,
       ),
     );
-    response.fold((failure) {
-      AppToasts.showErrorToast(Get.context!, failure.toString());
-    }, (model) {});
+    response.fold(
+      (failure) {
+        print("Upload failed: $failure");
+      },
+      (model) {
+        print("Upload successful");
+      },
+    );
+  }
+
+  final suggestedProducts = GetSuggestedProductModel().obs;
+  final isLoadingSuggested = false.obs;
+
+  @override
+  void onReady() {
+    super.onReady();
+    getSuggestedProduct(Get.arguments.toString());
+  }
+
+  void resetControllerForNewProduct() {
+    print("🔄 Resetting controller for new product...");
+
+    isLoading.value = true;
+    getProductResultModel.value = null;
+    suggestedProducts.value = GetSuggestedProductModel();
+    isLoadingSuggested.value = true;
+    errorMessage.value = null;
+    backgroundColor.value = Colors.white;
+    grade.value = "";
+    foodScore.value = 0.0;
+    processedScore.value = 0.0;
+    nutriLensScore.value = 0.0;
+    scoringMethod.value = "";
+    scoreExplanation.clear();
+    nutritionDetails.clear();
+
+    print("✅ Controller reset complete");
   }
 }

@@ -5,7 +5,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
 import 'package:neutri_lens/app/core/widgets/loading_overlay.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../../../../core/core.dart';
 import '../../../../../core/widgets/custom_textfield.dart';
 import '../controllers/signup_controller.dart';
@@ -111,7 +110,7 @@ class SignupView extends GetView<SignupController> {
                             ? "Personal Information"
                             : controller.currentIndex.value == 1
                             ? "Goals"
-                            : "Diet & Allergens",
+                            : "Food Type",
                         style: context.displaySmall!.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -135,9 +134,9 @@ class SignupView extends GetView<SignupController> {
                 ),
               ),
               heightBox(context.screenHeight * 0.02),
-
               Expanded(
                 child: PageView(
+                  physics: neverscroll,
                   controller: controller.pageController,
                   onPageChanged: (value) {
                     controller.currentIndex.value = value;
@@ -332,7 +331,7 @@ class SignupView extends GetView<SignupController> {
                         crossAxisAlignment: crossAxisStart,
                         children: [
                           Text(
-                            "Allergens to Avoid",
+                            "Select Food Types",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 8),

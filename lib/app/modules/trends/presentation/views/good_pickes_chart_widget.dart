@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/core.dart';
+import '../../../../core/core.dart';
 
 // Model class to hold chart data
 class ChartDataPoint {
@@ -57,8 +59,8 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
           aspectRatio: 1.70,
           child: Padding(
             padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
+              right: 30,
+              left: 30,
               top: 24,
               bottom: 12,
             ),
@@ -70,7 +72,7 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    final style = context.bodySmall!.copyWith(color: AppColors.darkGreyColor);
+    final style = context.bodySmall!.copyWith(color: AppColors.greyColor);
 
     // If custom titles provided, use them
     if (widget.bottomTitles != null && widget.bottomTitles!.isNotEmpty) {
@@ -78,6 +80,7 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
       if (index >= 0 && index < widget.bottomTitles!.length) {
         return SideTitleWidget(
           meta: meta,
+
           child: Text(widget.bottomTitles![index], style: style),
         );
       }
@@ -108,54 +111,82 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
-    final style = context.bodySmall!.copyWith(color: AppColors.darkGreyColor);
+    final style = context.bodySmall!.copyWith(
+      color: AppColors.greyColor,
+      fontSize: 12,
+    );
 
     // If custom titles provided, use them
     if (widget.leftTitles != null && widget.leftTitles!.isNotEmpty) {
-      final index = value.toInt();
-      if (index >= 0 && index < widget.leftTitles!.length) {
-        return Text(
-          widget.leftTitles![index],
-          style: style,
-          textAlign: TextAlign.left,
-        );
+      // Find the closest value in leftTitles
+      for (int i = 0; i < widget.leftTitles!.length; i++) {
+        final titleValue = double.tryParse(widget.leftTitles![i]) ?? 0;
+        if ((value - titleValue).abs() < 1) {
+          // Allow small rounding differences
+          return SideTitleWidget(
+            meta: meta,
+            child: Container(
+              margin: EdgeInsets.only(right: 8),
+              child: Text(widget.leftTitles![i], style: style),
+            ),
+          );
+        }
       }
-      return Container();
     }
 
-    // Default behavior
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
+    // Fallback: Show the actual Y value
+    return SideTitleWidget(
+      meta: meta,
+      child: Container(
+        margin: EdgeInsets.only(right: 8),
+        child: Text(value.toStringAsFixed(0), style: style),
+      ),
+    );
   }
 
   // Calculate min/max values from data if not provided
   double get _minX =>
       widget.minX ??
-      widget.dataPoints.map((p) => p.x).reduce((a, b) => a < b ? a : b);
+      (widget.dataPoints.isNotEmpty
+          ? widget.dataPoints.map((p) => p.x).reduce((a, b) => a < b ? a : b)
+          : 0.0);
 
   double get _maxX =>
       widget.maxX ??
-      widget.dataPoints.map((p) => p.x).reduce((a, b) => a > b ? a : b);
+      (widget.dataPoints.isNotEmpty
+          ? widget.dataPoints.map((p) => p.x).reduce((a, b) => a > b ? a : b)
+          : 1.0);
 
   double get _minY => widget.minY ?? 0;
 
   double get _maxY =>
       widget.maxY ??
-      widget.dataPoints.map((p) => p.y).reduce((a, b) => a > b ? a : b) * 1.2;
+      (widget.dataPoints.isNotEmpty
+          ? _calculateMaxY(widget.dataPoints.map((p) => p.y).toList())
+          : 100.0);
+
+  // Calculate max Y with proper intervals to avoid overlapping
+  double _calculateMaxY(List<double> yValues) {
+    if (yValues.isEmpty) return 100.0;
+
+    final maxValue = yValues.reduce((a, b) => a > b ? a : b);
+
+    // Calculate a nice max value that prevents label overlapping
+    if (maxValue <= 10) return maxValue * 1.2;
+    if (maxValue <= 50) return (maxValue / 10).ceil() * 10.0 * 1.2;
+    if (maxValue <= 100) return (maxValue / 25).ceil() * 25.0 * 1.2;
+    return (maxValue / 50).ceil() * 50.0 * 1.2;
+  }
+
+  // Calculate appropriate interval for Y-axis
+  double get _yInterval {
+    final range = _maxY - _minY;
+    if (range <= 10) return 2;
+    if (range <= 50) return 10;
+    if (range <= 100) return 20;
+    if (range <= 200) return 40;
+    return 100;
+  }
 
   LineChartData mainData() {
     // Convert data points to FlSpot
@@ -165,16 +196,16 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
 
     return LineChartData(
       gridData: FlGridData(
-        show: false,
+        show: true,
         drawVerticalLine: false,
-        drawHorizontalLine: false,
-        horizontalInterval: 1,
+        drawHorizontalLine: true,
+        horizontalInterval: _yInterval,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
-          return const FlLine(color: AppColors.appPrimaryColor, strokeWidth: 1);
-        },
-        getDrawingVerticalLine: (value) {
-          return const FlLine(color: AppColors.appPrimaryColor, strokeWidth: 1);
+          return FlLine(
+            color: AppColors.lightGreyColor.withOpacity(0.3),
+            strokeWidth: 1,
+          );
         },
       ),
       titlesData: FlTitlesData(
@@ -185,25 +216,22 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-            interval: 1,
-            showTitles: false,
+            showTitles: true,
             reservedSize: 30,
+            interval: _calculateXInterval(),
             getTitlesWidget: bottomTitleWidgets,
           ),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-            interval: 1,
             showTitles: false,
-            reservedSize: 42,
+            reservedSize: 20, // Increased reserved space
+            interval: _yInterval,
             getTitlesWidget: leftTitleWidgets,
           ),
         ),
       ),
-      borderData: FlBorderData(
-        show: false,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
+      borderData: FlBorderData(show: false),
       minX: _minX,
       maxX: _maxX,
       minY: _minY,
@@ -215,10 +243,29 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
           gradient: LinearGradient(colors: gradientColors),
           barWidth: widget.lineWidth!,
           isStrokeCapRound: true,
-          dotData: FlDotData(show: widget.showDots),
+          dotData: FlDotData(
+            show: widget.showDots,
+
+            getDotPainter: (spot, percent, barData, index) {
+              return FlDotCirclePainter(
+                radius: 4,
+                color: Colors.white,
+                strokeWidth: 2,
+                strokeColor: widget.lineColor ?? AppColors.appPrimaryColor,
+              );
+            },
+          ),
           belowBarData: BarAreaData(show: false),
         ),
       ],
     );
+  }
+
+  double _calculateXInterval() {
+    final range = _maxX - _minX;
+    if (range <= 5) return 1;
+    if (range <= 10) return 2;
+    if (range <= 20) return 3;
+    return 4;
   }
 }

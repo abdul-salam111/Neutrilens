@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neutri_lens/app/core/core.dart';
-import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
+import 'package:neutri_lens/app/core/widgets/custom_button.dart';
+
+import '../../../../core/utils/grade_color.dart';
+import '../../../../routes/app_pages.dart';
 import '../controllers/result_controller.dart';
 
 class ResultView extends GetView<ResultController> {
@@ -12,10 +15,8 @@ class ResultView extends GetView<ResultController> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        backgroundColor: controller.backgroundColor.value,
-        body: controller.isLoading.value
-            ? Center(child: LoadingIndicator())
-            : controller.errorMessage.value == null
+        backgroundColor: getGradeColor(controller.grade.value),
+        body: controller.errorMessage.value == null
             ? SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -31,15 +32,35 @@ class ResultView extends GetView<ResultController> {
                             color: Colors.white,
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                controller
-                                        .getProductResultModel
-                                        .value
-                                        ?.product
-                                        ?.imageFrontSmallUrl
-                                        .toString() ??
-                                    "",
-                              ),
+                              image:
+                                  controller
+                                              .getProductResultModel
+                                              .value
+                                              ?.product
+                                              ?.imageFrontSmallUrl !=
+                                          null &&
+                                      controller
+                                          .getProductResultModel
+                                          .value!
+                                          .product!
+                                          .imageFrontSmallUrl!
+                                          .isNotEmpty &&
+                                      Uri.parse(
+                                        controller
+                                            .getProductResultModel
+                                            .value!
+                                            .product!
+                                            .imageFrontSmallUrl!,
+                                      ).isAbsolute
+                                  ? CachedNetworkImageProvider(
+                                      controller
+                                          .getProductResultModel
+                                          .value!
+                                          .product!
+                                          .imageFrontSmallUrl!,
+                                    )
+                                  : AssetImage(AppImages.appLogo)
+                                        as ImageProvider,
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -68,19 +89,24 @@ class ResultView extends GetView<ResultController> {
                               Positioned(
                                 bottom: 0,
                                 child: CircleAvatar(
-                                  backgroundColor:
-                                      controller.backgroundColor.value,
-                                  radius: 23,
-                                  child: Icon(
-                                    (controller.grade.value == "a" ||
-                                            controller.grade.value == "b")
-                                        ? Icons.check
-                                        : controller.grade.value == "c"
-                                        ? Icons.remove
-                                        : Icons.close,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    size: 35,
+                                  backgroundColor: Colors.white,
+                                  radius: 25,
+                                  child: CircleAvatar(
+                                    backgroundColor: getGradeColor(
+                                      controller.grade.value,
+                                    ),
+                                    radius: 23,
+                                    child: Icon(
+                                      (controller.grade.value == "a" ||
+                                              controller.grade.value == "b")
+                                          ? Icons.check
+                                          : controller.grade.value == "c"
+                                          ? Icons.remove
+                                          : Icons.close,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      size: 35,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -89,11 +115,7 @@ class ResultView extends GetView<ResultController> {
                         ),
                         heightBox(10),
                         Text(
-                          "${controller.grade.value == "a"
-                              ? "Good"
-                              : controller.grade.value == "c" || controller.grade.value == "b"
-                              ? "Ok"
-                              : "Don't"} Pick",
+                          getGradeText(controller.grade.value),
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -120,16 +142,11 @@ class ResultView extends GetView<ResultController> {
                                     "Health Score",
                                     style: context.titleMedium!.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                      fontSize: 23,
                                     ),
                                   ),
                                   heightBox(5),
-                                  Text(
-                                    "Grade: ${controller.grade.value.toUpperCase()}",
-                                    style: context.titleMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
+
                                   Text(
                                     controller.grade.value == "a"
                                         ? "Excellent nutritional quality"
@@ -142,21 +159,13 @@ class ResultView extends GetView<ResultController> {
                                         : "Very poor nutritional quality",
                                     style: context.bodyMedium!.copyWith(),
                                   ),
-                                  heightBox(10),
-                                  Text(
-                                    "Method: ${controller.scoringMethod.value}",
-                                    style: context.bodyMedium!.copyWith(
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
                                 ],
                               ),
                               Container(
                                 width: 80,
                                 padding: padding5,
                                 decoration: BoxDecoration(
-                                  color: controller.backgroundColor.value,
+                                  color: getGradeColor(controller.grade.value),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Center(
@@ -207,6 +216,7 @@ class ResultView extends GetView<ResultController> {
                                 "Processing Level",
                                 controller.processedScore.value,
                                 "30% weight",
+                                isInverseScale: true,
                               ),
                               if (controller.scoreExplanation.isNotEmpty) ...[
                                 heightBox(15),
@@ -249,30 +259,31 @@ class ResultView extends GetView<ResultController> {
                           child: Column(
                             crossAxisAlignment: crossAxisStart,
                             children: [
-                              Row(
-                                mainAxisAlignment: mainAxisSpaceBetween,
-                                children: [
-                                  Image.asset(
-                                    "assets/icons/like.png",
-                                    height: 50,
-                                    width: 50,
-                                  ),
-                                  Text(
-                                    "Do You Agree?",
-                                    style: context.titleMedium,
-                                  ),
-                                  Image.asset(
-                                    "assets/icons/dislike.png",
-                                    height: 50,
-                                    width: 50,
-                                  ),
-                                ],
-                              ),
-                              heightBox(30),
+                              // Row(
+                              //   mainAxisAlignment: mainAxisSpaceBetween,
+                              //   children: [
+                              //     Image.asset(
+                              //       "assets/icons/like.png",
+                              //       height: 50,
+                              //       width: 50,
+                              //     ),
+                              //     Text(
+                              //       "Do You Agree?",
+                              //       style: context.titleMedium,
+                              //     ),
+                              //     Image.asset(
+                              //       "assets/icons/dislike.png",
+                              //       height: 50,
+                              //       width: 50,
+                              //     ),
+                              //   ],
+                              // ),
+                              heightBox(5),
                               Text(
                                 "Key Inside",
-                                style: context.bodyLarge!.copyWith(
+                                style: context.titleMedium!.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 ),
                               ),
                               Padding(
@@ -336,45 +347,38 @@ class ResultView extends GetView<ResultController> {
                                 ),
                               ),
                               heightBox(10),
-                              SizedBox(
-                                height: 50,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: List.generate(
-                                      controller.nutritionDetails.length,
-                                      (index) {
-                                        return Container(
-                                          margin: defaultPadding,
-                                          padding: defaultPadding,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                controller
-                                                        .nutritionDetails[index]['level'] ==
-                                                    'high'
-                                                ? Colors.red.withAlpha(80)
-                                                : controller
-                                                          .nutritionDetails[index]['level'] ==
-                                                      'moderate'
-                                                ? Colors.orange.withAlpha(80)
-                                                : Colors.green.withAlpha(80),
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            "${controller.nutritionDetails[index]['level'].toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
-                                            style: context.bodyMedium,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 6,
+                                children: List.generate(
+                                  controller.nutritionDetails.length,
+                                  (index) {
+                                    return Container(
+                                      padding: defaultPadding,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            controller
+                                                    .nutritionDetails[index]['level'] ==
+                                                'high'
+                                            ? Colors.red.withAlpha(80)
+                                            : controller
+                                                      .nutritionDetails[index]['level'] ==
+                                                  'moderate'
+                                            ? Colors.orange.withAlpha(80)
+                                            : Colors.green.withAlpha(80),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        "${controller.nutritionDetails[index]['level'].toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
+                                        style: context.bodyMedium,
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                               heightBox(20),
                               Text(
-                                "Similar good food choices",
+                                "Better Choices",
                                 style: context.bodyLarge!.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -389,247 +393,361 @@ class ResultView extends GetView<ResultController> {
                                             "Please, wait for the suggested products...",
                                           ),
                                         )
-                                      : controller.suggestedProducts.isEmpty
+                                      : controller
+                                                    .suggestedProducts
+                                                    .value
+                                                    .suggestedProducts ==
+                                                null ||
+                                            controller
+                                                .suggestedProducts
+                                                .value
+                                                .suggestedProducts!
+                                                .isEmpty
                                       ? Center(
                                           child: Text(
                                             "No similar products found",
                                           ),
                                         )
-                                      : SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            children: List.generate(
-                                              controller
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: List.generate(
+                                            controller
+                                                .suggestedProducts
+                                                .value
+                                                .suggestedProducts!
+                                                .length,
+                                            (index) {
+                                              final product = controller
                                                   .suggestedProducts
-                                                  .length,
-                                              (index) {
-                                                final product = controller
-                                                    .suggestedProducts[index];
+                                                  .value
+                                                  .suggestedProducts![index];
 
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    Get.generalDialog(
-                                                      pageBuilder:
-                                                          (
-                                                            context,
-                                                            animation,
-                                                            secondaryAnimation,
-                                                          ) {
-                                                            return Dialog(
-                                                              constraints: BoxConstraints(
-                                                                minHeight:
-                                                                    context
-                                                                        .screenHeight *
-                                                                    0.6,
-                                                                maxHeight:
-                                                                    context
-                                                                        .screenHeight *
-                                                                    0.6,
-                                                                minWidth:
-                                                                    context
-                                                                        .screenWidth *
-                                                                    0.8,
-                                                              ),
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        15,
-                                                                      ),
+                                              return Expanded(
+                                                child: Container(
+                                                  margin:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 4,
+                                                      ),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Get.generalDialog(
+                                                        pageBuilder:
+                                                            (
+                                                              context,
+                                                              animation,
+                                                              secondaryAnimation,
+                                                            ) {
+                                                              return Dialog(
+                                                                constraints: BoxConstraints(
+                                                                  minHeight:
+                                                                      context
+                                                                          .screenHeight *
+                                                                      0.5,
+                                                                  maxHeight:
+                                                                      context
+                                                                          .screenHeight *
+                                                                      0.67,
+                                                                  minWidth:
+                                                                      context
+                                                                          .screenWidth *
+                                                                      0.8,
                                                                 ),
-                                                                width:
-                                                                    double
-                                                                        .infinity -
-                                                                    80,
-
-                                                                child: Column(
-                                                                  children: [
-                                                                    Stack(
-                                                                      alignment:
-                                                                          topRight,
-                                                                      children: [
-                                                                        ClipRRect(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(
-                                                                                8,
-                                                                              ),
-                                                                          child: CachedNetworkImage(
-                                                                            imageUrl:
-                                                                                product.imageUrl ??
-                                                                                "",
-                                                                            width:
-                                                                                double.infinity,
-                                                                            height:
-                                                                                context.height *
-                                                                                0.4,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          15,
                                                                         ),
-                                                                        InkWell(
-                                                                          onTap: () {
-                                                                            Get.back();
-                                                                          },
-                                                                          child: Padding(
-                                                                            padding: const EdgeInsets.all(
-                                                                              8.0,
-                                                                            ),
-                                                                            child: CircleAvatar(
-                                                                              backgroundColor: Colors.white,
-                                                                              child: Icon(
-                                                                                Icons.close,
-                                                                                color: Colors.red,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-
-                                                                    Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                            8.0,
-                                                                          ),
-                                                                      child: Column(
-                                                                        crossAxisAlignment:
-                                                                            crossAxisStart,
+                                                                  ),
+                                                                  width:
+                                                                      double
+                                                                          .infinity -
+                                                                      80,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Stack(
+                                                                        alignment:
+                                                                            Alignment.topRight,
                                                                         children: [
-                                                                          RichText(
-                                                                            text: TextSpan(
-                                                                              style: context.bodyLarge,
-                                                                              children: [
-                                                                                TextSpan(
-                                                                                  text: "Product Name: ",
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.black,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                  ),
-                                                                                ),
-                                                                                TextSpan(
-                                                                                  text:
-                                                                                      product.productName ??
-                                                                                      "",
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.grey,
-                                                                                  ),
-                                                                                ),
-                                                                              ],
+                                                                          ClipRRect(
+                                                                            borderRadius: BorderRadius.circular(
+                                                                              8,
+                                                                            ),
+                                                                            child: CachedNetworkImage(
+                                                                              imageUrl:
+                                                                                  product.imageUrl ??
+                                                                                  "",
+                                                                              width: double.infinity,
+                                                                              height:
+                                                                                  context.height *
+                                                                                  0.4,
+                                                                              fit: BoxFit.cover,
                                                                             ),
                                                                           ),
-                                                                          heightBox(
-                                                                            5,
-                                                                          ),
-                                                                          RichText(
-                                                                            text: TextSpan(
-                                                                              style: context.bodyLarge,
-                                                                              children: [
-                                                                                TextSpan(
-                                                                                  text: "Brand: ",
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.black,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                  ),
+                                                                          InkWell(
+                                                                            onTap: () {
+                                                                              Get.back();
+                                                                            },
+                                                                            child: Padding(
+                                                                              padding: const EdgeInsets.all(
+                                                                                8.0,
+                                                                              ),
+                                                                              child: CircleAvatar(
+                                                                                backgroundColor: Colors.white,
+                                                                                child: Icon(
+                                                                                  Icons.close,
+                                                                                  color: Colors.red,
                                                                                 ),
-                                                                                TextSpan(
-                                                                                  text:
-                                                                                      product.brand ??
-                                                                                      "",
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.grey,
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                          heightBox(
-                                                                            5,
-                                                                          ),
-                                                                          RichText(
-                                                                            text: TextSpan(
-                                                                              style: context.bodyLarge,
-                                                                              children: [
-                                                                                TextSpan(
-                                                                                  text: "Health Score: ",
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.black,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                  ),
-                                                                                ),
-                                                                                TextSpan(
-                                                                                  text: "${controller.mapNutriScoreLetterTo100(product.nutritionGrade)}%",
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.grey,
-                                                                                  ),
-                                                                                ),
-                                                                              ],
+                                                                              ),
                                                                             ),
                                                                           ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                      transitionBuilder:
-                                                          (
-                                                            context,
-                                                            animation,
-                                                            secondaryAnimation,
-                                                            child,
-                                                          ) {
-                                                            return FadeTransition(
-                                                              opacity:
-                                                                  animation,
-                                                              child: ScaleTransition(
-                                                                scale:
-                                                                    Tween<double>(
-                                                                      begin:
-                                                                          0.7,
-                                                                      end: 1.0,
-                                                                    ).animate(
-                                                                      CurvedAnimation(
-                                                                        parent:
-                                                                            animation,
-                                                                        curve: Curves
-                                                                            .easeOutCubic,
-                                                                      ),
-                                                                    ),
-                                                                child: child,
-                                                              ),
-                                                            );
-                                                          },
-                                                      transitionDuration:
-                                                          const Duration(
-                                                            milliseconds: 400,
-                                                          ),
-                                                      barrierDismissible: true,
-                                                      barrierLabel: '',
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    width: 120,
-                                                    padding: padding5,
-                                                    margin:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal: 8,
-                                                        ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(
+                                                                              8.0,
+                                                                            ),
+                                                                        child: Center(
+                                                                          child: Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              RichText(
+                                                                                maxLines: 2,
+                                                                                text: TextSpan(
+                                                                                  style: context.bodyLarge,
+                                                                                  children: [
+                                                                                    TextSpan(
+                                                                                      text: "Product Name: ",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
+                                                                                    ),
+                                                                                    TextSpan(
+                                                                                      text:
+                                                                                          product.productName ??
+                                                                                          "",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              heightBox(
+                                                                                5,
+                                                                              ),
+                                                                              RichText(
+                                                                                text: TextSpan(
+                                                                                  style: context.bodyLarge,
+                                                                                  children: [
+                                                                                    TextSpan(
+                                                                                      text: "Brand: ",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
+                                                                                    ),
+                                                                                    TextSpan(
+                                                                                      text:
+                                                                                          product.brand ??
+                                                                                          "",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              heightBox(
+                                                                                5,
+                                                                              ),
+                                                                              RichText(
+                                                                                text: TextSpan(
+                                                                                  style: context.bodyLarge,
+                                                                                  children: [
+                                                                                    TextSpan(
+                                                                                      text: "Health Score: ",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
+                                                                                    ),
+                                                                                    TextSpan(
+                                                                                      text: "${controller.mapNutriScoreLetterTo100(product.nutritionGrade)}%",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              heightBox(
+                                                                                5,
+                                                                              ),
+                                                                              Center(
+                                                                                child: SizedBox(
+                                                                                  width:
+                                                                                      context.screenWidth *
+                                                                                      0.6,
+                                                                                  child: Obx(
+                                                                                    () => CustomButton(
+                                                                                      isLoading: controller.isLoading.value,
+                                                                                      text: "View Analysis",
+                                                                                      onPressed: () async {
+                                                                                        final barcode = product.barcode;
+                                                                                        if (barcode ==
+                                                                                                null ||
+                                                                                            barcode.isEmpty) {
+                                                                                          Get.snackbar(
+                                                                                            "Error",
+                                                                                            "Invalid product barcode",
+                                                                                            snackPosition: SnackPosition.BOTTOM,
+                                                                                            backgroundColor: Colors.red,
+                                                                                            colorText: Colors.white,
+                                                                                          );
+                                                                                          return;
+                                                                                        }
 
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          Colors.grey.shade200,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            8,
-                                                          ),
-                                                    ),
+                                                                                        Get.back();
+
+                                                                                        // Show loading dialog
+                                                                                        Get.dialog(
+                                                                                          PopScope(
+                                                                                            onPopInvokedWithResult:
+                                                                                                (
+                                                                                                  didPop,
+                                                                                                  result,
+                                                                                                ) => false,
+                                                                                            child: Center(
+                                                                                              child: Container(
+                                                                                                width:
+                                                                                                    Get.context!.width *
+                                                                                                    0.5,
+                                                                                                padding: const EdgeInsets.all(
+                                                                                                  30,
+                                                                                                ),
+                                                                                                decoration: BoxDecoration(
+                                                                                                  color: Colors.white,
+                                                                                                  borderRadius: BorderRadius.circular(
+                                                                                                    15,
+                                                                                                  ),
+                                                                                                ),
+                                                                                                child: Column(
+                                                                                                  mainAxisSize: MainAxisSize.min,
+                                                                                                  children: [
+                                                                                                    const CircularProgressIndicator(),
+                                                                                                    const SizedBox(
+                                                                                                      height: 20,
+                                                                                                    ),
+                                                                                                    Text(
+                                                                                                      "Loading product details...",
+                                                                                                      style: Get.textTheme.bodyMedium,
+                                                                                                      textAlign: TextAlign.center,
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          barrierDismissible: false,
+                                                                                        );
+
+                                                                                        try {
+                                                                                          controller.resetControllerForNewProduct();
+
+                                                                                          await Future.delayed(
+                                                                                            const Duration(
+                                                                                              milliseconds: 100,
+                                                                                            ),
+                                                                                          );
+
+                                                                                          await controller.getProductDetails(
+                                                                                            barcode,
+                                                                                          );
+
+                                                                                          Get.back();
+
+                                                                                          Get.offAndToNamed(
+                                                                                            Routes.RESULT,
+                                                                                            arguments: barcode,
+                                                                                          );
+                                                                                        } catch (
+                                                                                          e
+                                                                                        ) {
+                                                                                          // Close loading dialog
+                                                                                          Get.back();
+
+                                                                                          // Show error
+                                                                                          Get.snackbar(
+                                                                                            "Error",
+                                                                                            "Failed to load product: ${e.toString()}",
+                                                                                            snackPosition: SnackPosition.BOTTOM,
+                                                                                            backgroundColor: Colors.red,
+                                                                                            colorText: Colors.white,
+                                                                                          );
+                                                                                        }
+                                                                                      },
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                        transitionBuilder:
+                                                            (
+                                                              context,
+                                                              animation,
+                                                              secondaryAnimation,
+                                                              child,
+                                                            ) {
+                                                              return FadeTransition(
+                                                                opacity:
+                                                                    animation,
+                                                                child: ScaleTransition(
+                                                                  scale:
+                                                                      Tween<double>(
+                                                                        begin:
+                                                                            0.7,
+                                                                        end:
+                                                                            1.0,
+                                                                      ).animate(
+                                                                        CurvedAnimation(
+                                                                          parent:
+                                                                              animation,
+                                                                          curve:
+                                                                              Curves.easeOutCubic,
+                                                                        ),
+                                                                      ),
+                                                                  child: child,
+                                                                ),
+                                                              );
+                                                            },
+                                                        transitionDuration:
+                                                            const Duration(
+                                                              milliseconds: 400,
+                                                            ),
+                                                        barrierDismissible:
+                                                            true,
+                                                        barrierLabel: '',
+                                                      );
+                                                    },
                                                     child: Column(
                                                       mainAxisAlignment:
-                                                          mainAxisSpaceBetween,
+                                                          MainAxisAlignment
+                                                              .spaceAround,
                                                       children: [
                                                         ClipRRect(
                                                           borderRadius:
@@ -641,12 +759,12 @@ class ResultView extends GetView<ResultController> {
                                                                 product
                                                                     .imageUrl ??
                                                                 "",
-                                                            width: 120,
+                                                            width:
+                                                                double.infinity,
                                                             height: 100,
                                                             fit: BoxFit.cover,
                                                           ),
                                                         ),
-                                                        heightBox(5),
                                                         Text(
                                                           product.productName ??
                                                               "",
@@ -654,14 +772,16 @@ class ResultView extends GetView<ResultController> {
                                                               .bodyMedium,
                                                           maxLines: 1,
                                                           textAlign:
-                                                              textAlignCenter,
+                                                              TextAlign.center,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                         ),
                                                       ],
                                                     ),
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                ),
+                                              );
+                                            },
                                           ),
                                         ),
                                 ),
@@ -675,7 +795,26 @@ class ResultView extends GetView<ResultController> {
                   ),
                 ),
               )
-            : Center(child: Text(controller.errorMessage.value.toString())),
+            : Center(
+                child: Column(
+                  mainAxisAlignment: mainAxisCenter,
+                  children: [
+                    Text(
+                      controller.errorMessage.value.toString().toUpperCase(),
+                    ),
+                    heightBox(20),
+                    SizedBox(
+                      width: 100,
+                      child: CustomButton(
+                        text: "Close",
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }
@@ -684,8 +823,9 @@ class ResultView extends GetView<ResultController> {
     BuildContext context,
     String label,
     double score,
-    String weight,
-  ) {
+    String weight, {
+    bool isInverseScale = false, // Add this parameter
+  }) {
     return Row(
       children: [
         Expanded(
@@ -712,16 +852,25 @@ class ResultView extends GetView<ResultController> {
                 children: [
                   Expanded(
                     child: LinearProgressIndicator(
+                      borderRadius: BorderRadius.circular(10),
                       value: score / 100,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        score >= 80
-                            ? Colors.green
-                            : score >= 65
-                            ? Colors.lightGreen
-                            : score >= 50
-                            ? Colors.orange
-                            : Colors.red,
+                        isInverseScale
+                            ? (score <= 20
+                                  ? Colors.green
+                                  : score <= 35
+                                  ? Colors.lightGreen
+                                  : score <= 50
+                                  ? Colors.orange
+                                  : Colors.red)
+                            : (score >= 80
+                                  ? Colors.green
+                                  : score >= 65
+                                  ? Colors.lightGreen
+                                  : score >= 50
+                                  ? Colors.orange
+                                  : Colors.red),
                       ),
                       minHeight: 8,
                     ),

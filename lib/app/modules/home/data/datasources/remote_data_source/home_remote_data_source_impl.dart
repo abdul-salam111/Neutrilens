@@ -14,7 +14,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     try {
       final response = await _dioHelper.getApi(
         url:
-            "https://world.openfoodfacts.org/api/v2/search?page=$page&page_size=$pageSize&fields=product_name,brands,nutriment_nutrients,nutriscore_score,nutriscore_grade,image_front_small_url,quantity,code,categories",
+            "${ApiKeys.openfoodBaseUrl}/api/v2/search?page=$page&page_size=$pageSize&${ApiKeys.openapiProductFields}",
       );
       return GetAllProductsModel.fromJson(response);
     } catch (e) {
@@ -31,7 +31,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     try {
       final response = await _dioHelper.getApi(
         url:
-            "https://world.openfoodfacts.org/cgi/search.pl?action=process&search_terms=$query&json=1&page=$page&page_size=$pagesize&fields=product_name,brands,nutriment_nutrients,nutriscore_score,nutriscore_grade,image_front_small_url,quantity",
+            "${ApiKeys.openfoodBaseUrl}/cgi/search.pl?action=process&search_terms=$query&json=1&page=$page&page_size=$pagesize&${ApiKeys.openapiProductFields}",
       );
       return GetAllProductsModel.fromJson(response);
     } catch (error) {
