@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neutri_lens/app/core/services/session_manager.dart';
 import 'package:neutri_lens/app/modules/result/data/models/get_product_result_model/get_product_result_model.dart';
 import 'package:neutri_lens/app/modules/result/data/models/get_suggested_product/get_suggested_product_model.dart';
 import 'package:neutri_lens/app/modules/result/domain/abstract_repositories/product_repository.dart';
+
 import '../../data/models/upload_product_record/upload_product_record_model.dart';
 
 class NutriLensScores {
@@ -375,10 +377,9 @@ class ResultController extends GetxController {
       (failure) {
         isLoadingSuggested.value = false;
       },
-      (model) {
+      (model) async {
         isLoadingSuggested.value = false;
         suggestedProducts.value = model;
-        suggestedProducts.refresh();
       },
     );
   }
@@ -407,12 +408,12 @@ class ResultController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    getSuggestedProduct(Get.arguments.toString());
+    getSuggestedProduct(
+      Get.arguments.toString(),
+    ).then((_) => setGoalStatement());
   }
 
   void resetControllerForNewProduct() {
-    print("🔄 Resetting controller for new product...");
-
     isLoading.value = true;
     getProductResultModel.value = null;
     suggestedProducts.value = GetSuggestedProductModel();
@@ -428,5 +429,23 @@ class ResultController extends GetxController {
     nutritionDetails.clear();
 
     print("✅ Controller reset complete");
+  }
+
+  var goalStatement = "".obs;
+  setGoalStatement() async {
+    final selectedGoalsList = SessionController().getUserDetails.goals ?? [];
+    final goalsMeetLength = suggestedProducts.value.userGoals?.length ?? 0;
+
+    if (selectedGoalsList.isEmpty) {
+      goalStatement.value = "No goals selected.";
+    }
+
+    if (goalsMeetLength == 0) {
+      goalStatement.value = "Doesn't meet your goals.";
+    } else if (goalsMeetLength == selectedGoalsList.length) {
+      goalStatement.value = "Fully meets your goals.";
+    } else {
+      goalStatement.value = "Partially meets your goals.";
+    }
   }
 }
