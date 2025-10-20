@@ -280,14 +280,19 @@ class ResultView extends GetView<ResultController> {
 
                               Obx(
                                 () => Text(
-                                controller.suggestproductError.value.isNotEmpty ? "Data not available":  controller.goalStatement.value,
+                                  controller
+                                          .suggestproductError
+                                          .value
+                                          .isNotEmpty
+                                      ? "Data not available"
+                                      : controller.goalStatement.value,
                                   style: context.bodyMedium,
                                 ),
                               ),
                               heightBox(10),
                               Obx(
                                 () => controller.isLoadingSuggested.value
-                                    ? Text("Loading goals...")
+                                    ? Text("Loading goals..")
                                     : controller
                                                   .suggestedProducts
                                                   .value
@@ -352,19 +357,24 @@ class ResultView extends GetView<ResultController> {
                               Obx(
                                 () => controller.isLoadingSuggested.value
                                     ? SizedBox.shrink()
-                                    :  Text(
-                                          controller.suggestproductError.value.isNotEmpty ? "Data not available": (controller
-                                                        .suggestedProducts
-                                                        .value
-                                                        .userPreferences ==
-                                                    null ||
-                                                controller
-                                                    .suggestedProducts
-                                                    .value
-                                                    .userPreferences!
-                                                    .isEmpty)
+                                    : Text(
+                                        controller
+                                                .suggestproductError
+                                                .value
+                                                .isNotEmpty
+                                            ? "Data not available"
+                                            : (controller
+                                                          .suggestedProducts
+                                                          .value
+                                                          .userPreferences ==
+                                                      null ||
+                                                  controller
+                                                      .suggestedProducts
+                                                      .value
+                                                      .userPreferences!
+                                                      .isEmpty)
                                             ? "It meets your preferred diet."
-                                            :  "It doesn't meet your preferred diet.",
+                                            : "It doesn't meet your preferred diet.",
                                         style: context.bodyMedium,
                                       ),
                               ),
@@ -566,12 +576,12 @@ class ResultView extends GetView<ResultController> {
                                 () => SizedBox(
                                   height: context.screenHeight * 0.19,
                                   child: controller.isLoadingSuggested.value
-                                      ?  Center(
+                                      ? Center(
                                           child: Text(
                                             "Please, wait for the suggested products...",
                                           ),
                                         )
-                                      :  controller
+                                      : controller
                                                     .suggestedProducts
                                                     .value
                                                     .suggestedProducts ==
@@ -583,7 +593,12 @@ class ResultView extends GetView<ResultController> {
                                                 .isEmpty
                                       ? Center(
                                           child: Text(
-                                             controller.suggestproductError.value.isNotEmpty ? "Data not available": "No food proudct found for this barcode.",
+                                            controller
+                                                    .suggestproductError
+                                                    .value
+                                                    .isNotEmpty
+                                                ? "Data not available"
+                                                : "No food proudct found for this barcode.",
                                           ),
                                         )
                                       : Row(
