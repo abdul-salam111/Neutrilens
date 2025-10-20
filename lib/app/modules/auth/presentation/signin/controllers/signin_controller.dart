@@ -36,6 +36,7 @@ class SigninController extends GetxController {
         //call get user details api also to get user details
         await storage.setValues(StorageKeys.token, token);
         await getLoggedInUserDetails();
+
         isloading.value = false;
         //navigation to the navbar is also over there in the get user details method
       },
@@ -51,6 +52,7 @@ class SigninController extends GetxController {
       (user) async {
         await SessionController().saveUserInStorage(user);
         await SessionController().getUserfromSharedpref();
+        await storage.setValues(StorageKeys.password, passwordController.value.text.trim());
         await Get.offAllNamed(Routes.NAVBAR);
       },
     );

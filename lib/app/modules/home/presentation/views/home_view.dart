@@ -127,22 +127,25 @@ class HomeView extends GetView<HomeController> {
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value && controller.products.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: LoadingIndicator());
                 }
 
                 if (controller.errorMessage.value.isNotEmpty &&
                     controller.products.isEmpty) {
                   return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(controller.errorMessage.value),
-                        heightBox(10),
-                        ElevatedButton(
-                          onPressed: () => controller.getProducts(),
-                          child: const Text('Retry'),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: screenPadding,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(controller.errorMessage.value,textAlign: textAlignCenter,),
+                          heightBox(10),
+                          ElevatedButton(
+                            onPressed: () => controller.getProducts(),
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }

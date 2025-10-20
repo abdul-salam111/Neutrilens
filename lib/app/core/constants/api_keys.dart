@@ -1,5 +1,5 @@
 class ApiKeys {
-  static final baseUrl = "https://bdf30c32f54e.ngrok-free.app";
+  static final baseUrl = "https://a20a7442cf7c.ngrok-free.app";
   static final getGoalsAndDietUrl = "$baseUrl/goals-diet-list";
   static final registerUserUrl = "$baseUrl/auth/register";
   static final loginUserUrl = "$baseUrl/auth/login";
