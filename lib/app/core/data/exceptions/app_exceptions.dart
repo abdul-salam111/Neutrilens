@@ -25,8 +25,7 @@ class UnauthorizedException extends AppException {
 
 // Request Timeout Exception
 class RequestTimeoutException extends AppException {
-  RequestTimeoutException([String? message])
-    : super(message, "Request Timeout: ");
+  RequestTimeoutException([String? message]) : super(message, "");
 }
 
 // Fetch Data Exception

@@ -169,12 +169,12 @@ class DioHelper {
         );
       case DioExceptionType.sendTimeout:
         throw RequestTimeoutException(
-          "Request time out. Please, check your internet connection.",
+          "Connection time out. Please, check your internet connection.",
         );
 
       case DioExceptionType.receiveTimeout:
         throw RequestTimeoutException(
-          "Receiving time out. Please, check your internet connection.",
+          "Connection time out. Please, check your internet connection.",
         );
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
