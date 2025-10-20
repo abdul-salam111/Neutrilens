@@ -276,7 +276,7 @@ class ResultView extends GetView<ResultController> {
                               heightBox(10),
                               Obx(
                                 () => controller.isLoadingSuggested.value
-                                    ? const Text("Loading goals...")
+                                    ? Text("Loading goals...")
                                     : controller
                                                   .suggestedProducts
                                                   .value
@@ -311,7 +311,7 @@ class ResultView extends GetView<ResultController> {
                                                   padding:
                                                       const EdgeInsets.symmetric(
                                                         horizontal: 10,
-                                                        vertical: 10,
+                                                        vertical: 5,
                                                       ),
 
                                                   child: Text(
@@ -390,7 +390,7 @@ class ResultView extends GetView<ResultController> {
                                                   padding:
                                                       const EdgeInsets.symmetric(
                                                         horizontal: 10,
-                                                        vertical: 10,
+                                                        vertical: 5,
                                                       ),
 
                                                   child: Text(

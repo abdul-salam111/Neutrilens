@@ -11,8 +11,8 @@ class DioHelper {
     receiveDataWhenStatusError: true,
     contentType: "application/json",
     responseType: ResponseType.json,
-    sendTimeout: const Duration(seconds: 30),
-    receiveTimeout: const Duration(seconds: 30),
+    sendTimeout: const Duration(seconds: 60),
+    receiveTimeout: const Duration(seconds: 60),
   );
 
   Future<dynamic> getApi({
