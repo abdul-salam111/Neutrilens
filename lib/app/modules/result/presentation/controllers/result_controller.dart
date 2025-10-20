@@ -427,8 +427,6 @@ class ResultController extends GetxController {
     scoringMethod.value = "";
     scoreExplanation.clear();
     nutritionDetails.clear();
-
-    print("✅ Controller reset complete");
   }
 
   var goalStatement = "".obs;

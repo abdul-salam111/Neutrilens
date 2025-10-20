@@ -115,6 +115,17 @@ class ResultView extends GetView<ResultController> {
                           ),
                         ),
                         heightBox(10),
+                        Obx(
+                          () => Text(
+                            "(${controller.getProductResultModel.value?.product?.productName ?? ""})",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        heightBox(5),
                         Text(
                           getGradeText(controller.grade.value),
                           style: GoogleFonts.poppins(
@@ -614,7 +625,7 @@ class ResultView extends GetView<ResultController> {
                                                                   maxHeight:
                                                                       context
                                                                           .screenHeight *
-                                                                      0.67,
+                                                                      0.65,
                                                                   minWidth:
                                                                       context
                                                                           .screenWidth *
@@ -734,29 +745,29 @@ class ResultView extends GetView<ResultController> {
                                                                               heightBox(
                                                                                 5,
                                                                               ),
-                                                                              RichText(
-                                                                                text: TextSpan(
-                                                                                  style: context.bodyLarge,
-                                                                                  children: [
-                                                                                    TextSpan(
-                                                                                      text: "Health Score: ",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                      ),
-                                                                                    ),
-                                                                                    TextSpan(
-                                                                                      text: "${controller.mapNutriScoreLetterTo100(product.nutritionGrade)}%",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.grey,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              heightBox(
-                                                                                5,
-                                                                              ),
+                                                                              // RichText(
+                                                                              //   text: TextSpan(
+                                                                              //     style: context.bodyLarge,
+                                                                              //     children: [
+                                                                              //       TextSpan(
+                                                                              //         text: "Health Score: ",
+                                                                              //         style: TextStyle(
+                                                                              //           color: Colors.black,
+                                                                              //           fontWeight: FontWeight.bold,
+                                                                              //         ),
+                                                                              //       ),
+                                                                              //       TextSpan(
+                                                                              //         text: "${controller.mapNutriScoreLetterTo100(product.nutritionGrade)}%",
+                                                                              //         style: TextStyle(
+                                                                              //           color: Colors.grey,
+                                                                              //         ),
+                                                                              //       ),
+                                                                              //     ],
+                                                                              //   ),
+                                                                              // ),
+                                                                              // heightBox(
+                                                                              //   5,
+                                                                              // ),
                                                                               Center(
                                                                                 child: SizedBox(
                                                                                   width:
@@ -837,6 +848,10 @@ class ResultView extends GetView<ResultController> {
                                                                                           await controller.getProductDetails(
                                                                                             barcode,
                                                                                           );
+                                                                                          await controller.getSuggestedProduct(
+                                                                                            barcode,
+                                                                                          );
+                                                                                          await controller.setGoalStatement();
 
                                                                                           Get.back();
 
