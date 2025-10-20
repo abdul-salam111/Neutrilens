@@ -19,8 +19,12 @@ abstract class GetSuggestedProductModel with _$GetSuggestedProductModel {
   const factory GetSuggestedProductModel({
     @JsonKey(name: "suggested_products")
     List<SuggestedProduct>? suggestedProducts,
-    @JsonKey(name: "user_goals") List<UserGoal>? userGoals,
-    @JsonKey(name: "user_preferences") List<dynamic>? userPreferences,
+
+    @JsonKey(name: "user_goals")
+    List<UserGoal>? userGoals,
+
+    @JsonKey(name: "user_preferences")
+    List<UserPreference>? userPreferences, // ✅ Updated type
   }) = _GetSuggestedProductModel;
 
   factory GetSuggestedProductModel.fromJson(Map<String, dynamic> json) =>
@@ -50,4 +54,15 @@ abstract class UserGoal with _$UserGoal {
 
   factory UserGoal.fromJson(Map<String, dynamic> json) =>
       _$UserGoalFromJson(json);
+}
+
+@freezed
+abstract class UserPreference with _$UserPreference { // ✅ Added this model
+  const factory UserPreference({
+    @JsonKey(name: "id") int? id,
+    @JsonKey(name: "name") String? name,
+  }) = _UserPreference;
+
+  factory UserPreference.fromJson(Map<String, dynamic> json) =>
+      _$UserPreferenceFromJson(json);
 }

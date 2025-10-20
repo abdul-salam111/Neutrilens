@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GetSuggestedProductModel {
 
-@JsonKey(name: "suggested_products") List<SuggestedProduct>? get suggestedProducts;@JsonKey(name: "user_goals") List<UserGoal>? get userGoals;@JsonKey(name: "user_preferences") List<dynamic>? get userPreferences;
+@JsonKey(name: "suggested_products") List<SuggestedProduct>? get suggestedProducts;@JsonKey(name: "user_goals") List<UserGoal>? get userGoals;@JsonKey(name: "user_preferences") List<UserPreference>? get userPreferences;
 /// Create a copy of GetSuggestedProductModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $GetSuggestedProductModelCopyWith<$Res>  {
   factory $GetSuggestedProductModelCopyWith(GetSuggestedProductModel value, $Res Function(GetSuggestedProductModel) _then) = _$GetSuggestedProductModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "suggested_products") List<SuggestedProduct>? suggestedProducts,@JsonKey(name: "user_goals") List<UserGoal>? userGoals,@JsonKey(name: "user_preferences") List<dynamic>? userPreferences
+@JsonKey(name: "suggested_products") List<SuggestedProduct>? suggestedProducts,@JsonKey(name: "user_goals") List<UserGoal>? userGoals,@JsonKey(name: "user_preferences") List<UserPreference>? userPreferences
 });
 
 
@@ -70,7 +70,7 @@ class _$GetSuggestedProductModelCopyWithImpl<$Res>
 suggestedProducts: freezed == suggestedProducts ? _self.suggestedProducts : suggestedProducts // ignore: cast_nullable_to_non_nullable
 as List<SuggestedProduct>?,userGoals: freezed == userGoals ? _self.userGoals : userGoals // ignore: cast_nullable_to_non_nullable
 as List<UserGoal>?,userPreferences: freezed == userPreferences ? _self.userPreferences : userPreferences // ignore: cast_nullable_to_non_nullable
-as List<dynamic>?,
+as List<UserPreference>?,
   ));
 }
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "suggested_products")  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals")  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences")  List<dynamic>? userPreferences)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "suggested_products")  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals")  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences")  List<UserPreference>? userPreferences)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetSuggestedProductModel() when $default != null:
 return $default(_that.suggestedProducts,_that.userGoals,_that.userPreferences);case _:
@@ -176,7 +176,7 @@ return $default(_that.suggestedProducts,_that.userGoals,_that.userPreferences);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "suggested_products")  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals")  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences")  List<dynamic>? userPreferences)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "suggested_products")  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals")  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences")  List<UserPreference>? userPreferences)  $default,) {final _that = this;
 switch (_that) {
 case _GetSuggestedProductModel():
 return $default(_that.suggestedProducts,_that.userGoals,_that.userPreferences);case _:
@@ -196,7 +196,7 @@ return $default(_that.suggestedProducts,_that.userGoals,_that.userPreferences);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "suggested_products")  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals")  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences")  List<dynamic>? userPreferences)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "suggested_products")  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals")  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences")  List<UserPreference>? userPreferences)?  $default,) {final _that = this;
 switch (_that) {
 case _GetSuggestedProductModel() when $default != null:
 return $default(_that.suggestedProducts,_that.userGoals,_that.userPreferences);case _:
@@ -211,7 +211,7 @@ return $default(_that.suggestedProducts,_that.userGoals,_that.userPreferences);c
 @JsonSerializable()
 
 class _GetSuggestedProductModel implements GetSuggestedProductModel {
-  const _GetSuggestedProductModel({@JsonKey(name: "suggested_products") final  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals") final  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences") final  List<dynamic>? userPreferences}): _suggestedProducts = suggestedProducts,_userGoals = userGoals,_userPreferences = userPreferences;
+  const _GetSuggestedProductModel({@JsonKey(name: "suggested_products") final  List<SuggestedProduct>? suggestedProducts, @JsonKey(name: "user_goals") final  List<UserGoal>? userGoals, @JsonKey(name: "user_preferences") final  List<UserPreference>? userPreferences}): _suggestedProducts = suggestedProducts,_userGoals = userGoals,_userPreferences = userPreferences;
   factory _GetSuggestedProductModel.fromJson(Map<String, dynamic> json) => _$GetSuggestedProductModelFromJson(json);
 
  final  List<SuggestedProduct>? _suggestedProducts;
@@ -232,8 +232,8 @@ class _GetSuggestedProductModel implements GetSuggestedProductModel {
   return EqualUnmodifiableListView(value);
 }
 
- final  List<dynamic>? _userPreferences;
-@override@JsonKey(name: "user_preferences") List<dynamic>? get userPreferences {
+ final  List<UserPreference>? _userPreferences;
+@override@JsonKey(name: "user_preferences") List<UserPreference>? get userPreferences {
   final value = _userPreferences;
   if (value == null) return null;
   if (_userPreferences is EqualUnmodifiableListView) return _userPreferences;
@@ -275,7 +275,7 @@ abstract mixin class _$GetSuggestedProductModelCopyWith<$Res> implements $GetSug
   factory _$GetSuggestedProductModelCopyWith(_GetSuggestedProductModel value, $Res Function(_GetSuggestedProductModel) _then) = __$GetSuggestedProductModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "suggested_products") List<SuggestedProduct>? suggestedProducts,@JsonKey(name: "user_goals") List<UserGoal>? userGoals,@JsonKey(name: "user_preferences") List<dynamic>? userPreferences
+@JsonKey(name: "suggested_products") List<SuggestedProduct>? suggestedProducts,@JsonKey(name: "user_goals") List<UserGoal>? userGoals,@JsonKey(name: "user_preferences") List<UserPreference>? userPreferences
 });
 
 
@@ -297,7 +297,7 @@ class __$GetSuggestedProductModelCopyWithImpl<$Res>
 suggestedProducts: freezed == suggestedProducts ? _self._suggestedProducts : suggestedProducts // ignore: cast_nullable_to_non_nullable
 as List<SuggestedProduct>?,userGoals: freezed == userGoals ? _self._userGoals : userGoals // ignore: cast_nullable_to_non_nullable
 as List<UserGoal>?,userPreferences: freezed == userPreferences ? _self._userPreferences : userPreferences // ignore: cast_nullable_to_non_nullable
-as List<dynamic>?,
+as List<UserPreference>?,
   ));
 }
 
@@ -836,6 +836,272 @@ class __$UserGoalCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,}) {
   return _then(_UserGoal(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$UserPreference {
+
+@JsonKey(name: "id") int? get id;@JsonKey(name: "name") String? get name;
+/// Create a copy of UserPreference
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UserPreferenceCopyWith<UserPreference> get copyWith => _$UserPreferenceCopyWithImpl<UserPreference>(this as UserPreference, _$identity);
+
+  /// Serializes this UserPreference to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPreference&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name);
+
+@override
+String toString() {
+  return 'UserPreference(id: $id, name: $name)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UserPreferenceCopyWith<$Res>  {
+  factory $UserPreferenceCopyWith(UserPreference value, $Res Function(UserPreference) _then) = _$UserPreferenceCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: "id") int? id,@JsonKey(name: "name") String? name
+});
+
+
+
+
+}
+/// @nodoc
+class _$UserPreferenceCopyWithImpl<$Res>
+    implements $UserPreferenceCopyWith<$Res> {
+  _$UserPreferenceCopyWithImpl(this._self, this._then);
+
+  final UserPreference _self;
+  final $Res Function(UserPreference) _then;
+
+/// Create a copy of UserPreference
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,}) {
+  return _then(_self.copyWith(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [UserPreference].
+extension UserPreferencePatterns on UserPreference {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UserPreference value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _UserPreference() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UserPreference value)  $default,){
+final _that = this;
+switch (_that) {
+case _UserPreference():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UserPreference value)?  $default,){
+final _that = this;
+switch (_that) {
+case _UserPreference() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "name")  String? name)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _UserPreference() when $default != null:
+return $default(_that.id,_that.name);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "name")  String? name)  $default,) {final _that = this;
+switch (_that) {
+case _UserPreference():
+return $default(_that.id,_that.name);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "name")  String? name)?  $default,) {final _that = this;
+switch (_that) {
+case _UserPreference() when $default != null:
+return $default(_that.id,_that.name);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _UserPreference implements UserPreference {
+  const _UserPreference({@JsonKey(name: "id") this.id, @JsonKey(name: "name") this.name});
+  factory _UserPreference.fromJson(Map<String, dynamic> json) => _$UserPreferenceFromJson(json);
+
+@override@JsonKey(name: "id") final  int? id;
+@override@JsonKey(name: "name") final  String? name;
+
+/// Create a copy of UserPreference
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UserPreferenceCopyWith<_UserPreference> get copyWith => __$UserPreferenceCopyWithImpl<_UserPreference>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$UserPreferenceToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPreference&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name);
+
+@override
+String toString() {
+  return 'UserPreference(id: $id, name: $name)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UserPreferenceCopyWith<$Res> implements $UserPreferenceCopyWith<$Res> {
+  factory _$UserPreferenceCopyWith(_UserPreference value, $Res Function(_UserPreference) _then) = __$UserPreferenceCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: "id") int? id,@JsonKey(name: "name") String? name
+});
+
+
+
+
+}
+/// @nodoc
+class __$UserPreferenceCopyWithImpl<$Res>
+    implements _$UserPreferenceCopyWith<$Res> {
+  __$UserPreferenceCopyWithImpl(this._self, this._then);
+
+  final _UserPreference _self;
+  final $Res Function(_UserPreference) _then;
+
+/// Create a copy of UserPreference
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,}) {
+  return _then(_UserPreference(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,

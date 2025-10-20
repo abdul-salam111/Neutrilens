@@ -11,9 +11,8 @@ class DioHelper {
     receiveDataWhenStatusError: true,
     contentType: "application/json",
     responseType: ResponseType.json,
-    sendTimeout: const Duration(seconds: 30),
-    receiveTimeout: const Duration(seconds: 30),
-  
+    sendTimeout: const Duration(seconds: 60),
+    receiveTimeout: const Duration(seconds: 60),
   );
 
   Future<dynamic> getApi({
@@ -89,7 +88,11 @@ class DioHelper {
       if (requestBody == null) {
         response = await dio.put(url, options: requestOptions);
       } else {
-        response = await dio.put(url, options: options, data: requestBody);
+        response = await dio.put(
+          url,
+          options: requestOptions,
+          data: requestBody,
+        );
       }
       return response.data;
     } on DioException catch (error) {

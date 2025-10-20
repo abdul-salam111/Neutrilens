@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/widgets/custom_button.dart';
@@ -146,7 +147,6 @@ class ResultView extends GetView<ResultController> {
                                     ),
                                   ),
                                   heightBox(5),
-
                                   Text(
                                     controller.grade.value == "a"
                                         ? "Excellent nutritional quality"
@@ -159,6 +159,7 @@ class ResultView extends GetView<ResultController> {
                                         : "Very poor nutritional quality",
                                     style: context.bodyMedium!.copyWith(),
                                   ),
+                                  heightBox(5),
                                 ],
                               ),
                               Container(
@@ -242,6 +243,172 @@ class ResultView extends GetView<ResultController> {
                                   ),
                                 ),
                               ],
+                            ],
+                          ),
+                        ),
+                        heightBox(10),
+
+                        // Score Breakdown
+                        Container(
+                          padding: padding16,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: crossAxisStart,
+                            children: [
+                              Text(
+                                "Goals",
+                                style: context.titleMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+
+                              Obx(
+                                () => Text(
+                                  controller.goalStatement.value,
+                                  style: context.bodyMedium,
+                                ),
+                              ),
+                              heightBox(10),
+                              Obx(
+                                () => controller.isLoadingSuggested.value
+                                    ? Text("Loading goals...")
+                                    : controller
+                                                  .suggestedProducts
+                                                  .value
+                                                  .userGoals !=
+                                              null &&
+                                          controller
+                                              .suggestedProducts
+                                              .value
+                                              .userGoals!
+                                              .isNotEmpty
+                                    ? Wrap(
+                                        spacing: 6, // horizontal space
+                                        runSpacing: 0, // minimal vertical space
+                                        children: controller
+                                            .suggestedProducts
+                                            .value
+                                            .userGoals!
+                                            .map(
+                                              (goal) => Padding(
+                                                padding: EdgeInsets.only(
+                                                  right: 3,
+                                                  top: 5,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          50,
+                                                        ),
+                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5,
+                                                      ),
+
+                                                  child: Text(
+                                                    goal.name ?? '',
+                                                    style: context.bodySmall
+                                                        ?.copyWith(
+                                                          color: Colors.white,
+                                                          height:
+                                                              1.0, // 🔥 tighten text line height
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      )
+                                    : const SizedBox.shrink(),
+                              ),
+                              heightBox(20),
+                              Text(
+                                "Diet Preference",
+                                style: context.titleMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Obx(
+                                () => controller.isLoadingSuggested.value
+                                    ? SizedBox.shrink()
+                                    : Text(
+                                        (controller
+                                                        .suggestedProducts
+                                                        .value
+                                                        .userPreferences ==
+                                                    null ||
+                                                controller
+                                                    .suggestedProducts
+                                                    .value
+                                                    .userPreferences!
+                                                    .isEmpty)
+                                            ? "It meets your preferred diet."
+                                            : "It doesn't meet your preferred diet.",
+                                        style: context.bodyMedium,
+                                      ),
+                              ),
+                              heightBox(10),
+                              Obx(
+                                () => controller.isLoadingSuggested.value
+                                    ? Text("Loading diets...")
+                                    : controller
+                                              .suggestedProducts
+                                              .value
+                                              .userPreferences !=
+                                          null
+                                    ? Wrap(
+                                        spacing: 8,
+                                        runSpacing: 0,
+                                        children: controller
+                                            .suggestedProducts
+                                            .value
+                                            .userPreferences!
+                                            .map(
+                                              (pref) => Padding(
+                                                padding: EdgeInsets.only(
+                                                  right: 3,
+                                                  top: 5,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          50,
+                                                        ),
+                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5,
+                                                      ),
+
+                                                  child: Text(
+                                                    pref.name ?? '',
+                                                    style: context.bodySmall
+                                                        ?.copyWith(
+                                                          color: Colors.white,
+                                                          height:
+                                                              1.0, // 🔥 tighten text line height
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      )
+                                    : SizedBox.shrink(),
+                              ),
                             ],
                           ),
                         ),
@@ -378,7 +545,7 @@ class ResultView extends GetView<ResultController> {
                               ),
                               heightBox(20),
                               Text(
-                                "Better Choices",
+                                "Suggested Products",
                                 style: context.bodyLarge!.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -405,7 +572,7 @@ class ResultView extends GetView<ResultController> {
                                                 .isEmpty
                                       ? Center(
                                           child: Text(
-                                            "No similar products found",
+                                            "No food proudct found for this barcode.",
                                           ),
                                         )
                                       : Row(

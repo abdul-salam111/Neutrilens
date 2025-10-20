@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:neutri_lens/app/core/core.dart';
+import 'package:neutri_lens/app/modules/auth/data/models/profile_model/profile_model.dart';
 import 'package:neutri_lens/app/modules/auth/data/repository/user_repository.dart';
 import '../../../../core/data/local_data/secure_storage/storage.dart';
 import '../models/get_goals_diet_list/get_goals_diet_list.dart';
@@ -55,6 +56,23 @@ class UserRepositoryImpl implements UserRepository {
         authToken: await storage.readValues(StorageKeys.token),
       );
       return Right(UserModel.fromJson(response));
+    } catch (error) {
+      return Left(AppException(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<AppException, UserModel>> updateUser(
+    ProfileModel profileModel,
+  ) async {
+    try {
+      final response = await _dio.putApi(
+        url: ApiKeys.getUserUrl,
+        isAuthRequired: true,
+        authToken: await storage.readValues(StorageKeys.token),
+        requestBody: profileModel.toJson(),
+      );
+      return Right(UserModel.fromJson(response['profile']));
     } catch (error) {
       return Left(AppException(error.toString()));
     }

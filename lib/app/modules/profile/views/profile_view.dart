@@ -55,15 +55,17 @@ class ProfileView extends GetView<ProfileController> {
                       child: CircleAvatar(
                         radius: 50,
                         backgroundImage: CachedNetworkImageProvider(
-                          "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?semt=ais_hybrid&w=740&q=80",
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFASiuRnDSREyWEtfH5sU1SIXfwZRjjF475Q&s",
                         ),
                       ),
                     ),
                     heightBox(10),
-                    Text(
-                      " ${SessionController().getUserDetails.fullName}",
-                      style: context.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
+                    Obx(
+                      () => Text(
+                        " ${controller.isLoading.value ? "Loading..." : controller.userName.value}",
+                        style: context.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     heightBox(2),
@@ -154,10 +156,16 @@ class ProfileView extends GetView<ProfileController> {
               SizedBox(
                 height: 45,
                 width: 200,
-                child: CustomButton(
-                  text: "Update Profile",
-                  onPressed: () async {},
-                  backgroundColor: AppColors.appPrimaryColor,
+
+                child: Obx(
+                  () => CustomButton(
+                    isLoading: controller.isLoading.value,
+                    text: "Update Profile",
+                    onPressed: () async {
+                      await controller.updateProfile();
+                    },
+                    backgroundColor: AppColors.appPrimaryColor,
+                  ),
                 ),
               ),
             ],

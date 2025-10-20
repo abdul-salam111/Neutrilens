@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/core.dart';
-import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
+
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {
@@ -15,19 +15,28 @@ class SettingsView extends GetView<SettingsController> {
         backgroundColor: AppColors.appPrimaryColor,
         actions: [
           Obx(
-            () => TextButton.icon(
-              onPressed: () async {
-                controller.isEdit.value = !controller.isEdit.value;
-              },
-              label: Text(
-                controller.isEdit.value ? "Update" : "Edit",
-                style: context.bodyMedium,
-              ),
-              icon: Icon(
-                controller.isEdit.value ? Icons.done : Icons.edit,
-                color: Colors.black,
-              ),
-            ),
+            () => controller.isLoading.value
+                ? Center(child: CircularProgressIndicator(color: Colors.white))
+                : TextButton.icon(
+                    onPressed: () async {
+                      if (controller.isEdit.value) {
+                        // Now it's in edit mode, so pressing means "Update"
+                        await controller.updateProfile();
+                        controller.isEdit.value =
+                            false; // Exit edit mode after successful update
+                      } else {
+                        controller.isEdit.value = true; // Enter edit mode
+                      }
+                    },
+                    label: Text(
+                      controller.isEdit.value ? "Update" : "Edit",
+                      style: context.bodyMedium,
+                    ),
+                    icon: Icon(
+                      controller.isEdit.value ? Icons.done : Icons.edit,
+                      color: Colors.black,
+                    ),
+                  ),
           ),
         ],
       ),
@@ -44,47 +53,36 @@ class SettingsView extends GetView<SettingsController> {
               ),
               heightBox(10),
               Obx(
-                () => controller.isLoading.value
-                    ? Center(child: LoadingIndicator(size: 20))
-                    : Column(
-                        children: List.generate(controller.goals.length, (
-                          index,
-                        ) {
-                          return Obx(
-                            () => CheckboxListTile(
-                              contentPadding: EdgeInsets.zero,
-                              visualDensity: VisualDensity(vertical: -4),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              checkColor: AppColors.blackTextColor,
-                              side: BorderSide(
-                                color: AppColors.appPrimaryColor,
-                              ),
-                              activeColor: AppColors.appPrimaryColor,
-                              title: Text(
-                                controller.goals[index].name ?? "",
-                                style: context.bodyMedium!.copyWith(),
-                              ),
-                              value:
-                                  controller.selectedGoalsIndex.contains(index)
-                                  ? true
-                                  : false,
-                              onChanged: controller.isEdit.value
-                                  ? (value) {
-                                      if (value!) {
-                                        controller.selectedGoalsIndex.add(
-                                          index,
-                                        );
-                                      } else {
-                                        controller.selectedGoalsIndex.remove(
-                                          index,
-                                        );
-                                      }
-                                    }
-                                  : (val) {},
-                            ),
-                          );
-                        }),
+                () => Column(
+                  children: List.generate(controller.goals.length, (index) {
+                    return Obx(
+                      () => CheckboxListTile(
+                        contentPadding: EdgeInsets.zero,
+                        visualDensity: VisualDensity(vertical: -4),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        checkColor: AppColors.blackTextColor,
+                        side: BorderSide(color: AppColors.appPrimaryColor),
+                        activeColor: AppColors.appPrimaryColor,
+                        title: Text(
+                          controller.goals[index].name ?? "",
+                          style: context.bodyMedium!.copyWith(),
+                        ),
+                        value: controller.selectedGoalsIndex.contains(index)
+                            ? true
+                            : false,
+                        onChanged: controller.isEdit.value
+                            ? (value) {
+                                if (value!) {
+                                  controller.selectedGoalsIndex.add(index);
+                                } else {
+                                  controller.selectedGoalsIndex.remove(index);
+                                }
+                              }
+                            : (val) {},
                       ),
+                    );
+                  }),
+                ),
               ),
               heightBox(20),
               Text(

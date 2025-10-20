@@ -6,6 +6,7 @@ class ApiKeys {
   static final getUserUrl = "$baseUrl/user/profile";
   static final getSuggestedProductsUrl = "$baseUrl/scan/analysis?barcode=";
   static final uploadScannedProductUrl = "$baseUrl/scan/";
+  static final updateProfileUrl = "$baseUrl/user/profile";
   static final openfoodBaseUrl = "https://world.openfoodfacts.org";
   static final getTrendsUrl = "$baseUrl/scan/stats?from_date=";
   static final openapiProductFields =

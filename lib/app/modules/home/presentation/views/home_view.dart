@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/services/session_manager.dart';
+import 'package:neutri_lens/app/core/widgets/custom_button.dart';
 
 import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
 import 'package:neutri_lens/app/modules/result/presentation/bindings/result_binding.dart';
@@ -127,7 +128,7 @@ class HomeView extends GetView<HomeController> {
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value && controller.products.isEmpty) {
-                  return const Center(child: LoadingIndicator());
+                  return const Center(child: LoadingIndicator(size: 30));
                 }
 
                 if (controller.errorMessage.value.isNotEmpty &&
@@ -138,11 +139,17 @@ class HomeView extends GetView<HomeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(controller.errorMessage.value,textAlign: textAlignCenter,),
+                          Text(
+                            controller.errorMessage.value,
+                            style: context.bodyMedium!.copyWith(),
+                            textAlign: textAlignCenter,
+                          ),
                           heightBox(10),
-                          ElevatedButton(
+                          CustomButton(
+                            radius: 10,
                             onPressed: () => controller.getProducts(),
-                            child: const Text('Retry'),
+                            text: 'Retry',
+                            fontsize: 12,
                           ),
                         ],
                       ),
