@@ -468,7 +468,7 @@ class ResultView extends GetView<ResultController> {
                               // ),
                               heightBox(5),
                               Text(
-                                "Key Inside",
+                                "Key Insights",
                                 style: context.titleMedium!.copyWith(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -1053,21 +1053,13 @@ class ResultView extends GetView<ResultController> {
                       value: score / 100,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        isInverseScale
-                            ? (score <= 20
-                                  ? Colors.green
-                                  : score <= 35
-                                  ? Colors.lightGreen
-                                  : score <= 50
-                                  ? Colors.orange
-                                  : Colors.red)
-                            : (score >= 80
-                                  ? Colors.green
-                                  : score >= 65
-                                  ? Colors.lightGreen
-                                  : score >= 50
-                                  ? Colors.orange
-                                  : Colors.red),
+                        (score >= 80
+                            ? Colors.green
+                            : score >= 65
+                            ? Colors.lightGreen
+                            : score >= 50
+                            ? Colors.orange
+                            : Colors.red),
                       ),
                       minHeight: 8,
                     ),

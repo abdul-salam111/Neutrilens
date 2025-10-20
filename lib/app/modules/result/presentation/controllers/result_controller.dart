@@ -207,7 +207,6 @@ class ResultController extends GetxController {
         if (proteinBonus > 0) explain.add("Protein +${proteinBonus.round()}");
       }
 
-      explain.insert(0, "Fallback computed");
       method = "fallback";
     }
 
@@ -366,8 +365,7 @@ class ResultController extends GetxController {
     );
   }
 
-
-var suggestproductError="".obs;
+  var suggestproductError = "".obs;
   getSuggestedProduct(String code) async {
     suggestproductError.value = "";
     isLoadingSuggested.value = true;

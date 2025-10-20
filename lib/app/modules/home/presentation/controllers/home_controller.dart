@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/modules/home/domain/abstract_repositories/home_repository.dart';
@@ -39,29 +41,36 @@ class HomeController extends GetxController {
     });
   }
 
-  void _setupSearchListener() {
-    // Listen to text changes in search field
-    searchController.addListener(() {
-      // Debounce: wait 500ms after user stops typing before searching
-      _debounceSearch();
-    });
-  }
+ Timer? _searchTimer;
 
-  // Debounce timer to avoid searching on every keystroke
-  void _debounceSearch() {
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (searchController.text != searchQuery.value) {
-        performSearch(searchController.text);
-      }
-    });
-  }
+void _setupSearchListener() {
+  searchController.addListener(() {
+    _debounceSearch();
+  });
+}
+
+void _debounceSearch() {
+  _searchTimer?.cancel(); // Cancel previous timer
+  
+  _searchTimer = Timer(const Duration(milliseconds: 500), () {
+    if (searchController.text != searchQuery.value) {
+      performSearch(searchController.text);
+    }
+  });
+}
 
   // Perform search
   void performSearch(String query) {
-    searchQuery.value = query.trim();
+    final trimmedQuery = query.trim();
+
+    // Don't do anything if the query hasn't changed
+    if (trimmedQuery == searchQuery.value) return;
+
+    searchQuery.value = trimmedQuery;
     currentPage.value = 1;
-    products.clear();
+    products.clear(); // Clear previous results immediately
     hasMoreData.value = true;
+    isLoading.value = true; // Show loading immediately
 
     if (searchQuery.value.isEmpty) {
       // If search is empty, load all products
@@ -119,10 +128,18 @@ class HomeController extends GetxController {
       },
       (response) {
         if (response.products != null && response.products!.isNotEmpty) {
+          // FIX: Clear previous results and add new ones for first page
+          if (currentPage.value == 1) {
+            products.clear(); // Clear old results
+          }
           products.addAll(response.products!);
           currentPage.value++;
         } else {
           hasMoreData.value = false;
+          // FIX: Clear products if no results found
+          if (currentPage.value == 1) {
+            products.clear();
+          }
         }
         isLoading.value = false;
       },
@@ -174,10 +191,11 @@ class HomeController extends GetxController {
     getProducts();
   }
 
-  @override
-  void onClose() {
-    searchController.dispose();
-    scrollController.dispose();
-    super.onClose();
-  }
+ @override
+void onClose() {
+  _searchTimer?.cancel();
+  searchController.dispose();
+  scrollController.dispose();
+  super.onClose();
+}
 }

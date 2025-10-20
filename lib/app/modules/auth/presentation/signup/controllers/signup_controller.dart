@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/core.dart';
@@ -30,7 +28,6 @@ class SignupController extends GetxController {
   final isLoading = false.obs;
   final currentIndex = 0.obs;
   final selectedAge = 1.obs;
-
 
   // Goals & Diet Preferences
   final goals = <DietPreference>[].obs;
@@ -88,39 +85,6 @@ class SignupController extends GetxController {
     } else {
       list.add(item);
     }
-  }
-
-  void nextPage() {
-    if (key.currentState?.validate() ?? false) {
-      // Validation based on current page
-      if (currentIndex.value == 1 && selectedGoalsIndex.isEmpty) {
-        AppToasts.showErrorToast(Get.context!, "Please select your goals");
-        return;
-      }
-
-      if (currentIndex.value == 2 && selectedAllergens.isEmpty) {
-        AppToasts.showErrorToast(Get.context!, "Please select your allergens");
-        return;
-      }
-
-      // Navigate to next page
-      pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-    } else {
-      AppToasts.showErrorToast(
-        Get.context!,
-        "Please fill in all required fields",
-      );
-    }
-  }
-
-  void previousPage() {
-    pageController.previousPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
   }
 
   ////////////////Register User///////////////

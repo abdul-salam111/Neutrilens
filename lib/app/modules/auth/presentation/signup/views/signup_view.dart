@@ -20,37 +20,42 @@ class SignupView extends GetView<SignupController> {
           bottomNavigationBar: SafeArea(
             child: GestureDetector(
               onTap: () async {
-                if (controller.key.currentState!.validate()) {
-                  // Check based on current page
-                  if (controller.currentIndex.value == 0) {
-                    // First page - just validate form and go next
+                // Different validation for each page
+                if (controller.currentIndex.value == 0) {
+                  // First page - validate form
+                  if (controller.key.currentState!.validate()) {
                     controller.pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
                     );
-                  } else if (controller.currentIndex.value == 1) {
-                    // Second page - check goals
-                    if (controller.selectedGoalsIndex.isEmpty) {
-                      AppToasts.showErrorToast(
-                        Get.context!,
-                        "Please select your goals",
-                      );
-                    } else {
-                      controller.pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                    }
-                  } else if (controller.currentIndex.value == 2) {
-                    // Third page - check allergens
-                    if (controller.selectedAllergens.isEmpty) {
-                      AppToasts.showErrorToast(
-                        Get.context!,
-                        "Please select your allergens",
-                      );
-                    } else {
-                      await controller.registerUser();
-                    }
+                  } else {
+                    AppToasts.showErrorToast(
+                      Get.context!,
+                      "Please fill in all required fields",
+                    );
+                  }
+                } else if (controller.currentIndex.value == 1) {
+                  // Second page - check goals only (no form validation)
+                  if (controller.selectedGoalsIndex.isEmpty) {
+                    AppToasts.showErrorToast(
+                      Get.context!,
+                      "Please select your goals",
+                    );
+                  } else {
+                    controller.pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    );
+                  }
+                } else if (controller.currentIndex.value == 2) {
+                  // Third page - check allergens only (no form validation)
+                  if (controller.selectedAllergens.isEmpty) {
+                    AppToasts.showErrorToast(
+                      Get.context!,
+                      "Please select your allergens",
+                    );
+                  } else {
+                    await controller.registerUser();
                   }
                 }
               },
@@ -65,7 +70,6 @@ class SignupView extends GetView<SignupController> {
                 ),
                 child: Row(
                   mainAxisAlignment: mainAxisSpaceBetween,
-
                   children: [
                     Obx(
                       () => Text(
