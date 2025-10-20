@@ -292,7 +292,7 @@ class ResultView extends GetView<ResultController> {
                               heightBox(10),
                               Obx(
                                 () => controller.isLoadingSuggested.value
-                                    ? Text("Loading goals..")
+                                    ? Text("Loading goals...")
                                     : controller
                                                   .suggestedProducts
                                                   .value
