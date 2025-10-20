@@ -366,7 +366,10 @@ class ResultController extends GetxController {
     );
   }
 
+
+var suggestproductError="".obs;
   getSuggestedProduct(String code) async {
+    suggestproductError.value = "";
     isLoadingSuggested.value = true;
 
     final response = await _getProductResultRepo.getSuggestedProducts(
@@ -375,6 +378,7 @@ class ResultController extends GetxController {
 
     response.fold(
       (failure) {
+        suggestproductError.value = failure.toString();
         isLoadingSuggested.value = false;
       },
       (model) async {

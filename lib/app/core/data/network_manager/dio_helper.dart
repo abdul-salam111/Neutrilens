@@ -179,7 +179,7 @@ class DioHelper {
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
         switch (statusCode) {
-          case 401:
+          case 400:
             throw UnauthorizedException(
               "Invalid credentials. Please, try again.",
             );
