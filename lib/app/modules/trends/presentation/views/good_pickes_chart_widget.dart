@@ -216,7 +216,7 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: true,
+            showTitles: false,
             reservedSize: 30,
             interval: _calculateXInterval(),
             getTitlesWidget: bottomTitleWidgets,
