@@ -25,6 +25,7 @@ class ProfileView extends GetView<ProfileController> {
               await storage.clearValues(StorageKeys.userDetails);
               await storage.clearValues(StorageKeys.loggedIn);
               await storage.clearValues(StorageKeys.token);
+              await storage.clearValues(StorageKeys.password);
               await Get.offAllNamed(Routes.SIGNIN);
             },
             label: Text("Logout", style: context.bodyMedium),
