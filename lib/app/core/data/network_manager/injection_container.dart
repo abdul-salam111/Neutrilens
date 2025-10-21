@@ -91,7 +91,6 @@ Future<String?> _refreshAccessToken() async {
     if (response.statusCode == 200) {
       final data = response.data;
       final newToken = data['result']['access_token'];
-    
       // Store the new token
       await storage.setValues(StorageKeys.token, newToken);
 

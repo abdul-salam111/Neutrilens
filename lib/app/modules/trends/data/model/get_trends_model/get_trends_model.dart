@@ -21,21 +21,23 @@ abstract class GetTrendsModel with _$GetTrendsModel {
         double? mediumPickAvg,
         @JsonKey(name: "poor_pick_avg")
         double? poorPickAvg,
-        @JsonKey(name: "trend")
-        List<Trend>? trend,
+        @JsonKey(name: "entries")
+        List<Entry>? entries,
     }) = _GetTrendsModel;
 
     factory GetTrendsModel.fromJson(Map<String, dynamic> json) => _$GetTrendsModelFromJson(json);
 }
 
 @freezed
-abstract class Trend with _$Trend {
-    const factory Trend({
-        @JsonKey(name: "date")
-        DateTime? date,
-        @JsonKey(name: "good_picks_count")
-        int? goodPicksCount,
-    }) = _Trend;
+abstract class Entry with _$Entry {
+    const factory Entry({
+        @JsonKey(name: "id")
+        int? id,
+        @JsonKey(name: "food_iq_score")
+        int? foodIqScore,
+        @JsonKey(name: "scanned_at")
+        String? scannedAt,
+    }) = _Entry;
 
-    factory Trend.fromJson(Map<String, dynamic> json) => _$TrendFromJson(json);
+    factory Entry.fromJson(Map<String, dynamic> json) => _$EntryFromJson(json);
 }

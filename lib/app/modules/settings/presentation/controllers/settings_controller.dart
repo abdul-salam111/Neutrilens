@@ -19,7 +19,7 @@ class SettingsController extends GetxController {
   final selectedAllergens = <int>[].obs;
   final isLoading = false.obs;
 
-  void getGoalsAndDietList() async {
+   getGoalsAndDietList() async {
     
     final response = await userRepository.getGoalsDietList();
 

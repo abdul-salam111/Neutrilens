@@ -6,6 +6,8 @@ import 'package:neutri_lens/app/modules/result/data/models/upload_product_record
 import 'package:neutri_lens/app/modules/result/domain/abstract_repositories/product_repository.dart';
 
 import '../../../../core/data/local_data/secure_storage/storage.dart';
+import '../models/get_goals_pref_response/get_goals_and_preferences_response.dart';
+import '../models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
   static final _dio = DioHelper();
@@ -16,7 +18,7 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       final response = await _dio.getApi(
         url:
-            "${ApiKeys.openfoodBaseUrl}/api/v2/product/$barCode?fields=product_name,brands,nutriment_nutrients,nutriscore_score,nutriscore_grade,nutrient_levels_tags,image_front_small_url,nutriments",
+            "${ApiKeys.openfoodBaseUrl}/api/v2/product/$barCode?fields=product_name,brands,nutriment_nutrients,nutriscore_score,nutriscore_grade,nutrient_levels_tags,image_front_small_url,categories_tags,ingredients_text,nutriments",
       );
 
       if (response['status_verbose'].toString().contains(
@@ -31,17 +33,36 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<AppException, GetSuggestedProductModel>> getSuggestedProducts({
-    required String qrCode,
+  Future<Either<AppException, List<SuggestedProduct>>> getSuggestedProducts({
+    required List<String> tags,
   }) async {
     try {
-      final response = await _dio.getApi(
-        url: "${ApiKeys.getSuggestedProductsUrl}$qrCode",
+      final response = await _dio.postApi(
+        url: ApiKeys.getSuggestedProductsUrl,
         authToken: await storage.readValues(StorageKeys.token),
         isAuthRequired: true,
+        requestBody: tags,
       );
       print("${response}response is here");
-      return right(GetSuggestedProductModel.fromJson(response));
+
+      // Assuming response is a List
+      if (response is List) {
+        final products = response
+            .map<SuggestedProduct>((item) => SuggestedProduct.fromJson(item))
+            .toList();
+        return right(products);
+      }
+      // If response contains a 'data' field with the list
+      else if (response is Map<String, dynamic> && response['data'] is List) {
+        final products = (response as List)
+            .map<SuggestedProduct>((item) => SuggestedProduct.fromJson(item))
+            .toList();
+        return right(products);
+      } else {
+        return left(
+          AppException('Unexpected response format: ${response.runtimeType}'),
+        );
+      }
     } catch (error) {
       return left(AppException(error.toString()));
     }
@@ -59,6 +80,24 @@ class ProductRepositoryImpl implements ProductRepository {
         isAuthRequired: true,
       );
       return right(true);
+    } catch (error) {
+      return left(AppException(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<AppException, GetGoalsAndPreferencesResponse>>
+  getGoalsAndPreferences({
+    required GoalsAndPreferenceRequestModel goalsAndPreferenceRequestModel,
+  }) async {
+    try {
+      final response = await _dio.postApi(
+        url: ApiKeys.getMetGoalsAndPrefForUser,
+        requestBody: goalsAndPreferenceRequestModel.toJson(),
+        authToken: await storage.readValues(StorageKeys.token),
+        isAuthRequired: true,
+      );
+      return right(GetGoalsAndPreferencesResponse.fromJson(response));
     } catch (error) {
       return left(AppException(error.toString()));
     }

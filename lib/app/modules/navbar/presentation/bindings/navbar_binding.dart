@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/modules/profile/bindings/profile_binding.dart';
+import 'package:neutri_lens/app/modules/result/presentation/bindings/result_binding.dart';
 import '../../../home/presentation/bindings/home_binding.dart';
 import '../../../settings/presentation/bindings/settings_binding.dart';
 import '../../../trends/presentation/bindings/trends_binding.dart';
@@ -13,5 +14,6 @@ class NavbarBinding extends Bindings {
     SettingsBinding().dependencies();
     TrendsBinding().dependencies();
     ProfileBinding().dependencies();
+    ResultBinding().dependencies(); 
   }
 }

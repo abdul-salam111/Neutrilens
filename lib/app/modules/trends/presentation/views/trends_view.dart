@@ -112,9 +112,7 @@ class TrendsView extends GetView<TrendsController> {
                               () => controller.hasChartData
                                   ? GoodPicksChart(
                                       showDots: true,
-                                      dataPoints: controller.goodPicksChartData,
-                                      bottomTitles: controller.bottomTitles,
-                                      leftTitles: controller.leftTitles,
+                                      dataPoints: controller.foodIqChartData,
                                       minX: controller.minX.value,
                                       maxX: controller.maxX.value,
                                       minY: controller.minY.value,

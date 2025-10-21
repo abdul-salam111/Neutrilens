@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/widgets/custom_button.dart';
 
 import '../../../../core/utils/grade_color.dart';
 import '../../../../routes/app_pages.dart';
+
+import '../../data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
 import '../controllers/result_controller.dart';
 
 class ResultView extends GetView<ResultController> {
@@ -117,7 +118,12 @@ class ResultView extends GetView<ResultController> {
                         heightBox(10),
                         Obx(
                           () => Text(
-                            "(${controller.getProductResultModel.value?.product?.productName ?? ""})",
+                            controller
+                                    .getProductResultModel
+                                    .value
+                                    ?.product
+                                    ?.productName ??
+                                "",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontWeight: FontWeight.normal,
@@ -158,18 +164,14 @@ class ResultView extends GetView<ResultController> {
                                     ),
                                   ),
                                   heightBox(5),
-                                  Text(
-                                    controller.grade.value == "a"
-                                        ? "Excellent nutritional quality"
-                                        : controller.grade.value == "b"
-                                        ? "Good nutritional quality"
-                                        : controller.grade.value == "c"
-                                        ? "Average nutritional quality"
-                                        : controller.grade.value == "d"
-                                        ? "Poor nutritional quality"
-                                        : "Very poor nutritional quality",
-                                    style: context.bodyMedium!.copyWith(),
+                                  SizedBox(
+                                    width: context.screenWidth * 0.5,
+                                    child: Text(
+                                      "Overall nutritional rating combining food quality and processing level.",
+                                      style: context.bodySmall!.copyWith(),
+                                    ),
                                   ),
+
                                   heightBox(5),
                                 ],
                               ),
@@ -220,15 +222,14 @@ class ResultView extends GetView<ResultController> {
                                 context,
                                 "Food Quality",
                                 controller.foodScore.value,
-                                "70% weight",
+                                "Based on nutrients like protein, fiber, sugar and sodium.",
                               ),
                               heightBox(8),
                               _buildScoreRow(
                                 context,
                                 "Processing Level",
                                 controller.processedScore.value,
-                                "30% weight",
-                                isInverseScale: true,
+                                "Measures, how natural or refined the food is.",
                               ),
                               if (controller.scoreExplanation.isNotEmpty) ...[
                                 heightBox(15),
@@ -278,74 +279,115 @@ class ResultView extends GetView<ResultController> {
                                 ),
                               ),
 
-                              Obx(
-                                () => Text(
-                                  controller
-                                          .suggestproductError
-                                          .value
-                                          .isNotEmpty
-                                      ? "Data not available"
-                                      : controller.goalStatement.value,
-                                  style: context.bodyMedium,
-                                ),
-                              ),
-                              heightBox(10),
-                              Obx(
-                                () => controller.isLoadingSuggested.value
-                                    ? Text("Loading goals...")
-                                    : controller
-                                                  .suggestedProducts
-                                                  .value
-                                                  .userGoals !=
-                                              null &&
-                                          controller
-                                              .suggestedProducts
-                                              .value
-                                              .userGoals!
-                                              .isNotEmpty
-                                    ? Wrap(
-                                        spacing: 6, // horizontal space
-                                        runSpacing: 0, // minimal vertical space
-                                        children: controller
-                                            .suggestedProducts
-                                            .value
-                                            .userGoals!
-                                            .map(
-                                              (goal) => Padding(
-                                                padding: EdgeInsets.only(
-                                                  right: 3,
-                                                  top: 5,
-                                                ),
-                                                child: Container(
+                              Obx(() {
+                                if (controller.isGettingGoals.value) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text("Loading goals..."),
+                                  );
+                                }
+
+                                return Obx(
+                                  () => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Goals MET (Green checkmarks)
+                                      if (controller
+                                          .goalsMetList
+                                          .isNotEmpty) ...[
+                                        ...controller.goalsMetList.map(
+                                          (goal) => Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 18,
+                                                  height: 18,
                                                   decoration: BoxDecoration(
                                                     color: Colors.green,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                          50,
+                                                          3,
                                                         ),
                                                   ),
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 5,
-                                                      ),
-
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 12,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                widthBox(8),
+                                                Expanded(
                                                   child: Text(
-                                                    goal.name ?? '',
-                                                    style: context.bodySmall
-                                                        ?.copyWith(
-                                                          color: Colors.white,
-                                                          height:
-                                                              1.0, // 🔥 tighten text line height
+                                                    goal.name ?? "",
+                                                    style: context.bodySmall!
+                                                        .copyWith(
+                                                          color:
+                                                              Colors.green[800],
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
                                                   ),
                                                 ),
-                                              ),
-                                            )
-                                            .toList(),
-                                      )
-                                    : const SizedBox.shrink(),
-                              ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+
+                                      // Goals NOT MET (Red X marks)
+                                      if (controller
+                                          .goalsNotMet
+                                          .isNotEmpty) ...[
+                                        ...controller.goalsNotMet.map(
+                                          (goal) => Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 18,
+                                                  height: 18,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          3,
+                                                        ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    size: 12,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                widthBox(8),
+                                                Expanded(
+                                                  child: Text(
+                                                    goal.name ?? "",
+                                                    style: context.bodySmall!
+                                                        .copyWith(
+                                                          color:
+                                                              Colors.red[800],
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                );
+                              }),
+
                               heightBox(20),
                               Text(
                                 "Diet Preference",
@@ -354,82 +396,114 @@ class ResultView extends GetView<ResultController> {
                                   fontSize: 18,
                                 ),
                               ),
-                              Obx(
-                                () => controller.isLoadingSuggested.value
-                                    ? SizedBox.shrink()
-                                    : Text(
-                                        controller
-                                                .suggestproductError
-                                                .value
-                                                .isNotEmpty
-                                            ? "Data not available"
-                                            : (controller
-                                                          .suggestedProducts
-                                                          .value
-                                                          .userPreferences ==
-                                                      null ||
-                                                  controller
-                                                      .suggestedProducts
-                                                      .value
-                                                      .userPreferences!
-                                                      .isEmpty)
-                                            ? "It meets your preferred diet."
-                                            : "It doesn't meet your preferred diet.",
-                                        style: context.bodyMedium,
-                                      ),
-                              ),
-                              heightBox(10),
-                              Obx(
-                                () => controller.isLoadingSuggested.value
-                                    ? Text("Loading diets...")
-                                    : controller
-                                              .suggestedProducts
-                                              .value
-                                              .userPreferences !=
-                                          null
-                                    ? Wrap(
-                                        spacing: 8,
-                                        runSpacing: 0,
-                                        children: controller
-                                            .suggestedProducts
-                                            .value
-                                            .userPreferences!
-                                            .map(
-                                              (pref) => Padding(
-                                                padding: EdgeInsets.only(
-                                                  right: 3,
-                                                  top: 5,
+
+                              Obx(() {
+                                if (controller.isGettingGoals.value) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text("Loading Diets..."),
+                                  );
+                                }
+
+                                return Obx(
+                                  () => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Goals MET (Green checkmarks)
+                                      if (controller
+                                          .prefMetList
+                                          .isNotEmpty) ...[
+                                        ...controller.prefMetList.map(
+                                          (goal) => Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 18,
+                                                  height: 18,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          3,
+                                                        ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 12,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
-                                                child: Container(
+                                                widthBox(8),
+                                                Expanded(
+                                                  child: Text(
+                                                    goal.name ?? "",
+                                                    style: context.bodySmall!
+                                                        .copyWith(
+                                                          color:
+                                                              Colors.green[800],
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+
+                                      // Goals NOT MET (Red X marks)
+                                      if (controller.prefNotMet.isNotEmpty) ...[
+                                        ...controller.prefNotMet.map(
+                                          (goal) => Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 18,
+                                                  height: 18,
                                                   decoration: BoxDecoration(
                                                     color: Colors.red,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                          50,
+                                                          3,
                                                         ),
                                                   ),
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 5,
-                                                      ),
-
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    size: 12,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                widthBox(8),
+                                                Expanded(
                                                   child: Text(
-                                                    pref.name ?? '',
-                                                    style: context.bodySmall
-                                                        ?.copyWith(
-                                                          color: Colors.white,
-                                                          height:
-                                                              1.0, // 🔥 tighten text line height
+                                                    goal.name ?? "",
+                                                    style: context.bodySmall!
+                                                        .copyWith(
+                                                          color:
+                                                              Colors.red[800],
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
                                                   ),
                                                 ),
-                                              ),
-                                            )
-                                            .toList(),
-                                      )
-                                    : SizedBox.shrink(),
-                              ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                );
+                              }),
+                              heightBox(10),
                             ],
                           ),
                         ),
@@ -474,57 +548,123 @@ class ResultView extends GetView<ResultController> {
                                   fontSize: 18,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: List.generate(
-                                          controller.nutritionDetails.length,
-                                          (index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                top: 5,
+                              heightBox(10),
+                              Row(
+                                mainAxisAlignment: mainAxisSpaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      "Nutrient",
+                                      style: context.titleMedium!.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        "Value",
+                                        style: context.titleMedium!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        "Rating",
+                                        style: context.titleMedium!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Divider(color: Colors.grey),
+                              Column(
+                                children: List.generate(
+                                  controller.nutritionDetails.length,
+                                  (index) {
+                                    var neutriDetails =
+                                        controller.nutritionDetails[index];
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              mainAxisSpaceBetween,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                "${neutriDetails['display_name']}",
+                                                style: context.titleMedium!
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      fontSize: 12,
+                                                    ),
                                               ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Center(
+                                                child: Text(
+                                                  "${neutriDetails['value']}",
+                                                  style: context.titleMedium!
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 12,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
                                               child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    mainAxisCenter,
                                                 children: [
                                                   CircleAvatar(
-                                                    radius: 3,
+                                                    radius: 5,
                                                     backgroundColor:
-                                                        controller
-                                                                .nutritionDetails[index]['level'] ==
+                                                        neutriDetails['level'] ==
                                                             'high'
                                                         ? Colors.red
-                                                        : controller
-                                                                  .nutritionDetails[index]['level'] ==
+                                                        : neutriDetails['level'] ==
                                                               'moderate'
                                                         ? Colors.orange
                                                         : Colors.green,
                                                   ),
-                                                  widthBox(6),
-                                                  Expanded(
-                                                    child: Text(
-                                                      "${controller.nutritionDetails[index]['display_name']} : ${controller.nutritionDetails[index]['value']}${controller.nutritionDetails[index]['unit']}",
-                                                      style: context.bodyLarge!
-                                                          .copyWith(
-                                                            height: 1.5,
-                                                          ),
-                                                    ),
+                                                  widthBox(5),
+                                                  Text(
+                                                    "${neutriDetails['level'].toString().capitalizeFirst}",
+                                                    style: context.titleMedium!
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontSize: 12,
+                                                        ),
                                                   ),
                                                 ],
                                               ),
-                                            );
-                                          },
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ),
-                                  ],
+                                        Divider(
+                                          color: Colors.grey.withAlpha(60),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
                               heightBox(20),
@@ -541,24 +681,26 @@ class ResultView extends GetView<ResultController> {
                                 children: List.generate(
                                   controller.nutritionDetails.length,
                                   (index) {
+                                    final neutriLevel = controller
+                                        .nutritionDetails[index]['level'];
                                     return Container(
-                                      padding: defaultPadding,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 5,
+                                        horizontal: 8,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color:
-                                            controller
-                                                    .nutritionDetails[index]['level'] ==
-                                                'high'
-                                            ? Colors.red.withAlpha(80)
-                                            : controller
-                                                      .nutritionDetails[index]['level'] ==
-                                                  'moderate'
-                                            ? Colors.orange.withAlpha(80)
-                                            : Colors.green.withAlpha(80),
-                                        borderRadius: BorderRadius.circular(10),
+                                        color: neutriLevel == 'high'
+                                            ? Colors.red
+                                            : neutriLevel == 'moderate'
+                                            ? Colors.orange
+                                            : Colors.green,
+                                        borderRadius: BorderRadius.circular(50),
                                       ),
                                       child: Text(
-                                        "${controller.nutritionDetails[index]['level'].toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
-                                        style: context.bodyMedium,
+                                        "${neutriLevel.toString().capitalizeFirst} - ${controller.nutritionDetails[index]['display_name'].toString()}",
+                                        style: context.bodySmall!.copyWith(
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     );
                                   },
@@ -581,16 +723,7 @@ class ResultView extends GetView<ResultController> {
                                             "Please, wait for the suggested products...",
                                           ),
                                         )
-                                      : controller
-                                                    .suggestedProducts
-                                                    .value
-                                                    .suggestedProducts ==
-                                                null ||
-                                            controller
-                                                .suggestedProducts
-                                                .value
-                                                .suggestedProducts!
-                                                .isEmpty
+                                      : controller.suggestedProducts.isEmpty
                                       ? Center(
                                           child: Text(
                                             controller
@@ -604,382 +737,391 @@ class ResultView extends GetView<ResultController> {
                                       : Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
-                                          children: List.generate(
-                                            controller
-                                                .suggestedProducts
-                                                .value
-                                                .suggestedProducts!
-                                                .length,
-                                            (index) {
-                                              final product = controller
-                                                  .suggestedProducts
-                                                  .value
-                                                  .suggestedProducts![index];
+                                          children: List.generate(controller.suggestedProducts.length, (
+                                            index,
+                                          ) {
+                                            final product = controller
+                                                .suggestedProducts[index];
 
-                                              return Expanded(
-                                                child: Container(
-                                                  margin:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 4,
-                                                      ),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Get.generalDialog(
-                                                        pageBuilder:
-                                                            (
-                                                              context,
-                                                              animation,
-                                                              secondaryAnimation,
-                                                            ) {
-                                                              return Dialog(
-                                                                constraints: BoxConstraints(
-                                                                  minHeight:
-                                                                      context
-                                                                          .screenHeight *
-                                                                      0.5,
-                                                                  maxHeight:
-                                                                      context
-                                                                          .screenHeight *
-                                                                      0.65,
-                                                                  minWidth:
-                                                                      context
-                                                                          .screenWidth *
-                                                                      0.8,
-                                                                ),
-                                                                child: Container(
-                                                                  decoration: BoxDecoration(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                          15,
-                                                                        ),
-                                                                  ),
-                                                                  width:
-                                                                      double
-                                                                          .infinity -
-                                                                      80,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Stack(
-                                                                        alignment:
-                                                                            Alignment.topRight,
-                                                                        children: [
-                                                                          ClipRRect(
-                                                                            borderRadius: BorderRadius.circular(
-                                                                              8,
-                                                                            ),
-                                                                            child: CachedNetworkImage(
-                                                                              imageUrl:
-                                                                                  product.imageUrl ??
-                                                                                  "",
-                                                                              width: double.infinity,
-                                                                              height:
-                                                                                  context.height *
-                                                                                  0.4,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          ),
-                                                                          InkWell(
-                                                                            onTap: () {
-                                                                              Get.back();
-                                                                            },
-                                                                            child: Padding(
-                                                                              padding: const EdgeInsets.all(
-                                                                                8.0,
-                                                                              ),
-                                                                              child: CircleAvatar(
-                                                                                backgroundColor: Colors.white,
-                                                                                child: Icon(
-                                                                                  Icons.close,
-                                                                                  color: Colors.red,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
+                                            return Expanded(
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 4,
+                                                    ),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Get.generalDialog(
+                                                      pageBuilder:
+                                                          (
+                                                            context,
+                                                            animation,
+                                                            secondaryAnimation,
+                                                          ) {
+                                                            return Dialog(
+                                                              constraints: BoxConstraints(
+                                                                minHeight:
+                                                                    context
+                                                                        .screenHeight *
+                                                                    0.5,
+                                                                maxHeight:
+                                                                    context
+                                                                        .screenHeight *
+                                                                    0.65,
+                                                                minWidth:
+                                                                    context
+                                                                        .screenWidth *
+                                                                    0.8,
+                                                              ),
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        15,
                                                                       ),
-                                                                      Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(
+                                                                ),
+                                                                width:
+                                                                    double
+                                                                        .infinity -
+                                                                    80,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Stack(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .topRight,
+                                                                      children: [
+                                                                        ClipRRect(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(
+                                                                                8,
+                                                                              ),
+                                                                          child: CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                product.imageUrl ??
+                                                                                "",
+                                                                            width:
+                                                                                double.infinity,
+                                                                            height:
+                                                                                context.height *
+                                                                                0.4,
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
+                                                                        ),
+                                                                        InkWell(
+                                                                          onTap: () {
+                                                                            Get.back();
+                                                                          },
+                                                                          child: Padding(
+                                                                            padding: const EdgeInsets.all(
                                                                               8.0,
                                                                             ),
-                                                                        child: Center(
-                                                                          child: Column(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              RichText(
-                                                                                maxLines: 2,
-                                                                                text: TextSpan(
-                                                                                  style: context.bodyLarge,
-                                                                                  children: [
-                                                                                    TextSpan(
-                                                                                      text: "Product Name: ",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                      ),
-                                                                                    ),
-                                                                                    TextSpan(
-                                                                                      text:
-                                                                                          product.productName ??
-                                                                                          "",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.grey,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
+                                                                            child: CircleAvatar(
+                                                                              backgroundColor: Colors.white,
+                                                                              child: Icon(
+                                                                                Icons.close,
+                                                                                color: Colors.red,
                                                                               ),
-                                                                              heightBox(
-                                                                                5,
-                                                                              ),
-                                                                              RichText(
-                                                                                text: TextSpan(
-                                                                                  style: context.bodyLarge,
-                                                                                  children: [
-                                                                                    TextSpan(
-                                                                                      text: "Brand: ",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                      ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                            8.0,
+                                                                          ),
+                                                                      child: Center(
+                                                                        child: Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            RichText(
+                                                                              maxLines: 2,
+                                                                              text: TextSpan(
+                                                                                style: context.bodyLarge,
+                                                                                children: [
+                                                                                  TextSpan(
+                                                                                    text: "Product Name: ",
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.bold,
                                                                                     ),
-                                                                                    TextSpan(
-                                                                                      text:
-                                                                                          product.brand ??
-                                                                                          "",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.grey,
-                                                                                      ),
+                                                                                  ),
+                                                                                  TextSpan(
+                                                                                    text:
+                                                                                        product.productName ??
+                                                                                        "",
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.grey,
                                                                                     ),
-                                                                                  ],
-                                                                                ),
+                                                                                  ),
+                                                                                ],
                                                                               ),
-                                                                              heightBox(
-                                                                                5,
+                                                                            ),
+                                                                            heightBox(
+                                                                              5,
+                                                                            ),
+                                                                            RichText(
+                                                                              text: TextSpan(
+                                                                                style: context.bodyLarge,
+                                                                                children: [
+                                                                                  TextSpan(
+                                                                                    text: "Brand: ",
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ),
+                                                                                  TextSpan(
+                                                                                    text:
+                                                                                        product.brand ??
+                                                                                        "",
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.grey,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
                                                                               ),
-                                                                              // RichText(
-                                                                              //   text: TextSpan(
-                                                                              //     style: context.bodyLarge,
-                                                                              //     children: [
-                                                                              //       TextSpan(
-                                                                              //         text: "Health Score: ",
-                                                                              //         style: TextStyle(
-                                                                              //           color: Colors.black,
-                                                                              //           fontWeight: FontWeight.bold,
-                                                                              //         ),
-                                                                              //       ),
-                                                                              //       TextSpan(
-                                                                              //         text: "${controller.mapNutriScoreLetterTo100(product.nutritionGrade)}%",
-                                                                              //         style: TextStyle(
-                                                                              //           color: Colors.grey,
-                                                                              //         ),
-                                                                              //       ),
-                                                                              //     ],
-                                                                              //   ),
-                                                                              // ),
-                                                                              // heightBox(
-                                                                              //   5,
-                                                                              // ),
-                                                                              Center(
-                                                                                child: SizedBox(
-                                                                                  width:
-                                                                                      context.screenWidth *
-                                                                                      0.6,
-                                                                                  child: Obx(
-                                                                                    () => CustomButton(
-                                                                                      isLoading: controller.isLoading.value,
-                                                                                      text: "View Analysis",
-                                                                                      onPressed: () async {
-                                                                                        final barcode = product.barcode;
-                                                                                        if (barcode ==
-                                                                                                null ||
-                                                                                            barcode.isEmpty) {
-                                                                                          Get.snackbar(
-                                                                                            "Error",
-                                                                                            "Invalid product barcode",
-                                                                                            snackPosition: SnackPosition.BOTTOM,
-                                                                                            backgroundColor: Colors.red,
-                                                                                            colorText: Colors.white,
-                                                                                          );
-                                                                                          return;
-                                                                                        }
+                                                                            ),
+                                                                            heightBox(
+                                                                              5,
+                                                                            ),
+                                                                            RichText(
+                                                                              text: TextSpan(
+                                                                                style: context.bodyLarge,
+                                                                                children: [
+                                                                                  TextSpan(
+                                                                                    text: "Health Score: ",
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ),
+                                                                                  TextSpan(
+                                                                                    text: "${controller.mapNutriScoreLetterTo100(product.nutritionGrade)}%",
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.grey,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            heightBox(
+                                                                              5,
+                                                                            ),
+                                                                            Center(
+                                                                              child: SizedBox(
+                                                                                width:
+                                                                                    context.screenWidth *
+                                                                                    0.6,
+                                                                                child: Obx(
+                                                                                  () => CustomButton(
+                                                                                    isLoading: controller.isLoading.value,
+                                                                                    text: "View Analysis",
+                                                                                    onPressed: () async {
+                                                                                      final barcode = product.barcode;
+                                                                                      if (barcode ==
+                                                                                              null ||
+                                                                                          barcode.isEmpty) {
+                                                                                        Get.snackbar(
+                                                                                          "Error",
+                                                                                          "Invalid product barcode",
+                                                                                          snackPosition: SnackPosition.BOTTOM,
+                                                                                          backgroundColor: Colors.red,
+                                                                                          colorText: Colors.white,
+                                                                                        );
+                                                                                        return;
+                                                                                      }
 
-                                                                                        Get.back();
+                                                                                      Get.back();
 
-                                                                                        // Show loading dialog
-                                                                                        Get.dialog(
-                                                                                          PopScope(
-                                                                                            onPopInvokedWithResult:
-                                                                                                (
-                                                                                                  didPop,
-                                                                                                  result,
-                                                                                                ) => false,
-                                                                                            child: Center(
-                                                                                              child: Container(
-                                                                                                width:
-                                                                                                    Get.context!.width *
-                                                                                                    0.5,
-                                                                                                padding: const EdgeInsets.all(
-                                                                                                  30,
+                                                                                      // Show loading dialog
+                                                                                      Get.dialog(
+                                                                                        PopScope(
+                                                                                          onPopInvokedWithResult:
+                                                                                              (
+                                                                                                didPop,
+                                                                                                result,
+                                                                                              ) => false,
+                                                                                          child: Center(
+                                                                                            child: Container(
+                                                                                              width:
+                                                                                                  Get.context!.width *
+                                                                                                  0.5,
+                                                                                              padding: const EdgeInsets.all(
+                                                                                                30,
+                                                                                              ),
+                                                                                              decoration: BoxDecoration(
+                                                                                                color: Colors.white,
+                                                                                                borderRadius: BorderRadius.circular(
+                                                                                                  15,
                                                                                                 ),
-                                                                                                decoration: BoxDecoration(
-                                                                                                  color: Colors.white,
-                                                                                                  borderRadius: BorderRadius.circular(
-                                                                                                    15,
+                                                                                              ),
+                                                                                              child: Column(
+                                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                                children: [
+                                                                                                  const CircularProgressIndicator(),
+                                                                                                  const SizedBox(
+                                                                                                    height: 20,
                                                                                                   ),
-                                                                                                ),
-                                                                                                child: Column(
-                                                                                                  mainAxisSize: MainAxisSize.min,
-                                                                                                  children: [
-                                                                                                    const CircularProgressIndicator(),
-                                                                                                    const SizedBox(
-                                                                                                      height: 20,
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      "Loading product details...",
-                                                                                                      style: Get.textTheme.bodyMedium,
-                                                                                                      textAlign: TextAlign.center,
-                                                                                                    ),
-                                                                                                  ],
-                                                                                                ),
+                                                                                                  Text(
+                                                                                                    "Loading product details...",
+                                                                                                    style: Get.textTheme.bodyMedium,
+                                                                                                    textAlign: TextAlign.center,
+                                                                                                  ),
+                                                                                                ],
                                                                                               ),
                                                                                             ),
                                                                                           ),
-                                                                                          barrierDismissible: false,
+                                                                                        ),
+                                                                                        barrierDismissible: false,
+                                                                                      );
+
+                                                                                      try {
+                                                                                        await Future.delayed(
+                                                                                          const Duration(
+                                                                                            milliseconds: 100,
+                                                                                          ),
                                                                                         );
 
-                                                                                        try {
-                                                                                          controller.resetControllerForNewProduct();
+                                                                                        await controller.getProductDetails(
+                                                                                          barcode,
+                                                                                        );
+                                                                                        controller.getSuggestedProduct(
+                                                                                          controller.getProductResultModel.value?.product?.categoriesTags ??
+                                                                                              [],
+                                                                                        );
+                                                                                        controller.getGoalsAndPreferences(
+                                                                                          GoalsAndPreferenceRequestModel(
+                                                                                            nutriments: controller.getProductResultModel.value?.product?.nutriments!
+                                                                                                .toJson()
+                                                                                                .entries
+                                                                                                .map(
+                                                                                                  (
+                                                                                                    e,
+                                                                                                  ) => "${e.key}: ${e.value}",
+                                                                                                )
+                                                                                                .join(
+                                                                                                  ", ",
+                                                                                                ),
+                                                                                            ingredients: controller.getProductResultModel.value?.product?.ingredientsText,
+                                                                                          ),
+                                                                                        );
 
-                                                                                          await Future.delayed(
-                                                                                            const Duration(
-                                                                                              milliseconds: 100,
-                                                                                            ),
-                                                                                          );
+                                                                                        Get.back();
 
-                                                                                          await controller.getProductDetails(
-                                                                                            barcode,
-                                                                                          );
-                                                                                          await controller.getSuggestedProduct(
-                                                                                            barcode,
-                                                                                          );
-                                                                                          await controller.setGoalStatement();
+                                                                                        Get.offAndToNamed(
+                                                                                          Routes.RESULT,
+                                                                                          arguments: barcode,
+                                                                                        );
+                                                                                      } catch (
+                                                                                        e
+                                                                                      ) {
+                                                                                        // Close loading dialog
+                                                                                        Get.back();
 
-                                                                                          Get.back();
-
-                                                                                          Get.offAndToNamed(
-                                                                                            Routes.RESULT,
-                                                                                            arguments: barcode,
-                                                                                          );
-                                                                                        } catch (
-                                                                                          e
-                                                                                        ) {
-                                                                                          // Close loading dialog
-                                                                                          Get.back();
-
-                                                                                          // Show error
-                                                                                          Get.snackbar(
-                                                                                            "Error",
-                                                                                            "Failed to load product: ${e.toString()}",
-                                                                                            snackPosition: SnackPosition.BOTTOM,
-                                                                                            backgroundColor: Colors.red,
-                                                                                            colorText: Colors.white,
-                                                                                          );
-                                                                                        }
-                                                                                      },
-                                                                                    ),
+                                                                                        // Show error
+                                                                                        Get.snackbar(
+                                                                                          "Error",
+                                                                                          "Failed to load product: ${e.toString()}",
+                                                                                          snackPosition: SnackPosition.BOTTOM,
+                                                                                          backgroundColor: Colors.red,
+                                                                                          colorText: Colors.white,
+                                                                                        );
+                                                                                      }
+                                                                                    },
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                            ],
-                                                                          ),
+                                                                            ),
+                                                                          ],
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              );
-                                                            },
-                                                        transitionBuilder:
-                                                            (
-                                                              context,
-                                                              animation,
-                                                              secondaryAnimation,
-                                                              child,
-                                                            ) {
-                                                              return FadeTransition(
-                                                                opacity:
-                                                                    animation,
-                                                                child: ScaleTransition(
-                                                                  scale:
-                                                                      Tween<double>(
-                                                                        begin:
-                                                                            0.7,
-                                                                        end:
-                                                                            1.0,
-                                                                      ).animate(
-                                                                        CurvedAnimation(
-                                                                          parent:
-                                                                              animation,
-                                                                          curve:
-                                                                              Curves.easeOutCubic,
-                                                                        ),
-                                                                      ),
-                                                                  child: child,
-                                                                ),
-                                                              );
-                                                            },
-                                                        transitionDuration:
-                                                            const Duration(
-                                                              milliseconds: 400,
-                                                            ),
-                                                        barrierDismissible:
-                                                            true,
-                                                        barrierLabel: '',
-                                                      );
-                                                    },
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                8,
                                                               ),
-                                                          child: CachedNetworkImage(
-                                                            imageUrl:
-                                                                product
-                                                                    .imageUrl ??
-                                                                "",
-                                                            width:
-                                                                double.infinity,
-                                                            height: 100,
-                                                            fit: BoxFit.cover,
+                                                            );
+                                                          },
+                                                      transitionBuilder:
+                                                          (
+                                                            context,
+                                                            animation,
+                                                            secondaryAnimation,
+                                                            child,
+                                                          ) {
+                                                            return FadeTransition(
+                                                              opacity:
+                                                                  animation,
+                                                              child: ScaleTransition(
+                                                                scale:
+                                                                    Tween<double>(
+                                                                      begin:
+                                                                          0.7,
+                                                                      end: 1.0,
+                                                                    ).animate(
+                                                                      CurvedAnimation(
+                                                                        parent:
+                                                                            animation,
+                                                                        curve: Curves
+                                                                            .easeOutCubic,
+                                                                      ),
+                                                                    ),
+                                                                child: child,
+                                                              ),
+                                                            );
+                                                          },
+                                                      transitionDuration:
+                                                          const Duration(
+                                                            milliseconds: 400,
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          product.productName ??
+                                                      barrierDismissible: true,
+                                                      barrierLabel: '',
+                                                    );
+                                                  },
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                        child: CachedNetworkImage(
+                                                          imageUrl:
+                                                              product
+                                                                  .imageUrl ??
                                                               "",
-                                                          style: context
-                                                              .bodyMedium,
-                                                          maxLines: 1,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
+                                                          width:
+                                                              double.infinity,
+                                                          height: 100,
+                                                          fit: BoxFit.cover,
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      Text(
+                                                        product.productName ??
+                                                            "",
+                                                        style:
+                                                            context.bodyMedium,
+                                                        maxLines: 1,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                              ),
+                                            );
+                                          }),
                                         ),
                                 ),
                               ),
@@ -1020,61 +1162,51 @@ class ResultView extends GetView<ResultController> {
     BuildContext context,
     String label,
     double score,
-    String weight, {
-    bool isInverseScale = false, // Add this parameter
-  }) {
-    return Row(
+    String weight,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: context.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
-              ),
-              Text(
-                weight,
-                style: context.bodyMedium!.copyWith(color: Colors.grey[600]),
-              ),
-            ],
-          ),
+        Text(
+          label,
+          style: context.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
         ),
-        Expanded(
-          flex: 3,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      borderRadius: BorderRadius.circular(10),
-                      value: score / 100,
-                      backgroundColor: Colors.grey[300],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        (score >= 80
-                            ? Colors.green
-                            : score >= 65
-                            ? Colors.lightGreen
-                            : score >= 50
-                            ? Colors.orange
-                            : Colors.red),
-                      ),
-                      minHeight: 8,
+        Text(
+          weight,
+          style: context.bodySmall!.copyWith(color: Colors.grey[600]),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0, end: score / 100),
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, _) {
+                  return LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(10),
+                    value: value,
+                    backgroundColor: Colors.grey[300],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      (score >= 80
+                          ? Colors.green
+                          : score >= 65
+                          ? Colors.lightGreen
+                          : score >= 50
+                          ? Colors.orange
+                          : Colors.red),
                     ),
-                  ),
-                  widthBox(10),
-                  Text(
-                    "${score.round()}",
-                    style: context.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+                    minHeight: 8,
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+            widthBox(10),
+            Text(
+              "${score.round()}",
+              style: context.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ],
     );

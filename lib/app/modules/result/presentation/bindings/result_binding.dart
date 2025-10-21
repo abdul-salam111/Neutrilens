@@ -6,10 +6,7 @@ import '../controllers/result_controller.dart';
 class ResultBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ProductRepository>(() => ProductRepositoryImpl(), fenix: true);
-    Get.lazyPut<ResultController>(
-      () => ResultController(Get.find()),
-      fenix: true,
-    );
+    Get.put<ProductRepository>( ProductRepositoryImpl());
+    Get.put<ResultController>( ResultController(Get.find()));
   }
 }

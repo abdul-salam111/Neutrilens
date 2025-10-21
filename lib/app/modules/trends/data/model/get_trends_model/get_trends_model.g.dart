@@ -11,8 +11,8 @@ _GetTrendsModel _$GetTrendsModelFromJson(Map<String, dynamic> json) =>
       goodPickAvg: (json['good_pick_avg'] as num?)?.toDouble(),
       mediumPickAvg: (json['medium_pick_avg'] as num?)?.toDouble(),
       poorPickAvg: (json['poor_pick_avg'] as num?)?.toDouble(),
-      trend: (json['trend'] as List<dynamic>?)
-          ?.map((e) => Trend.fromJson(e as Map<String, dynamic>))
+      entries: (json['entries'] as List<dynamic>?)
+          ?.map((e) => Entry.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -21,15 +21,17 @@ Map<String, dynamic> _$GetTrendsModelToJson(_GetTrendsModel instance) =>
       'good_pick_avg': instance.goodPickAvg,
       'medium_pick_avg': instance.mediumPickAvg,
       'poor_pick_avg': instance.poorPickAvg,
-      'trend': instance.trend,
+      'entries': instance.entries,
     };
 
-_Trend _$TrendFromJson(Map<String, dynamic> json) => _Trend(
-  date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
-  goodPicksCount: (json['good_picks_count'] as num?)?.toInt(),
+_Entry _$EntryFromJson(Map<String, dynamic> json) => _Entry(
+  id: (json['id'] as num?)?.toInt(),
+  foodIqScore: (json['food_iq_score'] as num?)?.toInt(),
+  scannedAt: json['scanned_at'] as String?,
 );
 
-Map<String, dynamic> _$TrendToJson(_Trend instance) => <String, dynamic>{
-  'date': instance.date?.toIso8601String(),
-  'good_picks_count': instance.goodPicksCount,
+Map<String, dynamic> _$EntryToJson(_Entry instance) => <String, dynamic>{
+  'id': instance.id,
+  'food_iq_score': instance.foodIqScore,
+  'scanned_at': instance.scannedAt,
 };

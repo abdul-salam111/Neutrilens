@@ -1,4 +1,5 @@
 // ignore_for_file: deprecated_member_use
+import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,11 @@ import 'package:iconsax/iconsax.dart';
 import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/services/session_manager.dart';
 import 'package:neutri_lens/app/core/widgets/custom_button.dart';
-
 import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
 import 'package:neutri_lens/app/modules/result/presentation/bindings/result_binding.dart';
 import '../../../../core/utils/grade_color.dart';
 import '../../../../routes/app_pages.dart';
+import '../../../result/data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
 import '../../../result/presentation/controllers/result_controller.dart';
 import '../controllers/home_controller.dart';
 
@@ -230,22 +231,32 @@ class HomeView extends GetView<HomeController> {
                           );
 
                           try {
-                            ResultBinding().dependencies();
-                            final resultController =
-                                Get.isRegistered<ResultController>()
-                                ? Get.find<ResultController>()
-                                : Get.put(ResultController(Get.find()));
+                            final resultController = Get.put(
+                              ResultController(Get.find()),
+                            );
 
                             // Fetch product details
                             await resultController.getProductDetails(
                               productCode,
                             );
-
+                            resultController.getGoalsAndPreferences(
+                              GoalsAndPreferenceRequestModel(
+                                nutriments: product.nutriments!
+                                    .toJson()
+                                    .entries
+                                    .map((e) => "${e.key}: ${e.value}")
+                                    .join(", "),
+                                ingredients: product.ingredientsText,
+                              ),
+                            );
+                            resultController.getSuggestedProduct(
+                              product.categoriesTags!,
+                            );
                             // Close loading dialog
                             Get.back();
 
                             // Navigate to result page
-                            Get.toNamed(Routes.RESULT, arguments: productCode);
+                            await Get.toNamed(Routes.RESULT);
                           } catch (e) {
                             // Close loading dialog
                             Get.back();
@@ -399,7 +410,7 @@ class HomeView extends GetView<HomeController> {
     return Align(
       alignment: Alignment.bottomRight,
       child: Container(
-        width: 70,
+        width: context.screenWidth * 0.35,
         padding: padding5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),

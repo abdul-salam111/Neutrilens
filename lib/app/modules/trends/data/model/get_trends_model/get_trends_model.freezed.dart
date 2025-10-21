@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GetTrendsModel {
 
-@JsonKey(name: "good_pick_avg") double? get goodPickAvg;@JsonKey(name: "medium_pick_avg") double? get mediumPickAvg;@JsonKey(name: "poor_pick_avg") double? get poorPickAvg;@JsonKey(name: "trend") List<Trend>? get trend;
+@JsonKey(name: "good_pick_avg") double? get goodPickAvg;@JsonKey(name: "medium_pick_avg") double? get mediumPickAvg;@JsonKey(name: "poor_pick_avg") double? get poorPickAvg;@JsonKey(name: "entries") List<Entry>? get entries;
 /// Create a copy of GetTrendsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GetTrendsModelCopyWith<GetTrendsModel> get copyWith => _$GetTrendsModelCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetTrendsModel&&(identical(other.goodPickAvg, goodPickAvg) || other.goodPickAvg == goodPickAvg)&&(identical(other.mediumPickAvg, mediumPickAvg) || other.mediumPickAvg == mediumPickAvg)&&(identical(other.poorPickAvg, poorPickAvg) || other.poorPickAvg == poorPickAvg)&&const DeepCollectionEquality().equals(other.trend, trend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetTrendsModel&&(identical(other.goodPickAvg, goodPickAvg) || other.goodPickAvg == goodPickAvg)&&(identical(other.mediumPickAvg, mediumPickAvg) || other.mediumPickAvg == mediumPickAvg)&&(identical(other.poorPickAvg, poorPickAvg) || other.poorPickAvg == poorPickAvg)&&const DeepCollectionEquality().equals(other.entries, entries));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,goodPickAvg,mediumPickAvg,poorPickAvg,const DeepCollectionEquality().hash(trend));
+int get hashCode => Object.hash(runtimeType,goodPickAvg,mediumPickAvg,poorPickAvg,const DeepCollectionEquality().hash(entries));
 
 @override
 String toString() {
-  return 'GetTrendsModel(goodPickAvg: $goodPickAvg, mediumPickAvg: $mediumPickAvg, poorPickAvg: $poorPickAvg, trend: $trend)';
+  return 'GetTrendsModel(goodPickAvg: $goodPickAvg, mediumPickAvg: $mediumPickAvg, poorPickAvg: $poorPickAvg, entries: $entries)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $GetTrendsModelCopyWith<$Res>  {
   factory $GetTrendsModelCopyWith(GetTrendsModel value, $Res Function(GetTrendsModel) _then) = _$GetTrendsModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "good_pick_avg") double? goodPickAvg,@JsonKey(name: "medium_pick_avg") double? mediumPickAvg,@JsonKey(name: "poor_pick_avg") double? poorPickAvg,@JsonKey(name: "trend") List<Trend>? trend
+@JsonKey(name: "good_pick_avg") double? goodPickAvg,@JsonKey(name: "medium_pick_avg") double? mediumPickAvg,@JsonKey(name: "poor_pick_avg") double? poorPickAvg,@JsonKey(name: "entries") List<Entry>? entries
 });
 
 
@@ -65,13 +65,13 @@ class _$GetTrendsModelCopyWithImpl<$Res>
 
 /// Create a copy of GetTrendsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? goodPickAvg = freezed,Object? mediumPickAvg = freezed,Object? poorPickAvg = freezed,Object? trend = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? goodPickAvg = freezed,Object? mediumPickAvg = freezed,Object? poorPickAvg = freezed,Object? entries = freezed,}) {
   return _then(_self.copyWith(
 goodPickAvg: freezed == goodPickAvg ? _self.goodPickAvg : goodPickAvg // ignore: cast_nullable_to_non_nullable
 as double?,mediumPickAvg: freezed == mediumPickAvg ? _self.mediumPickAvg : mediumPickAvg // ignore: cast_nullable_to_non_nullable
 as double?,poorPickAvg: freezed == poorPickAvg ? _self.poorPickAvg : poorPickAvg // ignore: cast_nullable_to_non_nullable
-as double?,trend: freezed == trend ? _self.trend : trend // ignore: cast_nullable_to_non_nullable
-as List<Trend>?,
+as double?,entries: freezed == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
+as List<Entry>?,
   ));
 }
 
@@ -156,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "good_pick_avg")  double? goodPickAvg, @JsonKey(name: "medium_pick_avg")  double? mediumPickAvg, @JsonKey(name: "poor_pick_avg")  double? poorPickAvg, @JsonKey(name: "trend")  List<Trend>? trend)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "good_pick_avg")  double? goodPickAvg, @JsonKey(name: "medium_pick_avg")  double? mediumPickAvg, @JsonKey(name: "poor_pick_avg")  double? poorPickAvg, @JsonKey(name: "entries")  List<Entry>? entries)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetTrendsModel() when $default != null:
-return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.trend);case _:
+return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.entries);case _:
   return orElse();
 
 }
@@ -177,10 +177,10 @@ return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.tr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "good_pick_avg")  double? goodPickAvg, @JsonKey(name: "medium_pick_avg")  double? mediumPickAvg, @JsonKey(name: "poor_pick_avg")  double? poorPickAvg, @JsonKey(name: "trend")  List<Trend>? trend)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "good_pick_avg")  double? goodPickAvg, @JsonKey(name: "medium_pick_avg")  double? mediumPickAvg, @JsonKey(name: "poor_pick_avg")  double? poorPickAvg, @JsonKey(name: "entries")  List<Entry>? entries)  $default,) {final _that = this;
 switch (_that) {
 case _GetTrendsModel():
-return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.trend);case _:
+return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.entries);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +197,10 @@ return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.tr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "good_pick_avg")  double? goodPickAvg, @JsonKey(name: "medium_pick_avg")  double? mediumPickAvg, @JsonKey(name: "poor_pick_avg")  double? poorPickAvg, @JsonKey(name: "trend")  List<Trend>? trend)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "good_pick_avg")  double? goodPickAvg, @JsonKey(name: "medium_pick_avg")  double? mediumPickAvg, @JsonKey(name: "poor_pick_avg")  double? poorPickAvg, @JsonKey(name: "entries")  List<Entry>? entries)?  $default,) {final _that = this;
 switch (_that) {
 case _GetTrendsModel() when $default != null:
-return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.trend);case _:
+return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.entries);case _:
   return null;
 
 }
@@ -212,17 +212,17 @@ return $default(_that.goodPickAvg,_that.mediumPickAvg,_that.poorPickAvg,_that.tr
 @JsonSerializable()
 
 class _GetTrendsModel implements GetTrendsModel {
-  const _GetTrendsModel({@JsonKey(name: "good_pick_avg") this.goodPickAvg, @JsonKey(name: "medium_pick_avg") this.mediumPickAvg, @JsonKey(name: "poor_pick_avg") this.poorPickAvg, @JsonKey(name: "trend") final  List<Trend>? trend}): _trend = trend;
+  const _GetTrendsModel({@JsonKey(name: "good_pick_avg") this.goodPickAvg, @JsonKey(name: "medium_pick_avg") this.mediumPickAvg, @JsonKey(name: "poor_pick_avg") this.poorPickAvg, @JsonKey(name: "entries") final  List<Entry>? entries}): _entries = entries;
   factory _GetTrendsModel.fromJson(Map<String, dynamic> json) => _$GetTrendsModelFromJson(json);
 
 @override@JsonKey(name: "good_pick_avg") final  double? goodPickAvg;
 @override@JsonKey(name: "medium_pick_avg") final  double? mediumPickAvg;
 @override@JsonKey(name: "poor_pick_avg") final  double? poorPickAvg;
- final  List<Trend>? _trend;
-@override@JsonKey(name: "trend") List<Trend>? get trend {
-  final value = _trend;
+ final  List<Entry>? _entries;
+@override@JsonKey(name: "entries") List<Entry>? get entries {
+  final value = _entries;
   if (value == null) return null;
-  if (_trend is EqualUnmodifiableListView) return _trend;
+  if (_entries is EqualUnmodifiableListView) return _entries;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(value);
 }
@@ -241,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetTrendsModel&&(identical(other.goodPickAvg, goodPickAvg) || other.goodPickAvg == goodPickAvg)&&(identical(other.mediumPickAvg, mediumPickAvg) || other.mediumPickAvg == mediumPickAvg)&&(identical(other.poorPickAvg, poorPickAvg) || other.poorPickAvg == poorPickAvg)&&const DeepCollectionEquality().equals(other._trend, _trend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetTrendsModel&&(identical(other.goodPickAvg, goodPickAvg) || other.goodPickAvg == goodPickAvg)&&(identical(other.mediumPickAvg, mediumPickAvg) || other.mediumPickAvg == mediumPickAvg)&&(identical(other.poorPickAvg, poorPickAvg) || other.poorPickAvg == poorPickAvg)&&const DeepCollectionEquality().equals(other._entries, _entries));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,goodPickAvg,mediumPickAvg,poorPickAvg,const DeepCollectionEquality().hash(_trend));
+int get hashCode => Object.hash(runtimeType,goodPickAvg,mediumPickAvg,poorPickAvg,const DeepCollectionEquality().hash(_entries));
 
 @override
 String toString() {
-  return 'GetTrendsModel(goodPickAvg: $goodPickAvg, mediumPickAvg: $mediumPickAvg, poorPickAvg: $poorPickAvg, trend: $trend)';
+  return 'GetTrendsModel(goodPickAvg: $goodPickAvg, mediumPickAvg: $mediumPickAvg, poorPickAvg: $poorPickAvg, entries: $entries)';
 }
 
 
@@ -261,7 +261,7 @@ abstract mixin class _$GetTrendsModelCopyWith<$Res> implements $GetTrendsModelCo
   factory _$GetTrendsModelCopyWith(_GetTrendsModel value, $Res Function(_GetTrendsModel) _then) = __$GetTrendsModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "good_pick_avg") double? goodPickAvg,@JsonKey(name: "medium_pick_avg") double? mediumPickAvg,@JsonKey(name: "poor_pick_avg") double? poorPickAvg,@JsonKey(name: "trend") List<Trend>? trend
+@JsonKey(name: "good_pick_avg") double? goodPickAvg,@JsonKey(name: "medium_pick_avg") double? mediumPickAvg,@JsonKey(name: "poor_pick_avg") double? poorPickAvg,@JsonKey(name: "entries") List<Entry>? entries
 });
 
 
@@ -278,13 +278,13 @@ class __$GetTrendsModelCopyWithImpl<$Res>
 
 /// Create a copy of GetTrendsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? goodPickAvg = freezed,Object? mediumPickAvg = freezed,Object? poorPickAvg = freezed,Object? trend = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? goodPickAvg = freezed,Object? mediumPickAvg = freezed,Object? poorPickAvg = freezed,Object? entries = freezed,}) {
   return _then(_GetTrendsModel(
 goodPickAvg: freezed == goodPickAvg ? _self.goodPickAvg : goodPickAvg // ignore: cast_nullable_to_non_nullable
 as double?,mediumPickAvg: freezed == mediumPickAvg ? _self.mediumPickAvg : mediumPickAvg // ignore: cast_nullable_to_non_nullable
 as double?,poorPickAvg: freezed == poorPickAvg ? _self.poorPickAvg : poorPickAvg // ignore: cast_nullable_to_non_nullable
-as double?,trend: freezed == trend ? _self._trend : trend // ignore: cast_nullable_to_non_nullable
-as List<Trend>?,
+as double?,entries: freezed == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
+as List<Entry>?,
   ));
 }
 
@@ -293,42 +293,42 @@ as List<Trend>?,
 
 
 /// @nodoc
-mixin _$Trend {
+mixin _$Entry {
 
-@JsonKey(name: "date") DateTime? get date;@JsonKey(name: "good_picks_count") int? get goodPicksCount;
-/// Create a copy of Trend
+@JsonKey(name: "id") int? get id;@JsonKey(name: "food_iq_score") int? get foodIqScore;@JsonKey(name: "scanned_at") String? get scannedAt;
+/// Create a copy of Entry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$TrendCopyWith<Trend> get copyWith => _$TrendCopyWithImpl<Trend>(this as Trend, _$identity);
+$EntryCopyWith<Entry> get copyWith => _$EntryCopyWithImpl<Entry>(this as Entry, _$identity);
 
-  /// Serializes this Trend to a JSON map.
+  /// Serializes this Entry to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Trend&&(identical(other.date, date) || other.date == date)&&(identical(other.goodPicksCount, goodPicksCount) || other.goodPicksCount == goodPicksCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Entry&&(identical(other.id, id) || other.id == id)&&(identical(other.foodIqScore, foodIqScore) || other.foodIqScore == foodIqScore)&&(identical(other.scannedAt, scannedAt) || other.scannedAt == scannedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,goodPicksCount);
+int get hashCode => Object.hash(runtimeType,id,foodIqScore,scannedAt);
 
 @override
 String toString() {
-  return 'Trend(date: $date, goodPicksCount: $goodPicksCount)';
+  return 'Entry(id: $id, foodIqScore: $foodIqScore, scannedAt: $scannedAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $TrendCopyWith<$Res>  {
-  factory $TrendCopyWith(Trend value, $Res Function(Trend) _then) = _$TrendCopyWithImpl;
+abstract mixin class $EntryCopyWith<$Res>  {
+  factory $EntryCopyWith(Entry value, $Res Function(Entry) _then) = _$EntryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "date") DateTime? date,@JsonKey(name: "good_picks_count") int? goodPicksCount
+@JsonKey(name: "id") int? id,@JsonKey(name: "food_iq_score") int? foodIqScore,@JsonKey(name: "scanned_at") String? scannedAt
 });
 
 
@@ -336,28 +336,29 @@ $Res call({
 
 }
 /// @nodoc
-class _$TrendCopyWithImpl<$Res>
-    implements $TrendCopyWith<$Res> {
-  _$TrendCopyWithImpl(this._self, this._then);
+class _$EntryCopyWithImpl<$Res>
+    implements $EntryCopyWith<$Res> {
+  _$EntryCopyWithImpl(this._self, this._then);
 
-  final Trend _self;
-  final $Res Function(Trend) _then;
+  final Entry _self;
+  final $Res Function(Entry) _then;
 
-/// Create a copy of Trend
+/// Create a copy of Entry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = freezed,Object? goodPicksCount = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? foodIqScore = freezed,Object? scannedAt = freezed,}) {
   return _then(_self.copyWith(
-date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime?,goodPicksCount: freezed == goodPicksCount ? _self.goodPicksCount : goodPicksCount // ignore: cast_nullable_to_non_nullable
-as int?,
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,foodIqScore: freezed == foodIqScore ? _self.foodIqScore : foodIqScore // ignore: cast_nullable_to_non_nullable
+as int?,scannedAt: freezed == scannedAt ? _self.scannedAt : scannedAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
 }
 
 
-/// Adds pattern-matching-related methods to [Trend].
-extension TrendPatterns on Trend {
+/// Adds pattern-matching-related methods to [Entry].
+extension EntryPatterns on Entry {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -370,10 +371,10 @@ extension TrendPatterns on Trend {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Trend value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Entry value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _Trend() when $default != null:
+case _Entry() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -392,10 +393,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Trend value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Entry value)  $default,){
 final _that = this;
 switch (_that) {
-case _Trend():
+case _Entry():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -413,10 +414,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Trend value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Entry value)?  $default,){
 final _that = this;
 switch (_that) {
-case _Trend() when $default != null:
+case _Entry() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -434,10 +435,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "date")  DateTime? date, @JsonKey(name: "good_picks_count")  int? goodPicksCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "food_iq_score")  int? foodIqScore, @JsonKey(name: "scanned_at")  String? scannedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _Trend() when $default != null:
-return $default(_that.date,_that.goodPicksCount);case _:
+case _Entry() when $default != null:
+return $default(_that.id,_that.foodIqScore,_that.scannedAt);case _:
   return orElse();
 
 }
@@ -455,10 +456,10 @@ return $default(_that.date,_that.goodPicksCount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "date")  DateTime? date, @JsonKey(name: "good_picks_count")  int? goodPicksCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "food_iq_score")  int? foodIqScore, @JsonKey(name: "scanned_at")  String? scannedAt)  $default,) {final _that = this;
 switch (_that) {
-case _Trend():
-return $default(_that.date,_that.goodPicksCount);case _:
+case _Entry():
+return $default(_that.id,_that.foodIqScore,_that.scannedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -475,10 +476,10 @@ return $default(_that.date,_that.goodPicksCount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "date")  DateTime? date, @JsonKey(name: "good_picks_count")  int? goodPicksCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "food_iq_score")  int? foodIqScore, @JsonKey(name: "scanned_at")  String? scannedAt)?  $default,) {final _that = this;
 switch (_that) {
-case _Trend() when $default != null:
-return $default(_that.date,_that.goodPicksCount);case _:
+case _Entry() when $default != null:
+return $default(_that.id,_that.foodIqScore,_that.scannedAt);case _:
   return null;
 
 }
@@ -489,47 +490,48 @@ return $default(_that.date,_that.goodPicksCount);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _Trend implements Trend {
-  const _Trend({@JsonKey(name: "date") this.date, @JsonKey(name: "good_picks_count") this.goodPicksCount});
-  factory _Trend.fromJson(Map<String, dynamic> json) => _$TrendFromJson(json);
+class _Entry implements Entry {
+  const _Entry({@JsonKey(name: "id") this.id, @JsonKey(name: "food_iq_score") this.foodIqScore, @JsonKey(name: "scanned_at") this.scannedAt});
+  factory _Entry.fromJson(Map<String, dynamic> json) => _$EntryFromJson(json);
 
-@override@JsonKey(name: "date") final  DateTime? date;
-@override@JsonKey(name: "good_picks_count") final  int? goodPicksCount;
+@override@JsonKey(name: "id") final  int? id;
+@override@JsonKey(name: "food_iq_score") final  int? foodIqScore;
+@override@JsonKey(name: "scanned_at") final  String? scannedAt;
 
-/// Create a copy of Trend
+/// Create a copy of Entry
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$TrendCopyWith<_Trend> get copyWith => __$TrendCopyWithImpl<_Trend>(this, _$identity);
+_$EntryCopyWith<_Entry> get copyWith => __$EntryCopyWithImpl<_Entry>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$TrendToJson(this, );
+  return _$EntryToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Trend&&(identical(other.date, date) || other.date == date)&&(identical(other.goodPicksCount, goodPicksCount) || other.goodPicksCount == goodPicksCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Entry&&(identical(other.id, id) || other.id == id)&&(identical(other.foodIqScore, foodIqScore) || other.foodIqScore == foodIqScore)&&(identical(other.scannedAt, scannedAt) || other.scannedAt == scannedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,goodPicksCount);
+int get hashCode => Object.hash(runtimeType,id,foodIqScore,scannedAt);
 
 @override
 String toString() {
-  return 'Trend(date: $date, goodPicksCount: $goodPicksCount)';
+  return 'Entry(id: $id, foodIqScore: $foodIqScore, scannedAt: $scannedAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$TrendCopyWith<$Res> implements $TrendCopyWith<$Res> {
-  factory _$TrendCopyWith(_Trend value, $Res Function(_Trend) _then) = __$TrendCopyWithImpl;
+abstract mixin class _$EntryCopyWith<$Res> implements $EntryCopyWith<$Res> {
+  factory _$EntryCopyWith(_Entry value, $Res Function(_Entry) _then) = __$EntryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "date") DateTime? date,@JsonKey(name: "good_picks_count") int? goodPicksCount
+@JsonKey(name: "id") int? id,@JsonKey(name: "food_iq_score") int? foodIqScore,@JsonKey(name: "scanned_at") String? scannedAt
 });
 
 
@@ -537,20 +539,21 @@ $Res call({
 
 }
 /// @nodoc
-class __$TrendCopyWithImpl<$Res>
-    implements _$TrendCopyWith<$Res> {
-  __$TrendCopyWithImpl(this._self, this._then);
+class __$EntryCopyWithImpl<$Res>
+    implements _$EntryCopyWith<$Res> {
+  __$EntryCopyWithImpl(this._self, this._then);
 
-  final _Trend _self;
-  final $Res Function(_Trend) _then;
+  final _Entry _self;
+  final $Res Function(_Entry) _then;
 
-/// Create a copy of Trend
+/// Create a copy of Entry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = freezed,Object? goodPicksCount = freezed,}) {
-  return _then(_Trend(
-date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime?,goodPicksCount: freezed == goodPicksCount ? _self.goodPicksCount : goodPicksCount // ignore: cast_nullable_to_non_nullable
-as int?,
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? foodIqScore = freezed,Object? scannedAt = freezed,}) {
+  return _then(_Entry(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,foodIqScore: freezed == foodIqScore ? _self.foodIqScore : foodIqScore // ignore: cast_nullable_to_non_nullable
+as int?,scannedAt: freezed == scannedAt ? _self.scannedAt : scannedAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

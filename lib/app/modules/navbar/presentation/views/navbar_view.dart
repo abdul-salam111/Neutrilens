@@ -12,6 +12,7 @@ import 'package:neutri_lens/app/modules/profile/views/profile_view.dart';
 import 'package:neutri_lens/app/modules/settings/presentation/views/settings_view.dart';
 import 'package:neutri_lens/app/modules/trends/presentation/views/trends_view.dart';
 import 'package:neutri_lens/app/routes/app_pages.dart';
+import '../../../result/data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
 import '../../../result/presentation/bindings/result_binding.dart';
 import '../../../result/presentation/controllers/result_controller.dart';
 import '../controllers/navbar_controller.dart';
@@ -115,14 +116,28 @@ class NavbarView extends GetView<NavbarController> {
                             barrierDismissible: false,
                           );
                           // init binding + controller
-                          ResultBinding().dependencies();
-                          final resultController =
-                              Get.isRegistered<ResultController>()
-                              ? Get.find<ResultController>()
-                              : Get.put(ResultController(Get.find()));
+                          final resultController = Get.put(
+                            ResultController(Get.find()),
+                          );
+                          // Fetch product details
+                          final productResult = await resultController
+                              .getProductDetails(code);
 
-                          await resultController.getProductDetails(code);
-                          // ✅ After successful API call
+                          resultController.getGoalsAndPreferences(
+                            GoalsAndPreferenceRequestModel(
+                              nutriments: productResult.product!.nutriments!
+                                  .toJson()
+                                  .entries
+                                  .map((e) => "${e.key}: ${e.value}")
+                                  .join(", "),
+                              ingredients:
+                                  productResult.product?.ingredientsText,
+                            ),
+                          );
+                          resultController.getSuggestedProduct(
+                            productResult.product!.categoriesTags ?? [],
+                          );
+
                           if (resultController.errorMessage.value != null) {
                             await _showErrorDialogAndResume(
                               "Barcode not found.",

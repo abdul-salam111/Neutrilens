@@ -2,10 +2,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/services/session_manager.dart';
+import 'package:neutri_lens/app/modules/auth/data/models/get_goals_diet_list/get_goals_diet_list.dart';
+import 'package:neutri_lens/app/modules/result/data/models/get_goals_pref_response/get_goals_and_preferences_response.dart';
 import 'package:neutri_lens/app/modules/result/data/models/get_product_result_model/get_product_result_model.dart';
 import 'package:neutri_lens/app/modules/result/data/models/get_suggested_product/get_suggested_product_model.dart';
 import 'package:neutri_lens/app/modules/result/domain/abstract_repositories/product_repository.dart';
+import 'package:neutri_lens/app/modules/settings/presentation/controllers/settings_controller.dart';
 
+import '../../data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
 import '../../data/models/upload_product_record/upload_product_record_model.dart';
 
 class NutriLensScores {
@@ -274,7 +278,7 @@ class ResultController extends GetxController {
     return 'unknown';
   }
 
-  Future getProductDetails(String code) async {
+  Future<GetProductResultModel> getProductDetails(String code) async {
     isLoading.value = true;
     errorMessage.value = null;
     final barCode = code;
@@ -286,6 +290,7 @@ class ResultController extends GetxController {
       (error) {
         isLoading.value = false;
         errorMessage.value = error.toString();
+         throw error;
       },
       (model) {
         isLoading.value = false;
@@ -360,18 +365,18 @@ class ResultController extends GetxController {
         }
 
         uploadScannedProduct(barCode, model.product?.productName ?? "Unknown");
-        return;
+        return model;
       },
     );
   }
 
   var suggestproductError = "".obs;
-  getSuggestedProduct(String code) async {
+  getSuggestedProduct(List<String> tags) async {
     suggestproductError.value = "";
     isLoadingSuggested.value = true;
 
     final response = await _getProductResultRepo.getSuggestedProducts(
-      qrCode: code,
+      tags: tags,
     );
 
     response.fold(
@@ -404,21 +409,13 @@ class ResultController extends GetxController {
     );
   }
 
-  final suggestedProducts = GetSuggestedProductModel().obs;
+  final RxList<SuggestedProduct> suggestedProducts = <SuggestedProduct>[].obs;
   final isLoadingSuggested = false.obs;
-
-  @override
-  void onReady() {
-    super.onReady();
-    getSuggestedProduct(
-      Get.arguments.toString(),
-    ).then((_) => setGoalStatement());
-  }
 
   void resetControllerForNewProduct() {
     isLoading.value = true;
     getProductResultModel.value = null;
-    suggestedProducts.value = GetSuggestedProductModel();
+    suggestedProducts.value = [];
     isLoadingSuggested.value = true;
     errorMessage.value = null;
     backgroundColor.value = Colors.white;
@@ -431,21 +428,114 @@ class ResultController extends GetxController {
     nutritionDetails.clear();
   }
 
-  var goalStatement = "".obs;
-  setGoalStatement() async {
-    final selectedGoalsList = SessionController().getUserDetails.goals ?? [];
-    final goalsMeetLength = suggestedProducts.value.userGoals?.length ?? 0;
+  ////code for getting goals and preferences
+  ///final getGoalsAndPreferencesList = GetGoalsAndPreferencesResponse().obs;
+  var isGettingGoals = false.obs;
+  var getGoalsAndPreferencesList = GetGoalsAndPreferencesResponse().obs;
+  // Add this to ResultController class
 
-    if (selectedGoalsList.isEmpty) {
-      goalStatement.value = "No goals selected.";
-    }
+  final selectedGoals = <DietPreference>[].obs;
+  final selectedPref = <DietPreference>[].obs;
 
-    if (goalsMeetLength == 0) {
-      goalStatement.value = "Doesn't meet your goals.";
-    } else if (goalsMeetLength == selectedGoalsList.length) {
-      goalStatement.value = "Fully meets your goals.";
-    } else {
-      goalStatement.value = "Partially meets your goals.";
-    }
+  // Computed property for goals NOT met
+  List<DietPreference> get goalsNotMet {
+    final metGoalIds =
+        getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
+        [];
+
+    return selectedGoals
+        .where((goal) => !metGoalIds.contains(goal.id))
+        .toList();
   }
+
+  List<DietPreference> get prefNotMet {
+    final metPrefIds =
+        getGoalsAndPreferencesList.value.preferencesViolated
+            ?.map((g) => g.id)
+            .toList() ??
+        [];
+
+    return selectedPref.where((goal) => !metPrefIds.contains(goal.id)).toList();
+  }
+
+  // Computed property for goals that ARE met
+  List<DietPreference> get goalsMetList {
+    final metGoalIds =
+        getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
+        [];
+
+    return selectedGoals.where((goal) => metGoalIds.contains(goal.id)).toList();
+  }
+
+  List<DietPreference> get prefMetList {
+    final metPrefIds =
+        getGoalsAndPreferencesList.value.preferencesViolated
+            ?.map((g) => g.id)
+            .toList() ??
+        [];
+
+    return selectedPref.where((goal) => metPrefIds.contains(goal.id)).toList();
+  }
+
+  Future getGoalsAndPreferences(
+    GoalsAndPreferenceRequestModel goalsAndPreferenceRequestModel,
+  ) async {
+    suggestproductError.value = "";
+    isGettingGoals.value = true;
+
+    final response = await _getProductResultRepo.getGoalsAndPreferences(
+      goalsAndPreferenceRequestModel: goalsAndPreferenceRequestModel,
+    );
+
+    response.fold(
+      (failure) {
+        suggestproductError.value = failure.toString();
+        isGettingGoals.value = false;
+        print("❌ Goals API Error: ${failure.toString()}");
+      },
+      (model) async {
+        print("✅ Goals API Response: $model");
+        print(
+          "🎯 Goals Met from API: ${model.goalsMet?.map((g) => g.name).toList()}",
+        );
+
+        isGettingGoals.value = false;
+        getGoalsAndPreferencesList.value = model;
+
+        // Get all goals list from settings controller
+        final settingController = Get.find<SettingsController>();
+        await settingController.getGoalsAndDietList();
+        var goalsList = settingController.goals;
+        var prefList = settingController.allergensToAvoid;
+        // Get user's selected goal IDs
+        var selectedGoalsIds = SessionController().getUserDetails.goals;
+        var selectedPreferences =
+            SessionController().getUserDetails.dietPreferences;
+
+        // Filter to get only selected goals
+        selectedGoals.value = goalsList
+            .where((element) => selectedGoalsIds?.contains(element.id) ?? false)
+            .toList();
+
+        selectedPref.value = prefList
+            .where(
+              (element) => selectedPreferences?.contains(element.id) ?? false,
+            )
+            .toList();
+
+        print(
+          "📋 User's Selected Goals: ${selectedGoals.map((g) => g.name).toList()}",
+        );
+        print("✅ Goals Met: ${goalsMetList.map((g) => g.name).toList()}");
+        print("❌ Goals NOT Met: ${goalsNotMet.map((g) => g.name).toList()}");
+      },
+    );
+  }
+
+  // @override
+  // void onReady() {
+  //   // TODO: implement onReady
+  //   super.onReady();
+  //   getGoalsAndPreferences(Get.arguments);
+  // }
 }
