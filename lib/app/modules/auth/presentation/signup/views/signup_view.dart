@@ -23,7 +23,7 @@ class SignupView extends GetView<SignupController> {
                 // Different validation for each page
                 if (controller.currentIndex.value == 0) {
                   // First page - validate form
-                  if (controller.key.currentState!.validate()) {
+                  if (controller.signupFormKey.currentState!.validate()) {
                     controller.pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
@@ -199,7 +199,7 @@ class SignupView extends GetView<SignupController> {
                             // ),
                             heightBox(30),
                             Form(
-                              key: controller.key,
+                              key: controller.signupFormKey,
                               child: Column(
                                 crossAxisAlignment: crossAxisStart,
                                 children: [

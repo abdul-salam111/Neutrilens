@@ -44,7 +44,7 @@ class SigninView extends GetView<SigninController> {
                   heightBox(context.screenWidth * 0.1),
 
                   Form(
-                    key: controller.formKey,
+                    key: controller.signinFormKey,
                     child: Column(
                       children: [
                         CustomTextFormField(
@@ -105,7 +105,7 @@ class SigninView extends GetView<SigninController> {
                               isLoading: controller.isloading.value,
                               text: "Log In",
                               onPressed: () async {
-                                if (controller.formKey.currentState!
+                                if (controller.signinFormKey.currentState!
                                     .validate()) {
                                   await controller.login();
                                 }

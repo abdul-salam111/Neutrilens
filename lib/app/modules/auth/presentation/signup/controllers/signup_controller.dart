@@ -14,7 +14,7 @@ class SignupController extends GetxController {
   SignupController(this.authRepository);
 
   // Form State
-  final key = GlobalKey<FormState>();
+  final signupFormKey = GlobalKey<FormState>();
 
   // Text Controllers
   final emailController = TextEditingController();
