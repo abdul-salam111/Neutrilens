@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Neutri Lens",
-      initialRoute: AppPages.INITIAL,
+      initialRoute: Routes.SPLASH,
       getPages: AppPages.routes,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,

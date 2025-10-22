@@ -15,7 +15,7 @@ class AppException implements Exception {
 // No Internet Exception
 class NoInternetException extends AppException {
   NoInternetException([String? message])
-    : super(message, "No Internet Connection: ");
+    : super(message, "No Internet Connection.");
 }
 
 // Unauthorized Exception
@@ -30,8 +30,7 @@ class RequestTimeoutException extends AppException {
 
 // Fetch Data Exception
 class FetchDataException extends AppException {
-  FetchDataException([String? message])
-    : super(message, "Error Fetching Data: ");
+  FetchDataException([String? message]) : super(message, "");
 }
 
 // Bad Request Exception
@@ -46,8 +45,7 @@ class NotFoundException extends AppException {
 
 // Internal Server Error Exception
 class InternalServerErrorException extends AppException {
-  InternalServerErrorException([String? message])
-    : super(message, "Internal Server Error: ");
+  InternalServerErrorException([String? message]) : super(message, "");
 }
 
 // Service Unavailable Exception

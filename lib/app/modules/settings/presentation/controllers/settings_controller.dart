@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/core/services/session_manager.dart';
-import 'package:neutri_lens/app/modules/auth/data/repository/user_repository.dart';
+import 'package:neutri_lens/app/modules/auth/domain/repository/user_repository.dart';
 
 import '../../../../core/utils/apptoast_util.dart';
 import '../../../auth/data/models/get_goals_diet_list/get_goals_diet_list.dart';

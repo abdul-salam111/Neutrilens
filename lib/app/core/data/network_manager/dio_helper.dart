@@ -5,7 +5,7 @@ import '../exceptions/app_exceptions.dart';
 import 'injection_container.dart';
 
 class DioHelper {
-  Dio dio = getDio();
+  Dio get dio => getDio();
 
   Options options = Options(
     receiveDataWhenStatusError: true,
@@ -35,7 +35,9 @@ class DioHelper {
     } on DioException catch (error) {
       _handleDioError(error);
     } catch (error) {
-      throw FetchDataException(error.toString());
+      throw FetchDataException(
+        "Data cannot be fetched, please check your internet connection!",
+      );
     }
   }
 
@@ -184,7 +186,9 @@ class DioHelper {
               "Invalid credentials. Please, try again.",
             );
           case 404:
-            throw InternalServerErrorException("Something, went wrong!");
+            throw InternalServerErrorException(
+              "Server unavailble, Please check your internet connection.",
+            );
           case 4002:
             throw InvalidInputException("Invalid Input");
           case 6001:
@@ -215,7 +219,7 @@ class DioHelper {
       case DioExceptionType.cancel:
         throw FetchDataException('Request cancelled');
       case DioExceptionType.connectionError:
-        throw NoInternetException('No internet connection');
+        throw NoInternetException('Please, check your internet connection.');
       case DioExceptionType.badCertificate:
         throw FetchDataException('Bad certificate');
       case DioExceptionType.unknown:

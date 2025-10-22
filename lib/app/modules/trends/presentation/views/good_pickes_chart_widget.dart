@@ -15,8 +15,7 @@ class ChartDataPoint {
 
 class GoodPicksChart extends StatefulWidget {
   final List<ChartDataPoint> dataPoints;
-  final List<String>? bottomTitles; // Month labels
-  final List<String>? leftTitles; // Y-axis labels
+
   final double? minX;
   final double? maxX;
   final double? minY;
@@ -29,8 +28,7 @@ class GoodPicksChart extends StatefulWidget {
   const GoodPicksChart({
     super.key,
     required this.dataPoints,
-    this.bottomTitles,
-    this.leftTitles,
+
     this.minX,
     this.maxX,
     this.minY,
@@ -68,79 +66,6 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    final style = context.bodySmall!.copyWith(color: AppColors.greyColor);
-
-    // If custom titles provided, use them
-    if (widget.bottomTitles != null && widget.bottomTitles!.isNotEmpty) {
-      final index = value.toInt();
-      if (index >= 0 && index < widget.bottomTitles!.length) {
-        return SideTitleWidget(
-          meta: meta,
-
-          child: Text(widget.bottomTitles![index], style: style),
-        );
-      }
-      return SideTitleWidget(
-        meta: meta,
-        child: Text('', style: style),
-      );
-    }
-
-    // Default behavior
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = Text('MAR', style: style);
-        break;
-      case 5:
-        text = Text('JUN', style: style);
-        break;
-      case 8:
-        text = Text('SEP', style: style);
-        break;
-      default:
-        text = Text('', style: style);
-        break;
-    }
-
-    return SideTitleWidget(meta: meta, child: text);
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    final style = context.bodySmall!.copyWith(
-      color: AppColors.greyColor,
-      fontSize: 12,
-    );
-
-    // If custom titles provided, use them
-    if (widget.leftTitles != null && widget.leftTitles!.isNotEmpty) {
-      // Find the closest value in leftTitles
-      for (int i = 0; i < widget.leftTitles!.length; i++) {
-        final titleValue = double.tryParse(widget.leftTitles![i]) ?? 0;
-        if ((value - titleValue).abs() < 1) {
-          // Allow small rounding differences
-          return SideTitleWidget(
-            meta: meta,
-            child: Container(
-              margin: EdgeInsets.only(right: 8),
-              child: Text(widget.leftTitles![i], style: style),
-            ),
-          );
-        }
-      }
-    }
-
-    // Fallback: Show the actual Y value
-    return SideTitleWidget(
-      meta: meta,
-      child: Container(
-        margin: EdgeInsets.only(right: 8),
-        child: Text(value.toStringAsFixed(0), style: style),
-      ),
     );
   }
 
@@ -219,7 +144,6 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
             showTitles: false,
             reservedSize: 30,
             interval: _calculateXInterval(),
-            getTitlesWidget: bottomTitleWidgets,
           ),
         ),
         leftTitles: AxisTitles(
@@ -227,7 +151,6 @@ class _GoodPicksChartState extends State<GoodPicksChart> {
             showTitles: false,
             reservedSize: 20, // Increased reserved space
             interval: _yInterval,
-            getTitlesWidget: leftTitleWidgets,
           ),
         ),
       ),

@@ -4,26 +4,56 @@ import 'package:get/get.dart';
 import 'package:neutri_lens/app/modules/home/domain/abstract_repositories/home_repository.dart';
 import '../../data/models/get_all_products_model.dart';
 
+// ============================================================================
+// HOME CONTROLLER
+// ============================================================================
+
 class HomeController extends GetxController {
-  final searchController = TextEditingController();
+  // --------------------------------------------------------------------------
+  // Dependencies
+  // --------------------------------------------------------------------------
   final HomeRepository homeRepository;
-  final ScrollController scrollController = ScrollController();
 
   HomeController({required this.homeRepository});
 
+  // --------------------------------------------------------------------------
+  // UI Controllers
+  // --------------------------------------------------------------------------
+  final searchController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+
+  // --------------------------------------------------------------------------
+  // Loading State Observables
+  // --------------------------------------------------------------------------
   final RxBool isLoading = false.obs;
   final RxBool isLoadingMore = false.obs;
   final RxString errorMessage = ''.obs;
+
+  // --------------------------------------------------------------------------
+  // Pagination Observables
+  // --------------------------------------------------------------------------
   final RxInt currentPage = 1.obs;
   final RxBool hasMoreData = true.obs;
-  final RxString searchQuery = ''.obs;
 
-  // Add this to track the current search operation
+  // --------------------------------------------------------------------------
+  // Search Observables
+  // --------------------------------------------------------------------------
+  final RxString searchQuery = ''.obs;
+  Timer? _searchTimer;
+
+  // --------------------------------------------------------------------------
+  // Operation Tracking (Prevents stale API responses)
+  // --------------------------------------------------------------------------
   final RxString _currentOperationId = ''.obs;
-  
+
+  // --------------------------------------------------------------------------
+  // Products Data
+  // --------------------------------------------------------------------------
   final RxList<Product> products = <Product>[].obs;
 
-  Timer? _searchTimer;
+  // ==========================================================================
+  // LIFECYCLE METHODS
+  // ==========================================================================
 
   @override
   void onInit() {
@@ -33,8 +63,22 @@ class HomeController extends GetxController {
     _setupSearchListener();
   }
 
+  @override
+  void onClose() {
+    _searchTimer?.cancel();
+    searchController.dispose();
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  // ==========================================================================
+  // INITIALIZATION & SETUP
+  // ==========================================================================
+
+  /// Sets up infinite scroll listener for pagination
   void _setupScrollListener() {
     scrollController.addListener(() {
+      // Trigger load more when user scrolls to 80% of content
       if (scrollController.position.pixels >=
               scrollController.position.maxScrollExtent * 0.8 &&
           !isLoadingMore.value &&
@@ -45,15 +89,22 @@ class HomeController extends GetxController {
     });
   }
 
+  /// Sets up search field listener with debouncing
   void _setupSearchListener() {
     searchController.addListener(() {
       _debounceSearch();
     });
   }
 
+  // ==========================================================================
+  // SEARCH FUNCTIONALITY
+  // ==========================================================================
+
+  /// Debounces search input to avoid excessive API calls
+  /// Waits 500ms after user stops typing before searching
   void _debounceSearch() {
     _searchTimer?.cancel();
-    
+
     _searchTimer = Timer(const Duration(milliseconds: 500), () {
       if (searchController.text != searchQuery.value) {
         performSearch(searchController.text);
@@ -61,25 +112,24 @@ class HomeController extends GetxController {
     });
   }
 
-  // Generate a unique ID for each search operation
-  String _generateOperationId() {
-    return DateTime.now().millisecondsSinceEpoch.toString();
-  }
-
+  /// Executes search with the given query
+  /// Resets pagination and clears previous results
   void performSearch(String query) {
     final trimmedQuery = query.trim();
     if (trimmedQuery == searchQuery.value) return;
 
-    // Generate a new operation ID for this search
+    // Generate new operation ID to track this search
     final operationId = _generateOperationId();
     _currentOperationId.value = operationId;
 
+    // Reset state for new search
     searchQuery.value = trimmedQuery;
     currentPage.value = 1;
     products.clear();
     hasMoreData.value = true;
     isLoading.value = true;
 
+    // Execute appropriate API call
     if (searchQuery.value.isEmpty) {
       _getAllProducts(operationId);
     } else {
@@ -87,73 +137,23 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> _getAllProducts(String operationId) async {
-    try {
-      final result = await homeRepository.getProducts(page: 1);
-
-      // Check if this operation is still the current one
-      if (_currentOperationId.value != operationId) {
-        return; // Ignore result if a newer operation has started
-      }
-
-      result.fold(
-        (error) {
-          errorMessage.value = error.toString();
-          isLoading.value = false;
-        },
-        (response) {
-          if (response.products != null && response.products!.isNotEmpty) {
-            products.assignAll(response.products!);
-            currentPage.value = 2; // Set to next page
-          } else {
-            hasMoreData.value = false;
-          }
-          isLoading.value = false;
-        },
-      );
-    } catch (e) {
-      if (_currentOperationId.value == operationId) {
-        errorMessage.value = e.toString();
-        isLoading.value = false;
-      }
-    }
+  /// Clears search and returns to showing all products
+  void clearSearch() {
+    searchController.clear();
+    searchQuery.value = '';
+    currentPage.value = 1;
+    products.clear();
+    hasMoreData.value = true;
+    _currentOperationId.value = _generateOperationId();
+    getProducts();
   }
 
-  Future<void> _searchProducts(String operationId) async {
-    try {
-      final result = await homeRepository.searchProducts(
-        query: searchQuery.value,
-        page: 1,
-      );
+  // ==========================================================================
+  // PRODUCTS LOADING (Initial & Refresh)
+  // ==========================================================================
 
-      // Check if this operation is still the current one
-      if (_currentOperationId.value != operationId) {
-        return; // Ignore result if a newer operation has started
-      }
-
-      result.fold(
-        (error) {
-          errorMessage.value = error.toString();
-          isLoading.value = false;
-        },
-        (response) {
-          if (response.products != null && response.products!.isNotEmpty) {
-            products.assignAll(response.products!);
-            currentPage.value = 2; // Set to next page
-          } else {
-            hasMoreData.value = false;
-          }
-          isLoading.value = false;
-        },
-      );
-    } catch (e) {
-      if (_currentOperationId.value == operationId) {
-        errorMessage.value = e.toString();
-        isLoading.value = false;
-      }
-    }
-  }
-
+  /// Loads products from API
+  /// If refresh=true, resets pagination and clears current data
   Future<void> getProducts({bool refresh = false}) async {
     if (refresh) {
       currentPage.value = 1;
@@ -170,7 +170,7 @@ class HomeController extends GetxController {
     final operationId = _currentOperationId.value;
     final result = await homeRepository.getProducts(page: currentPage.value);
 
-    // Check if operation is still valid
+    // Ignore response if a newer operation has started
     if (_currentOperationId.value != operationId) return;
 
     result.fold(
@@ -190,6 +190,17 @@ class HomeController extends GetxController {
     );
   }
 
+  /// Wrapper for pull-to-refresh functionality
+  Future<void> refreshProducts() async {
+    await getProducts(refresh: true);
+  }
+
+  // ==========================================================================
+  // PAGINATION (Load More)
+  // ==========================================================================
+
+  /// Loads next page of products (for infinite scroll)
+  /// Handles both regular products and search results
   Future<void> loadMoreProducts() async {
     if (!hasMoreData.value || isLoadingMore.value) return;
 
@@ -197,6 +208,8 @@ class HomeController extends GetxController {
     errorMessage.value = '';
 
     final operationId = _currentOperationId.value;
+    
+    // Choose appropriate API call based on search state
     final result = searchQuery.value.isEmpty
         ? await homeRepository.getProducts(page: currentPage.value)
         : await homeRepository.searchProducts(
@@ -204,7 +217,7 @@ class HomeController extends GetxController {
             page: currentPage.value,
           );
 
-    // Check if operation is still valid
+    // Ignore response if a newer operation has started
     if (_currentOperationId.value != operationId) {
       isLoadingMore.value = false;
       return;
@@ -227,25 +240,85 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<void> refreshProducts() async {
-    await getProducts(refresh: true);
+  // ==========================================================================
+  // PRIVATE API METHODS
+  // ==========================================================================
+
+  /// Fetches all products (no search filter)
+  /// Operation ID prevents stale responses from being processed
+  Future<void> _getAllProducts(String operationId) async {
+    try {
+      final result = await homeRepository.getProducts(page: 1);
+
+      // Check if this operation is still the current one
+      if (_currentOperationId.value != operationId) {
+        return; // Ignore result if a newer operation has started
+      }
+      result.fold(
+        (error) {
+          errorMessage.value = error.toString();
+          isLoading.value = false;
+        },
+        (response) {
+          if (response.products != null && response.products!.isNotEmpty) {
+            products.assignAll(response.products!);
+            currentPage.value = 2; // Set to next page
+          } else {
+            hasMoreData.value = false;
+          }
+          isLoading.value = false;
+        },
+      );
+    } catch (e) {
+      if (_currentOperationId.value == operationId) {
+        errorMessage.value = e.toString();
+        isLoading.value = false;
+      }
+    }
   }
 
-  void clearSearch() {
-    searchController.clear();
-    searchQuery.value = '';
-    currentPage.value = 1;
-    products.clear();
-    hasMoreData.value = true;
-    _currentOperationId.value = _generateOperationId();
-    getProducts();
+  /// Searches products with the current search query
+  /// Operation ID prevents stale responses from being processed
+  Future<void> _searchProducts(String operationId) async {
+    try {
+      final result = await homeRepository.searchProducts(
+        query: searchQuery.value,
+        page: 1,
+      );
+      // Check if this operation is still the current one
+      if (_currentOperationId.value != operationId) {
+        return; // Ignore result if a newer operation has started
+      }
+      result.fold(
+        (error) {
+          errorMessage.value = error.toString();
+          isLoading.value = false;
+        },
+        (response) {
+          if (response.products != null && response.products!.isNotEmpty) {
+            products.assignAll(response.products!);
+            currentPage.value = 2; // Set to next page
+          } else {
+            hasMoreData.value = false;
+          }
+          isLoading.value = false;
+        },
+      );
+    } catch (e) {
+      if (_currentOperationId.value == operationId) {
+        errorMessage.value = e.toString();
+        isLoading.value = false;
+      }
+    }
   }
 
-  @override
-  void onClose() {
-    _searchTimer?.cancel();
-    searchController.dispose();
-    scrollController.dispose();
-    super.onClose();
+  // ==========================================================================
+  // HELPER METHODS
+  // ==========================================================================
+
+  /// Generates a unique ID for tracking API operations
+  /// Prevents race conditions when multiple searches happen quickly
+  String _generateOperationId() {
+    return DateTime.now().millisecondsSinceEpoch.toString();
   }
 }

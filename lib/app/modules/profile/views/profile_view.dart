@@ -71,7 +71,7 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                     heightBox(2),
                     Text(
-                      " ${SessionController().getUserDetails.username}",
+                      " ${SessionController().getUserDetails.username ?? ""}",
                       style: context.bodyMedium!.copyWith(
                         fontWeight: FontWeight.normal,
                       ),
@@ -91,7 +91,7 @@ class ProfileView extends GetView<ProfileController> {
                     CustomTextFormField(
                       controller: controller.nameController,
                       hintText:
-                          " ${SessionController().getUserDetails.fullName}",
+                          " ${SessionController().getUserDetails.fullName ?? ""}",
                       label: "Full Name",
                       labelfontSize: 14,
                       labelColor: Colors.black,
@@ -102,7 +102,7 @@ class ProfileView extends GetView<ProfileController> {
                       readonly: true,
                       controller: controller.emailController,
                       hintText:
-                          " ${SessionController().getUserDetails.username}",
+                          " ${SessionController().getUserDetails.username ?? ""}",
                       label: "Email",
                       labelfontSize: 14,
                       labelColor: Colors.black,

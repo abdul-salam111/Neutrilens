@@ -28,11 +28,6 @@ class SignupView extends GetView<SignupController> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
                     );
-                  } else {
-                    AppToasts.showErrorToast(
-                      Get.context!,
-                      "Please fill in all required fields",
-                    );
                   }
                 } else if (controller.currentIndex.value == 1) {
                   // Second page - check goals only (no form validation)
@@ -52,7 +47,7 @@ class SignupView extends GetView<SignupController> {
                   if (controller.selectedAllergens.isEmpty) {
                     AppToasts.showErrorToast(
                       Get.context!,
-                      "Please select your allergens",
+                      "Please select your diets",
                     );
                   } else {
                     await controller.registerUser();

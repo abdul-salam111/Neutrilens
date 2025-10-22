@@ -2,25 +2,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neutri_lens/app/core/core.dart';
+import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
 
 void showLoadingPopup({String message = "Please wait..."}) {
   Get.dialog(
     WillPopScope(
-      onWillPop: () async => false, // Prevent back button dismiss
+      onWillPop: () async => false,
       child: Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+        backgroundColor: Colors.white,
+        constraints: BoxConstraints(maxWidth: 180, minWidth: 180),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator(),
+              const LoadingIndicator(size: 30),
               const SizedBox(height: 20),
               Text(
                 message,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 14),
+                textAlign: textAlignCenter,
               ),
             ],
           ),

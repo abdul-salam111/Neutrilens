@@ -37,7 +37,7 @@ Dio getDio() {
           if (refreshToken != null) {
             // Update the request with the new token
             e.requestOptions.headers['Authorization'] = 'Bearer $refreshToken';
-            
+
             // Retry the original request with the new token
             try {
               final retryResponse = await dio.request(
@@ -59,12 +59,16 @@ Dio getDio() {
                 return handler.reject(retryError);
               }
               // Handle non-DioException errors, if necessary
-              printValue(tag: "Non-Dio error during retry", retryError.toString());
-              return handler.reject(DioException(
-                requestOptions: e.requestOptions,
-                error: retryError,
-                
-              ));
+              printValue(
+                tag: "Non-Dio error during retry",
+                retryError.toString(),
+              );
+              return handler.reject(
+                DioException(
+                  requestOptions: e.requestOptions,
+                  error: retryError,
+                ),
+              );
             }
           }
         }

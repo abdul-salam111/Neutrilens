@@ -6,14 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:neutri_lens/app/core/core.dart';
-import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
+import 'package:neutri_lens/app/core/widgets/loading_popup.dart';
 import 'package:neutri_lens/app/modules/home/presentation/views/home_view.dart';
 import 'package:neutri_lens/app/modules/profile/views/profile_view.dart';
 import 'package:neutri_lens/app/modules/settings/presentation/views/settings_view.dart';
 import 'package:neutri_lens/app/modules/trends/presentation/views/trends_view.dart';
 import 'package:neutri_lens/app/routes/app_pages.dart';
 import '../../../result/data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
-import '../../../result/presentation/bindings/result_binding.dart';
 import '../../../result/presentation/controllers/result_controller.dart';
 import '../controllers/navbar_controller.dart';
 
@@ -87,33 +86,8 @@ class NavbarView extends GetView<NavbarController> {
                             );
                             return;
                           }
-                          Get.dialog(
-                            WillPopScope(
-                              onWillPop: () async => false,
-                              child: Center(
-                                child: Container(
-                                  width: context.screenWidth * 0.5,
-                                  padding: const EdgeInsets.all(30),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      LoadingIndicator(size: 24),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "Loading product details...",
-                                        style: context.bodyMedium,
-                                        textAlign: textAlignCenter,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            barrierDismissible: false,
+                          showLoadingPopup(
+                            message: "Loading product details...",
                           );
                           // init binding + controller
                           final resultController = Get.put(
@@ -147,7 +121,7 @@ class NavbarView extends GetView<NavbarController> {
                             // close loader if still open
                             if (Get.isDialogOpen == true) Get.back();
                             Get.back();
-                            Get.toNamed(Routes.RESULT, arguments: code);
+                            Get.toNamed(Routes.RESULT);
                           }
 
                           // close loader
@@ -180,7 +154,6 @@ class NavbarView extends GetView<NavbarController> {
                 Icons.settings_outlined,
                 Icons.settings,
                 "Settings",
-
                 2,
               ),
               _buildNavItem(Icons.person_outline, Icons.person, "Profile", 3),

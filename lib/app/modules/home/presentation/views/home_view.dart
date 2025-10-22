@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,8 @@ import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/services/session_manager.dart';
 import 'package:neutri_lens/app/core/widgets/custom_button.dart';
 import 'package:neutri_lens/app/core/widgets/loading_indicator.dart';
-import 'package:neutri_lens/app/modules/result/presentation/bindings/result_binding.dart';
+import 'package:neutri_lens/app/core/widgets/loading_popup.dart';
+import 'package:neutri_lens/app/core/widgets/snackbars.dart';
 import '../../../../core/utils/grade_color.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../result/data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
@@ -57,7 +57,7 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   heightBox(Platform.isAndroid ? 40 : 60),
                   Text(
-                    "Hello, ${SessionController().getUserDetails.fullName}",
+                    "Hello, ${SessionController().getUserDetails.fullName ?? ""}",
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       fontSize: 30,
@@ -81,7 +81,6 @@ class HomeView extends GetView<HomeController> {
                     child: TextField(
                       autofocus: false,
                       controller: controller.searchController,
-
                       cursorColor: Colors.black,
                       style: context.bodyMedium!.copyWith(
                         color: AppColors.greyColor,
@@ -141,7 +140,7 @@ class HomeView extends GetView<HomeController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            controller.errorMessage.value,
+                            "Products not available, please check your internet connection!",
                             style: context.bodyMedium!.copyWith(),
                             textAlign: textAlignCenter,
                           ),
@@ -191,43 +190,15 @@ class HomeView extends GetView<HomeController> {
                           dismissKeyboard(context);
                           final productCode = product.code;
                           if (productCode == null || productCode.isEmpty) {
-                            Get.snackbar(
-                              "Error",
-                              "Invalid product code",
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.red,
-                              colorText: Colors.white,
+                            AppSnackBar.error(
+                              context,
+                              "Product code not found",
                             );
                             return;
                           }
 
-                          Get.dialog(
-                            WillPopScope(
-                              onWillPop: () async => false,
-                              child: Center(
-                                child: Container(
-                                  width: context.screenWidth * 0.5,
-                                  padding: const EdgeInsets.all(30),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      LoadingIndicator(size: 24),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "Loading product details...",
-                                        style: context.bodyMedium,
-                                        textAlign: textAlignCenter,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            barrierDismissible: false,
+                          showLoadingPopup(
+                            message: "Loading product details...",
                           );
 
                           try {
@@ -261,13 +232,9 @@ class HomeView extends GetView<HomeController> {
                             // Close loading dialog
                             Get.back();
 
-                            // Show error message
-                            Get.snackbar(
-                              "Error",
-                              "Failed to load product details: ${e.toString()}",
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.red,
-                              colorText: Colors.white,
+                            AppSnackBar.error(
+                              context,
+                              "Failed to load product details",
                             );
                           }
                         },

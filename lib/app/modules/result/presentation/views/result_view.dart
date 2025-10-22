@@ -6,6 +6,8 @@ import 'package:neutri_lens/app/core/core.dart';
 import 'package:neutri_lens/app/core/widgets/custom_button.dart';
 
 import '../../../../core/utils/grade_color.dart';
+import '../../../../core/widgets/loading_popup.dart';
+import '../../../../core/widgets/snackbars.dart';
 import '../../../../routes/app_pages.dart';
 
 import '../../data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
@@ -124,6 +126,7 @@ class ResultView extends GetView<ResultController> {
                                     ?.product
                                     ?.productName ??
                                 "",
+                            textAlign: textAlignCenter,
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontWeight: FontWeight.normal,
@@ -231,30 +234,6 @@ class ResultView extends GetView<ResultController> {
                                 controller.processedScore.value,
                                 "Measures, how natural or refined the food is.",
                               ),
-                              if (controller.scoreExplanation.isNotEmpty) ...[
-                                heightBox(15),
-                                Text(
-                                  "Calculation Details:",
-                                  style: context.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                heightBox(5),
-                                ...controller.scoreExplanation.map(
-                                  (exp) => Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 8,
-                                      top: 2,
-                                    ),
-                                    child: Text(
-                                      "• $exp",
-                                      style: context.bodyMedium!.copyWith(
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ],
                           ),
                         ),
@@ -285,6 +264,16 @@ class ResultView extends GetView<ResultController> {
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text("Loading goals..."),
                                   );
+                                } else if (controller.goalsMetList.isEmpty &&
+                                    controller.goalsNotMet.isEmpty) {
+                                  return Text(
+                                    "Data not avaialbe.",
+                                    style: context.bodySmall!.copyWith(
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  );
+                                  // Goals MET (Green checkmarks)
                                 }
 
                                 return Obx(
@@ -292,7 +281,6 @@ class ResultView extends GetView<ResultController> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // Goals MET (Green checkmarks)
                                       if (controller
                                           .goalsMetList
                                           .isNotEmpty) ...[
@@ -403,8 +391,16 @@ class ResultView extends GetView<ResultController> {
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text("Loading Diets..."),
                                   );
+                                } else if (controller.prefMetList.isEmpty &&
+                                    controller.prefNotMet.isEmpty) {
+                                  return Text(
+                                    "Data not available.",
+                                    style: context.bodySmall!.copyWith(
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  );
                                 }
-
                                 return Obx(
                                   () => Column(
                                     crossAxisAlignment:
@@ -706,7 +702,20 @@ class ResultView extends GetView<ResultController> {
                                   },
                                 ),
                               ),
-                              heightBox(20),
+                            ],
+                          ),
+                        ),
+                        heightBox(10),
+                        Container(
+                          padding: defaultPadding,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: crossAxisStart,
+                            children: [
+                              heightBox(10),
                               Text(
                                 "Suggested Products",
                                 style: context.bodyLarge!.copyWith(
@@ -928,12 +937,9 @@ class ResultView extends GetView<ResultController> {
                                                                                       if (barcode ==
                                                                                               null ||
                                                                                           barcode.isEmpty) {
-                                                                                        Get.snackbar(
-                                                                                          "Error",
-                                                                                          "Invalid product barcode",
-                                                                                          snackPosition: SnackPosition.BOTTOM,
-                                                                                          backgroundColor: Colors.red,
-                                                                                          colorText: Colors.white,
+                                                                                        AppSnackBar.error(
+                                                                                          context,
+                                                                                          "Product code not found",
                                                                                         );
                                                                                         return;
                                                                                       }
@@ -941,45 +947,8 @@ class ResultView extends GetView<ResultController> {
                                                                                       Get.back();
 
                                                                                       // Show loading dialog
-                                                                                      Get.dialog(
-                                                                                        PopScope(
-                                                                                          onPopInvokedWithResult:
-                                                                                              (
-                                                                                                didPop,
-                                                                                                result,
-                                                                                              ) => false,
-                                                                                          child: Center(
-                                                                                            child: Container(
-                                                                                              width:
-                                                                                                  Get.context!.width *
-                                                                                                  0.5,
-                                                                                              padding: const EdgeInsets.all(
-                                                                                                30,
-                                                                                              ),
-                                                                                              decoration: BoxDecoration(
-                                                                                                color: Colors.white,
-                                                                                                borderRadius: BorderRadius.circular(
-                                                                                                  15,
-                                                                                                ),
-                                                                                              ),
-                                                                                              child: Column(
-                                                                                                mainAxisSize: MainAxisSize.min,
-                                                                                                children: [
-                                                                                                  const CircularProgressIndicator(),
-                                                                                                  const SizedBox(
-                                                                                                    height: 20,
-                                                                                                  ),
-                                                                                                  Text(
-                                                                                                    "Loading product details...",
-                                                                                                    style: Get.textTheme.bodyMedium,
-                                                                                                    textAlign: TextAlign.center,
-                                                                                                  ),
-                                                                                                ],
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                        barrierDismissible: false,
+                                                                                      showLoadingPopup(
+                                                                                        message: "Loading product details...",
                                                                                       );
 
                                                                                       try {
@@ -1017,7 +986,6 @@ class ResultView extends GetView<ResultController> {
 
                                                                                         Get.offAndToNamed(
                                                                                           Routes.RESULT,
-                                                                                          arguments: barcode,
                                                                                         );
                                                                                       } catch (
                                                                                         e
@@ -1025,13 +993,9 @@ class ResultView extends GetView<ResultController> {
                                                                                         // Close loading dialog
                                                                                         Get.back();
 
-                                                                                        // Show error
-                                                                                        Get.snackbar(
-                                                                                          "Error",
-                                                                                          "Failed to load product: ${e.toString()}",
-                                                                                          snackPosition: SnackPosition.BOTTOM,
-                                                                                          backgroundColor: Colors.red,
-                                                                                          colorText: Colors.white,
+                                                                                        AppSnackBar.error(
+                                                                                          context,
+                                                                                          "Failed to load product details",
                                                                                         );
                                                                                       }
                                                                                     },
@@ -1128,7 +1092,7 @@ class ResultView extends GetView<ResultController> {
                             ],
                           ),
                         ),
-                        heightBox(40),
+                        heightBox(20),
                       ],
                     ),
                   ),

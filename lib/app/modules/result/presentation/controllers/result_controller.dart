@@ -12,6 +12,10 @@ import 'package:neutri_lens/app/modules/settings/presentation/controllers/settin
 import '../../data/models/goals_and_pref_request_model/goals_and_preference_request_model.dart';
 import '../../data/models/upload_product_record/upload_product_record_model.dart';
 
+// ============================================================================
+// NUTRILENS SCORES MODEL
+// ============================================================================
+
 class NutriLensScores {
   final double foodScore;
   final double processedScore;
@@ -28,56 +32,135 @@ class NutriLensScores {
   });
 
   Map<String, dynamic> toJson() => {
-    "foodScore": {
-      "value": foodScore.round(),
-      "basis": debug["basisFood"],
-      "grade": debug["grade"],
-      "method": method,
-      "explain": debug["explainFood"],
-    },
-    "processedScore": {
-      "value": processedScore.round(),
-      "basis": debug["basisProcessed"],
-      "novaGroup": debug["novaGroup"],
-    },
-    "nutriLensScore": nutriLensScore.round(),
-  };
+        "foodScore": {
+          "value": foodScore.round(),
+          "basis": debug["basisFood"],
+          "grade": debug["grade"],
+          "method": method,
+          "explain": debug["explainFood"],
+        },
+        "processedScore": {
+          "value": processedScore.round(),
+          "basis": debug["basisProcessed"],
+          "novaGroup": debug["novaGroup"],
+        },
+        "nutriLensScore": nutriLensScore.round(),
+      };
 }
 
+// ============================================================================
+// RESULT CONTROLLER
+// ============================================================================
+
 class ResultController extends GetxController {
+  // --------------------------------------------------------------------------
+  // Dependencies
+  // --------------------------------------------------------------------------
   final ProductRepository _getProductResultRepo;
+
   ResultController(this._getProductResultRepo);
 
+  // --------------------------------------------------------------------------
+  // Product Result Observables
+  // --------------------------------------------------------------------------
   final isLoading = false.obs;
   final getProductResultModel = Rxn<GetProductResultModel>();
   final errorMessage = RxnString();
-  final Rx<Color> backgroundColor = Colors.white.obs;
+
   final Rx<String> grade = "".obs;
   final List<Map<String, dynamic>> nutritionDetails = [];
 
-  // Score-related observables
+  // --------------------------------------------------------------------------
+  // Score Observables
+  // --------------------------------------------------------------------------
   final Rx<double> foodScore = 0.0.obs;
   final Rx<double> processedScore = 0.0.obs;
   final Rx<double> nutriLensScore = 0.0.obs;
   final Rx<String> scoringMethod = "".obs;
   final RxList<String> scoreExplanation = <String>[].obs;
 
-  // Helper functions
+  // --------------------------------------------------------------------------
+  // Suggested Products Observables
+  // --------------------------------------------------------------------------
+  final RxList<SuggestedProduct> suggestedProducts = <SuggestedProduct>[].obs;
+  final isLoadingSuggested = false.obs;
+  var suggestproductError = "".obs;
+
+  // --------------------------------------------------------------------------
+  // Goals and Preferences Observables
+  // --------------------------------------------------------------------------
+  var isGettingGoals = false.obs;
+  var getGoalsAndPreferencesList = GetGoalsAndPreferencesResponse().obs;
+  final selectedGoals = <DietPreference>[].obs;
+  final selectedPref = <DietPreference>[].obs;
+
+  // --------------------------------------------------------------------------
+  // Goals and Preferences Computed Properties
+  // --------------------------------------------------------------------------
+
+  /// Goals NOT met by the product
+  List<DietPreference> get goalsNotMet {
+    final metGoalIds =
+        getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
+            [];
+
+    return selectedGoals
+        .where((goal) => !metGoalIds.contains(goal.id))
+        .toList();
+  }
+
+  /// Preferences violated by the product
+  List<DietPreference> get prefNotMet {
+    final metPrefIds = getGoalsAndPreferencesList.value.preferencesViolated
+            ?.map((g) => g.id)
+            .toList() ??
+        [];
+
+    return selectedPref.where((goal) => !metPrefIds.contains(goal.id)).toList();
+  }
+
+  /// Goals that ARE met by the product
+  List<DietPreference> get goalsMetList {
+    final metGoalIds =
+        getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
+            [];
+
+    return selectedGoals.where((goal) => metGoalIds.contains(goal.id)).toList();
+  }
+
+  /// Preferences that ARE met by the product
+  List<DietPreference> get prefMetList {
+    final metPrefIds = getGoalsAndPreferencesList.value.preferencesViolated
+            ?.map((g) => g.id)
+            .toList() ??
+        [];
+
+    return selectedPref.where((goal) => metPrefIds.contains(goal.id)).toList();
+  }
+
+  // ==========================================================================
+  // SCORE MAPPING & CALCULATION HELPERS
+  // ==========================================================================
+
+  /// Maps Nutri-Score letter grade (a-e) to 0-100 scale
   double? mapNutriScoreLetterTo100(String? letter) {
     if (letter == null) return null;
     const tbl = {'a': 95, 'b': 80, 'c': 65, 'd': 45, 'e': 25};
     return tbl[letter.toLowerCase()]?.toDouble();
   }
 
+  /// Maps NOVA group (1-4) to 0-100 scale
   double? mapNovaTo100(int? nova) {
     if (nova == null) return null;
     const tbl = {1: 95, 2: 75, 3: 50, 4: 15};
     return tbl[nova]?.toDouble();
   }
 
+  /// Clamps a value between min and max
   double clampValue(double value, double minVal, double maxVal) =>
       value < minVal ? minVal : (value > maxVal ? maxVal : value);
 
+  /// Calculates fallback food score based on nutrient values
   double fallbackFoodScore(Nutriments? nutriments) {
     if (nutriments == null) return 50.0;
 
@@ -136,6 +219,10 @@ class ResultController extends GetxController {
     return score;
   }
 
+  // ==========================================================================
+  // NUTRILENS SCORE COMPUTATION
+  // ==========================================================================
+
   NutriLensScores computeNutriLensScores(Product? product) {
     if (product == null) {
       return NutriLensScores(
@@ -153,7 +240,9 @@ class ResultController extends GetxController {
       );
     }
 
-    // --- Food score ---
+    // ------------------------------------------------------------------------
+    // FOOD SCORE CALCULATION
+    // ------------------------------------------------------------------------
     String? gradeValue = product.nutriscoreGrade;
     int? nutriScore = product.nutriscoreScore;
 
@@ -214,7 +303,9 @@ class ResultController extends GetxController {
       method = "fallback";
     }
 
-    // --- Processed score (FIXED: NOVA is in nutriments!) ---
+    // ------------------------------------------------------------------------
+    // PROCESSED SCORE CALCULATION (FIXED: NOVA is in nutriments!)
+    // ------------------------------------------------------------------------
     // CRITICAL: NOVA group is inside nutriments, not at product level
     int? nova = product.nutriments?.novaGroup;
 
@@ -237,7 +328,9 @@ class ResultController extends GetxController {
       print("✅ Using NOVA group $nova = $processed score");
     }
 
-    // --- Combined NutriLens score ---
+    // ------------------------------------------------------------------------
+    // COMBINED NUTRILENS SCORE
+    // ------------------------------------------------------------------------
     double nutrilens = (0.7 * food) + (0.3 * processed);
 
     return NutriLensScores(
@@ -254,6 +347,10 @@ class ResultController extends GetxController {
       },
     );
   }
+
+  // ==========================================================================
+  // SCORE DISPLAY HELPERS
+  // ==========================================================================
 
   Color getScoreColor(double score) {
     if (score >= 80) return Colors.green;
@@ -278,6 +375,10 @@ class ResultController extends GetxController {
     return 'unknown';
   }
 
+  // ==========================================================================
+  // PRODUCT DETAILS API
+  // ==========================================================================
+
   Future<GetProductResultModel> getProductDetails(String code) async {
     isLoading.value = true;
     errorMessage.value = null;
@@ -290,7 +391,7 @@ class ResultController extends GetxController {
       (error) {
         isLoading.value = false;
         errorMessage.value = error.toString();
-         throw error;
+        throw error;
       },
       (model) {
         isLoading.value = false;
@@ -310,7 +411,7 @@ class ResultController extends GetxController {
 
         // Set grade based on NutriLens score
         grade.value = getScoreGrade(scores.nutriLensScore);
-        backgroundColor.value = getScoreColor(scores.nutriLensScore);
+    
 
         // Debug logging
         print("🎯 Food Score: ${scores.foodScore}");
@@ -320,49 +421,7 @@ class ResultController extends GetxController {
         print("🔍 Debug: ${scores.debug}");
 
         // Build nutrition details
-        nutritionDetails.clear();
-        final nutriments = model.product?.nutriments;
-        final nutrientTags = model.product?.nutrientLevelsTags ?? [];
-
-        if (nutriments != null) {
-          for (int i = 0; i < nutrientTags.length; i++) {
-            final tag = nutrientTags[i];
-
-            String? nutrientValue;
-            String? nutrientUnit;
-            String displayName = '';
-
-            if (tag.contains('fat') && !tag.contains('saturated')) {
-              nutrientValue = '${nutriments.fat100g ?? nutriments.fat ?? 0}';
-              nutrientUnit = 'g';
-              displayName = 'Fat';
-            } else if (tag.contains('saturated-fat')) {
-              nutrientValue =
-                  '${nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0}';
-              nutrientUnit = 'g';
-              displayName = 'Saturated Fat';
-            } else if (tag.contains('sugars')) {
-              nutrientValue =
-                  '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
-              nutrientUnit = 'g';
-              displayName = 'Sugars';
-            } else if (tag.contains('salt')) {
-              nutrientValue = '${nutriments.salt100g ?? nutriments.salt ?? 0}';
-              nutrientUnit = 'g';
-              displayName = 'Salt';
-            }
-
-            if (nutrientValue != null) {
-              nutritionDetails.add({
-                "tag": tag,
-                "display_name": displayName,
-                "value": nutrientValue,
-                "unit": nutrientUnit,
-                "level": _getNutrientLevel(tag),
-              });
-            }
-          }
-        }
+        _buildNutritionDetails(model);
 
         uploadScannedProduct(barCode, model.product?.productName ?? "Unknown");
         return model;
@@ -370,8 +429,58 @@ class ResultController extends GetxController {
     );
   }
 
-  var suggestproductError = "".obs;
-  getSuggestedProduct(List<String> tags) async {
+  /// Builds the nutrition details list from product data
+  void _buildNutritionDetails(GetProductResultModel model) {
+    nutritionDetails.clear();
+    final nutriments = model.product?.nutriments;
+    final nutrientTags = model.product?.nutrientLevelsTags ?? [];
+
+    if (nutriments != null) {
+      for (int i = 0; i < nutrientTags.length; i++) {
+        final tag = nutrientTags[i];
+
+        String? nutrientValue;
+        String? nutrientUnit;
+        String displayName = '';
+
+        if (tag.contains('fat') && !tag.contains('saturated')) {
+          nutrientValue = '${nutriments.fat100g ?? nutriments.fat ?? 0}';
+          nutrientUnit = 'g';
+          displayName = 'Fat';
+        } else if (tag.contains('saturated-fat')) {
+          nutrientValue =
+              '${nutriments.saturatedFat100g ?? nutriments.saturatedFat ?? 0}';
+          nutrientUnit = 'g';
+          displayName = 'Saturated Fat';
+        } else if (tag.contains('sugars')) {
+          nutrientValue =
+              '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
+          nutrientUnit = 'g';
+          displayName = 'Sugars';
+        } else if (tag.contains('salt')) {
+          nutrientValue = '${nutriments.salt100g ?? nutriments.salt ?? 0}';
+          nutrientUnit = 'g';
+          displayName = 'Salt';
+        }
+
+        if (nutrientValue != null) {
+          nutritionDetails.add({
+            "tag": tag,
+            "display_name": displayName,
+            "value": nutrientValue,
+            "unit": nutrientUnit,
+            "level": _getNutrientLevel(tag),
+          });
+        }
+      }
+    }
+  }
+
+  // ==========================================================================
+  // SUGGESTED PRODUCTS API
+  // ==========================================================================
+
+  Future getSuggestedProduct(List<String> tags) async {
     suggestproductError.value = "";
     isLoadingSuggested.value = true;
 
@@ -391,6 +500,10 @@ class ResultController extends GetxController {
     );
   }
 
+  // ==========================================================================
+  // UPLOAD SCANNED PRODUCT
+  // ==========================================================================
+
   Future uploadScannedProduct(String barcode, String productName) async {
     final response = await _getProductResultRepo.uploadScannedProduct(
       UploadProductRecordModel(
@@ -409,73 +522,9 @@ class ResultController extends GetxController {
     );
   }
 
-  final RxList<SuggestedProduct> suggestedProducts = <SuggestedProduct>[].obs;
-  final isLoadingSuggested = false.obs;
-
-  void resetControllerForNewProduct() {
-    isLoading.value = true;
-    getProductResultModel.value = null;
-    suggestedProducts.value = [];
-    isLoadingSuggested.value = true;
-    errorMessage.value = null;
-    backgroundColor.value = Colors.white;
-    grade.value = "";
-    foodScore.value = 0.0;
-    processedScore.value = 0.0;
-    nutriLensScore.value = 0.0;
-    scoringMethod.value = "";
-    scoreExplanation.clear();
-    nutritionDetails.clear();
-  }
-
-  ////code for getting goals and preferences
-  ///final getGoalsAndPreferencesList = GetGoalsAndPreferencesResponse().obs;
-  var isGettingGoals = false.obs;
-  var getGoalsAndPreferencesList = GetGoalsAndPreferencesResponse().obs;
-  // Add this to ResultController class
-
-  final selectedGoals = <DietPreference>[].obs;
-  final selectedPref = <DietPreference>[].obs;
-
-  // Computed property for goals NOT met
-  List<DietPreference> get goalsNotMet {
-    final metGoalIds =
-        getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
-        [];
-
-    return selectedGoals
-        .where((goal) => !metGoalIds.contains(goal.id))
-        .toList();
-  }
-
-  List<DietPreference> get prefNotMet {
-    final metPrefIds =
-        getGoalsAndPreferencesList.value.preferencesViolated
-            ?.map((g) => g.id)
-            .toList() ??
-        [];
-
-    return selectedPref.where((goal) => !metPrefIds.contains(goal.id)).toList();
-  }
-
-  // Computed property for goals that ARE met
-  List<DietPreference> get goalsMetList {
-    final metGoalIds =
-        getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
-        [];
-
-    return selectedGoals.where((goal) => metGoalIds.contains(goal.id)).toList();
-  }
-
-  List<DietPreference> get prefMetList {
-    final metPrefIds =
-        getGoalsAndPreferencesList.value.preferencesViolated
-            ?.map((g) => g.id)
-            .toList() ??
-        [];
-
-    return selectedPref.where((goal) => metPrefIds.contains(goal.id)).toList();
-  }
+  // ==========================================================================
+  // GOALS AND PREFERENCES API
+  // ==========================================================================
 
   Future getGoalsAndPreferences(
     GoalsAndPreferenceRequestModel goalsAndPreferenceRequestModel,
@@ -507,6 +556,7 @@ class ResultController extends GetxController {
         await settingController.getGoalsAndDietList();
         var goalsList = settingController.goals;
         var prefList = settingController.allergensToAvoid;
+
         // Get user's selected goal IDs
         var selectedGoalsIds = SessionController().getUserDetails.goals;
         var selectedPreferences =
@@ -532,10 +582,4 @@ class ResultController extends GetxController {
     );
   }
 
-  // @override
-  // void onReady() {
-  //   // TODO: implement onReady
-  //   super.onReady();
-  //   getGoalsAndPreferences(Get.arguments);
-  // }
 }

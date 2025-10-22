@@ -48,7 +48,11 @@ class Validator {
     if (value == null || value.trim().isEmpty) {
       return 'Password is required';
     }
-  
+
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+
     return null;
   }
 
@@ -57,7 +61,7 @@ class Validator {
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
     }
-   
+
     return null;
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:neutri_lens/app/modules/auth/data/models/profile_model/profile_model.dart';
-import 'package:neutri_lens/app/modules/auth/data/repository/user_repository.dart';
+import 'package:neutri_lens/app/modules/auth/domain/repository/user_repository.dart';
 import '../../../core/services/session_manager.dart';
 import '../../../core/utils/apptoast_util.dart';
 
