@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:neutri_lens/app/modules/home/data/datasources/remote_data_source/home_remote_data_source.dart';
 import 'package:neutri_lens/app/modules/home/domain/abstract_repositories/home_repository.dart';
 import 'package:neutri_lens/app/modules/home/data/repository_impl/home_repository_impl.dart';
 
@@ -11,10 +12,10 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => DioHelper());
 
-    Get.lazyPut(() => HomeRemoteDataSourceImpl(Get.find<DioHelper>()));
+    Get.lazyPut<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(Get.find<DioHelper>()));
 
     Get.lazyPut<HomeRepository>(
-      () => HomeRepositoryImpl(Get.find<HomeRemoteDataSourceImpl>()),
+      () => HomeRepositoryImpl(Get.find<HomeRemoteDataSource>()),
     );
     Get.lazyPut<HomeController>(
       () => HomeController(homeRepository: Get.find()),
