@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:neutri_lens/app/modules/trends/data/repository/repository_impl/trends_repository_impl.dart';
 
 import '../controllers/trends_controller.dart';
-import '../../data/repository/abstract_repository/trends_abstract_repository.dart';
+import '../../domain/abstract_repository/trends_abstract_repository.dart';
 
 class TrendsBinding extends Bindings {
   @override

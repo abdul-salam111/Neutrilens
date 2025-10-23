@@ -16,10 +16,15 @@ class SigninController extends GetxController {
   var isloading = false.obs;
 
   //form key
-  final signinFormKey = GlobalKey<FormState>();
+  late GlobalKey<FormState> signinFormKey;
   //text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  @override
+  onInit() {
+    super.onInit();
+    signinFormKey = GlobalKey<FormState>();
+  }
 
   Future<void> login() async {
     isloading.value = true;
@@ -52,7 +57,10 @@ class SigninController extends GetxController {
       (user) async {
         await SessionController().saveUserInStorage(user);
         await SessionController().getUserfromSharedpref();
-        await storage.setValues(StorageKeys.password, passwordController.value.text.trim());
+        await storage.setValues(
+          StorageKeys.password,
+          passwordController.value.text.trim(),
+        );
         await Get.offAllNamed(Routes.NAVBAR);
       },
     );

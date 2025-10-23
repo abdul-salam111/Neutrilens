@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:neutri_lens/app/modules/trends/data/model/get_trends_model/get_trends_model.dart';
-import 'package:neutri_lens/app/modules/trends/data/repository/abstract_repository/trends_abstract_repository.dart';
+import 'package:neutri_lens/app/modules/trends/domain/abstract_repository/trends_abstract_repository.dart';
 
 import '../views/good_pickes_chart_widget.dart';
 

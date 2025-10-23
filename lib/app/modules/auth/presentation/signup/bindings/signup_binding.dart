@@ -8,6 +8,6 @@ class SignupBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<UserRepository>(() => UserRepositoryImpl());
-    Get.lazyPut<SignupController>(() => SignupController(Get.find()));
+    Get.lazyPut<SignupController>(() => SignupController(Get.find()),fenix: true);
   }
 }
