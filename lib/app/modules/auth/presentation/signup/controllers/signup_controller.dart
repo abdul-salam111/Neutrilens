@@ -14,7 +14,7 @@ class SignupController extends GetxController {
   SignupController(this.authRepository);
 
   // Form State
-  late GlobalKey<FormState> signupFormKey;
+  final signupFormKey = GlobalKey<FormState>();
 
   // Text Controllers
   final emailController = TextEditingController();
@@ -50,7 +50,6 @@ class SignupController extends GetxController {
   void onInit() {
     super.onInit();
     getGoalsAndDietList();
-    signupFormKey = GlobalKey<FormState>();
   }
 
   @override
@@ -92,6 +91,7 @@ class SignupController extends GetxController {
   var isRegistringUser = false.obs;
   Future<void> registerUser() async {
     isRegistringUser.value = true;
+
     final ageRange = agesList[selectedAge.value].split("-");
     final ageFrom = int.tryParse(ageRange[0]) ?? 0;
     final ageTo = ageRange.length > 1
@@ -108,6 +108,7 @@ class SignupController extends GetxController {
         dietPreferences: selectedAllergens,
       ),
     );
+
     response.fold(
       (failure) {
         isRegistringUser.value = false;
