@@ -157,9 +157,34 @@ class HomeView extends GetView<HomeController> {
                   );
                 }
 
-                if (controller.products.isEmpty) {
-                  return const Center(child: Text('No products found'));
-                }
+             if (controller.products.isEmpty) {
+  // When user hasn’t searched yet → show nothing (default empty state)
+  if (controller.searchQuery.value.isEmpty) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Iconsax.search_normal, size: 60, color: Colors.grey),
+          const SizedBox(height: 10),
+          Text(
+            "Search to find products",
+            style: context.bodyLarge!.copyWith(color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // When user searched but no results found
+  return Center(
+    child: Text(
+      'No products found for "${controller.searchQuery.value}"',
+      style: context.bodyMedium,
+    ),
+  );
+}
+
+
 
                 return RefreshIndicator(
                   onRefresh: controller.refreshProducts,

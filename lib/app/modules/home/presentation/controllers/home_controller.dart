@@ -58,7 +58,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getProducts();
+   
     _setupScrollListener();
     _setupSearchListener();
   }
@@ -115,38 +115,38 @@ class HomeController extends GetxController {
   /// Executes search with the given query
   /// Resets pagination and clears previous results
   void performSearch(String query) {
-    final trimmedQuery = query.trim();
-    if (trimmedQuery == searchQuery.value) return;
+  final trimmedQuery = query.trim();
+  if (trimmedQuery == searchQuery.value) return;
 
-    // Generate new operation ID to track this search
-    final operationId = _generateOperationId();
-    _currentOperationId.value = operationId;
+  final operationId = _generateOperationId();
+  _currentOperationId.value = operationId;
 
-    // Reset state for new search
-    searchQuery.value = trimmedQuery;
-    currentPage.value = 1;
-    products.clear();
-    hasMoreData.value = true;
-    isLoading.value = true;
+  searchQuery.value = trimmedQuery;
+  currentPage.value = 1;
+  products.clear();
+  hasMoreData.value = true;
 
-    // Execute appropriate API call
-    if (searchQuery.value.isEmpty) {
-      _getAllProducts(operationId);
-    } else {
-      _searchProducts(operationId);
-    }
+  if (trimmedQuery.isEmpty) {
+    // User cleared search → reset UI
+    isLoading.value = false;
+    return;
   }
+
+  isLoading.value = true;
+  _searchProducts(operationId);
+}
+
 
   /// Clears search and returns to showing all products
   void clearSearch() {
-    searchController.clear();
-    searchQuery.value = '';
-    currentPage.value = 1;
-    products.clear();
-    hasMoreData.value = true;
-    _currentOperationId.value = _generateOperationId();
-    getProducts();
-  }
+  searchController.clear();
+  searchQuery.value = '';
+  currentPage.value = 1;
+  products.clear();
+  hasMoreData.value = true;
+  _currentOperationId.value = _generateOperationId();
+}
+
 
   // ==========================================================================
   // PRODUCTS LOADING (Initial & Refresh)
