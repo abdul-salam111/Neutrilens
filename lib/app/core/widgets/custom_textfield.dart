@@ -77,7 +77,7 @@ class CustomTextFormField extends StatelessWidget {
         obscureText
             ? Obx(
                 () => TextFormField(
-                cursorColor: Colors.black,
+                  cursorColor: Colors.black,
 
                   autofocus: false,
                   textCapitalization: TextCapitalization.words,
@@ -127,6 +127,7 @@ class CustomTextFormField extends StatelessWidget {
                             },
                           )
                         : null,
+                    errorStyle: TextStyle(color: Colors.red, fontSize: 14),
                   ),
                   validator: validator,
                   onChanged: onChanged,
@@ -146,6 +147,7 @@ class CustomTextFormField extends StatelessWidget {
                     ? 1
                     : maxLines, // Force single line if obscureText is true
                 decoration: InputDecoration(
+                  errorStyle: TextStyle(color: Colors.red, fontSize: 14),
                   hintStyle: context.bodyMedium!.copyWith(
                     color: AppColors.greyColor,
                   ),

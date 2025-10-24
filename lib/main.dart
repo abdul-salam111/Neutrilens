@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Neutri Lens",
+      title: "Neutri Lens Production",
       initialRoute: Routes.SPLASH,
       getPages: AppPages.routes,
       theme: AppThemes.lightTheme,

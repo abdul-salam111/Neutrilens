@@ -32,20 +32,20 @@ class NutriLensScores {
   });
 
   Map<String, dynamic> toJson() => {
-        "foodScore": {
-          "value": foodScore.round(),
-          "basis": debug["basisFood"],
-          "grade": debug["grade"],
-          "method": method,
-          "explain": debug["explainFood"],
-        },
-        "processedScore": {
-          "value": processedScore.round(),
-          "basis": debug["basisProcessed"],
-          "novaGroup": debug["novaGroup"],
-        },
-        "nutriLensScore": nutriLensScore.round(),
-      };
+    "foodScore": {
+      "value": foodScore.round(),
+      "basis": debug["basisFood"],
+      "grade": debug["grade"],
+      "method": method,
+      "explain": debug["explainFood"],
+    },
+    "processedScore": {
+      "value": processedScore.round(),
+      "basis": debug["basisProcessed"],
+      "novaGroup": debug["novaGroup"],
+    },
+    "nutriLensScore": nutriLensScore.round(),
+  };
 }
 
 // ============================================================================
@@ -102,7 +102,7 @@ class ResultController extends GetxController {
   List<DietPreference> get goalsNotMet {
     final metGoalIds =
         getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
-            [];
+        [];
 
     return selectedGoals
         .where((goal) => !metGoalIds.contains(goal.id))
@@ -111,7 +111,8 @@ class ResultController extends GetxController {
 
   /// Preferences violated by the product
   List<DietPreference> get prefNotMet {
-    final metPrefIds = getGoalsAndPreferencesList.value.preferencesViolated
+    final metPrefIds =
+        getGoalsAndPreferencesList.value.preferencesViolated
             ?.map((g) => g.id)
             .toList() ??
         [];
@@ -123,14 +124,15 @@ class ResultController extends GetxController {
   List<DietPreference> get goalsMetList {
     final metGoalIds =
         getGoalsAndPreferencesList.value.goalsMet?.map((g) => g.id).toList() ??
-            [];
+        [];
 
     return selectedGoals.where((goal) => metGoalIds.contains(goal.id)).toList();
   }
 
   /// Preferences that ARE met by the product
   List<DietPreference> get prefMetList {
-    final metPrefIds = getGoalsAndPreferencesList.value.preferencesViolated
+    final metPrefIds =
+        getGoalsAndPreferencesList.value.preferencesViolated
             ?.map((g) => g.id)
             .toList() ??
         [];
@@ -411,7 +413,6 @@ class ResultController extends GetxController {
 
         // Set grade based on NutriLens score
         grade.value = getScoreGrade(scores.nutriLensScore);
-    
 
         // Debug logging
         print("🎯 Food Score: ${scores.foodScore}");
@@ -453,8 +454,7 @@ class ResultController extends GetxController {
           nutrientUnit = 'g';
           displayName = 'Saturated Fat';
         } else if (tag.contains('sugars')) {
-          nutrientValue =
-              '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
+          nutrientValue = '${nutriments.sugars100g ?? nutriments.sugars ?? 0}';
           nutrientUnit = 'g';
           displayName = 'Sugars';
         } else if (tag.contains('salt')) {
@@ -548,7 +548,6 @@ class ResultController extends GetxController {
           "🎯 Goals Met from API: ${model.goalsMet?.map((g) => g.name).toList()}",
         );
 
-        isGettingGoals.value = false;
         getGoalsAndPreferencesList.value = model;
 
         // Get all goals list from settings controller
@@ -578,8 +577,8 @@ class ResultController extends GetxController {
         );
         print("✅ Goals Met: ${goalsMetList.map((g) => g.name).toList()}");
         print("❌ Goals NOT Met: ${goalsNotMet.map((g) => g.name).toList()}");
+        isGettingGoals.value = false;
       },
     );
   }
-
 }
